@@ -1,12 +1,13 @@
 import React from 'react';
+import {useAuthStore} from "@store/authStore";
 
 // Khai báo tham số nhận vào từ HomePage
 interface Props {
-	onClose: () => void;
 	onConfirm: () => void;
 }
 
-export default function LogoutConfirmModal({ onClose, onConfirm }: Props) {
+export default function LogoutConfirmModal({ onConfirm }: Props) {
+	const {setIsOpenLogoutConfirm} = useAuthStore();
 	return (
 		<div className="fixed inset-0 bg-black/40 z-[99] flex items-center justify-center p-4">
 			<div className="bg-white rounded-sm shadow-xl max-w-[380px] w-full p-6 border border-gray-100">
@@ -19,7 +20,7 @@ export default function LogoutConfirmModal({ onClose, onConfirm }: Props) {
 
 				<div className="flex gap-3 mt-6">
 					{/* Click nút Không -> gọi hàm onClose của Cha */}
-					<button onClick={onClose} className="text-gray-800 flex-1 rounded-sm border border-gray-300 py-2 text-sm cursor-pointer">
+					<button onClick={() => setIsOpenLogoutConfirm(false)} className="text-gray-800 flex-1 rounded-sm border border-gray-300 py-2 text-sm cursor-pointer">
 						Không
 					</button>
 

@@ -16,25 +16,22 @@ export default function LoginPage() {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
-
+	const isButtonDisabled = !username.trim() || !password.trim() || loading
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setLoading(true); // Bắt đầu gọi API -> đặt loading = true
-		setError(null);    // Xóa thông báo lỗi cũ đi
+		setLoading(true);
+		setError(null); // Clear notification old
+
 		try {
 			const response = await axios.post('http://127.0.0.1:8000/api/login', {
 				username: username,
 				password: password
 			});
 
-			// 2. Nếu Laravel trả về 200 thành công:
 			if (response.data && response.data.code === 200) {
 				const {user, access_token} = response.data.data;
-				// Lưu thông tin vào authStore (Zustand & localStorage)
 				login(user, access_token);
-
-				// Chuyển hướng người dùng về trang chủ
 				router.push('/');
 			}
 		} catch (err: any) {
@@ -97,11 +94,23 @@ export default function LoginPage() {
 
 					<button
 						type="submit"
-						disabled={loading}
-						className={`w-full rounded-sm bg-[#ee4d2d] py-3 text-sm font-medium text-white shadow-sm hover:opacity-90 
-						transition-opacity cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+						disabled={isButtonDisabled}
+						className={`w-full rounded-sm bg-[#ee4d2d] py-3 text-sm font-medium text-white shadow-sm transition-opacity
+						  ${isButtonDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:opacity-85'}`
+						}
 					>
-						{loading ? 'ĐANG ĐĂNG NHẬP...' : 'ĐĂNG NHẬP'}
+						{loading ? (
+							<div className="flex items-center justify-center gap-2">
+								{/* Icon SVG xoay tròn sử dụng class animate-spin của Tailwind */}
+								<svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24" fill="none">
+									<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+									<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+								</svg>
+								<span>ĐANG ĐĂNG NHẬP...</span>
+							</div>
+						) : (
+							'ĐĂNG NHẬP'
+						)}
 					</button>
 				</form>
 

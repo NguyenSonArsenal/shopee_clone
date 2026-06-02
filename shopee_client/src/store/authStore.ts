@@ -5,11 +5,15 @@ interface AuthState {
 	token: string | null;
 	login: (user: any, token: string) => void;
 	logout: () => void;
+
+	isOpenLogoutConfirmModal: boolean;
+	setIsOpenLogoutConfirm: (isOpen: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
 	user: null,
 	token: null,
+	isOpenLogoutConfirmModal: false,
 
 	// Hành động đăng nhập thành công: Lưu vào RAM của App và lưu vào localStorage để khi F5 không bị mất
 	login: (user, token) => {
@@ -23,5 +27,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 		localStorage.removeItem('user');
 		localStorage.removeItem('token');
 		set({ user: null, token: null });
+	},
+
+	setIsOpenLogoutConfirm: (isOpen) => {
+		set({ isOpenLogoutConfirmModal: isOpen});
 	}
 }));

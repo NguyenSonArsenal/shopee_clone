@@ -2,12 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import {FacebookIcon, ShopeeAvatar, TikTokIcon} from "../component/icon/icon";
 import {useAuthStore} from "@store/authStore";
 import { useRouter } from 'next/navigation';
 import LogoutConfirmModal from "@modal/LogoutConfirmModal";
-import {FaRegQuestionCircle, FaUserCircle} from "react-icons/fa";
-import Header from "@component/Header";
+import Header from "@component/Header/Header";
 
 // Định nghĩa kiểu dữ liệu cho Sản phẩm bằng TypeScript
 interface Product {
@@ -71,9 +69,8 @@ export default function HomePage() {
 	const [searchQuery, setSearchQuery] = useState<string>('');
 	const [hasMore, setHasMore] = useState<boolean>(true);
 	const [cartCount, setCartCount] = useState<number>(0);
-	const [isOpenLogoutConfirm, setIsOpenLogoutConfirm] = useState(false);
 
-	const { user, logout } = useAuthStore();
+	const { logout, isOpenLogoutConfirmModal, setIsOpenLogoutConfirm} = useAuthStore();
 	const router = useRouter();
 
 	// Khôi phục trạng thái đăng nhập từ localStorage khi reload trang (Hydration)
@@ -98,6 +95,7 @@ export default function HomePage() {
 
 	const handleConfirmLogout = () => {
 		logout()
+		setIsOpenLogoutConfirm(false)
 		router.push('/login');
 	}
 
@@ -114,7 +112,6 @@ export default function HomePage() {
 	return (
 		<div className="min-h-screen bg-gray-100 font-sans pb-12">
 			<Header
-				onLogoutClick={() => setIsOpenLogoutConfirm(true)}
 				cartCount={cartCount}
 			/>
 
@@ -216,9 +213,8 @@ export default function HomePage() {
 						</div>
 					)}
 
-					{isOpenLogoutConfirm && (
+					{isOpenLogoutConfirmModal && (
 						<LogoutConfirmModal
-							onClose={() => setIsOpenLogoutConfirm(false)}
 							onConfirm={handleConfirmLogout}
 						/>
 					)}

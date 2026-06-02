@@ -27,6 +27,7 @@
       "@store/*": ["./src/store/*"],
       "@component/*": ["./src/component/*"],
       "@icon": ["./src/component/icon/icon"],
+      "@helper": ["./src/utils/helper"],
       "@modal/*": ["./src/component/modal/*"]
     }
   },
