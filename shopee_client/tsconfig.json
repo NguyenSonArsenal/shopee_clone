@@ -21,7 +21,14 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/*": ["./src/*"],  // default
+      "@store/*": ["./src/store/*"],
+      "@component/*": ["./src/component/*"],
+      "@icon": ["./src/component/icon/icon"],
+      "@modal/*": ["./src/component/modal/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
