@@ -19,7 +19,7 @@ export default function LogoutConfirmModal({ onClose, onConfirm }: Props) {
 
 				<div className="flex gap-3 mt-6">
 					{/* Click nút Không -> gọi hàm onClose của Cha */}
-					<button onClick={onClose} className="flex-1 rounded-sm border border-gray-300 py-2 text-sm cursor-pointer">
+					<button onClick={onClose} className="text-gray-800 flex-1 rounded-sm border border-gray-300 py-2 text-sm cursor-pointer">
 						Không
 					</button>
 
