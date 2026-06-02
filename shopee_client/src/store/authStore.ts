@@ -33,3 +33,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 		set({ isOpenLogoutConfirmModal: isOpen});
 	}
 }));
+
+// Tự động đăng ký store vào trình theo dõi debug của cửa sổ window
+if (typeof window !== 'undefined') {
+	(window as any).__ZUSTAND_STORES__ = (window as any).__ZUSTAND_STORES__ || {};
+	(window as any).__ZUSTAND_STORES__.auth = useAuthStore;
+}

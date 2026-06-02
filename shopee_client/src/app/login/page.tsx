@@ -7,6 +7,9 @@ import axios from 'axios';
 import { useAuthStore } from '@store/authStore';
 import {EyeOn, EyeOff} from "@icon";
 
+import StateDebugger from '@component/StateDebugger';
+
+
 export default function LoginPage() {
 	const router = useRouter();
 	const { login } = useAuthStore();
@@ -131,6 +134,10 @@ export default function LoginPage() {
 				</p>
 
 			</div>
+
+
+			<StateDebugger states={{ username, password, showPassword, loading, error }} />
+
 		</div>
 	);
 }
