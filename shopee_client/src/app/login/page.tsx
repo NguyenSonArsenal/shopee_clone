@@ -3,12 +3,11 @@
 import React, {useState} from 'react';
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import { useAuthStore } from '@store/authStore';
 import {EyeOn, EyeOff} from "@icon";
-
+import axiosInstance from '@/lib/axios';
 import StateDebugger from '@component/StateDebugger';
-
+import FormErrors from "@component/FormErrors";
 
 export default function LoginPage() {
 	const router = useRouter();
@@ -18,31 +17,27 @@ export default function LoginPage() {
 	const [password, setPassword] = useState<string>('');
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
-	const [error, setError] = useState<string | null>(null);
+	const [error, setError] = useState<string[]>([]);
 	const isButtonDisabled = !username.trim() || !password.trim() || loading
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setLoading(true);
-		setError(null); // Clear notification old
+		setError([]);
 
 		try {
-			const response = await axios.post('http://127.0.0.1:8000/api/login', {
+			const response = await axiosInstance.post('login', {
 				username: username,
 				password: password
 			});
-
-			if (response.data && response.data.code === 200) {
+			if (response.data && response.data.success == true) {
 				const {user, access_token} = response.data.data;
 				login(user, access_token);
-				router.push('/');
+				return router.push('/');
 			}
+			setError([response.data.message])
 		} catch (err: any) {
-			if (err.response && err.response.data) {
-				setError(err.response.data.message || 'Đăng nhập thất bại!');
-			} else {
-				setError('Không thể kết nối đến máy chủ API!');
-			}
+			console.log(err, '// err')
 		} finally {
 			setLoading(false);
 		}
@@ -55,11 +50,7 @@ export default function LoginPage() {
 					<h1 className="text-xl sm:text-2xl text-gray-800 font-normal">Đăng nhập</h1>
 				</div>
 
-				{error && (
-					<div className="mb-4 rounded-sm bg-red-50 border border-red-200 p-3 text-xs text-red-600">
-						⚠️ {error}
-					</div>
-				)}
+				<FormErrors error={error}/>
 
 				{/* Form Đăng nhập */}
 				<form onSubmit={handleSubmit} className="space-y-4">

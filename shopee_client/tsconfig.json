@@ -26,9 +26,10 @@
       "@/*": ["./src/*"],  // default
       "@store/*": ["./src/store/*"],
       "@component/*": ["./src/component/*"],
+      "@constant/*": ["./src/constant/*"],
       "@icon": ["./src/component/icon/icon"],
       "@helper": ["./src/utils/helper"],
-      "@modal/*": ["./src/component/modal/*"]
+      "@modal/*": ["./src/component/modal/*"],
     }
   },
   "include": [
