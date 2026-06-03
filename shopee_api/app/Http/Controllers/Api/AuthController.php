@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\LoginRequest;
+use App\Http\Requests\Api\Auth\LoginRequest;
+use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Models\User;
 use App\Service\Auth\JWTService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -22,41 +24,26 @@ class AuthController extends Controller
     /**
      * API Đăng ký tài khoản
      */
-    public function postRegister(Request $request)
+    public function postRegister(RegisterRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required|string|unique:user,username|max:50',
-            'password' => 'required|string|min:6',
-            'full_name' => 'nullable|string|max:100',
-            'email' => 'nullable|email|unique:user,email|max:64',
-            'phone' => 'nullable|string|max:20',
-        ]);
+        try {
+            $user = User::create([
+                'username' => $request->username,
+                'password' => bcrypt($request->password),
+                'email' => $request->email,
+                'status' => User::STATUS_ACTIVE,
+                'gender' => $request->gender,
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'code' => 422,
-                'message' => 'Dữ liệu đăng ký không hợp lệ!',
-                'data' => $validator->errors()
-            ], 422);
-        }
-
-        $user = User::create([
-            'username' => $request->username,
-            'password' => Hash::make($request->password), // Hash mật khẩu chuẩn Bcrypt
-            'full_name' => $request->full_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'status' => User::STATUS_ACTIVE, // Đăng ký xong tự kích hoạt (Trạng thái = 1)
-        ]);
-
-        return response()->json([
-            'code' => 201,
-            'message' => 'Đăng ký tài khoản thành công!',
-            'data' => [
+            $data = [
                 'id' => $user->id,
-                'username' => $user->username,
-            ]
-        ], 201);
+                'username' => $user->username
+            ];
+            return $this->success($data, "Đăng ký tài khoản thành công!", 201);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->error($e->getMessage());
+        }
     }
 
     /**

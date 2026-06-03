@@ -20,6 +20,9 @@ class CreateUserTable extends Migration
             $table->string('full_name')->nullable();
             $table->string('email', 64)->unique()->nullable();
             $table->string('phone', 20)->nullable();
+            $table->tinyInteger('gender')->nullable()->unsigned()->comment('1: boy, 2: girl');
+            $table->date('birthday')->nullable();
+            $table->string('avatar')->nullable();
             $table->text('rf_token')->nullable();
             $table->tinyInteger('status')->default(1)->nullable()->comment('1 active, 2 block');
             $table->timestamps();

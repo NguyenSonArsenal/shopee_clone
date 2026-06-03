@@ -16,6 +16,9 @@ class User extends Authenticatable
 
     const STATUS_ACTIVE = 1;
     const STATUS_BLOCKED = 2;
+
+    const GENDER_BOY = 1;
+    const GENDER_GIRL = 2;
     protected $fillable = [
         'username',
         'password',
@@ -24,5 +27,8 @@ class User extends Authenticatable
         'email',
         'phone',
         'rf_token',
+        'gender',
+        'avatar',
+        'birthday',
     ];
 }

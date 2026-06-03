@@ -49,11 +49,11 @@ trait ApiResponseService
         $this->code = $code;
     }
 
-    public function success($data = null, $message = '')
+    public function success($data = null, $message = '', $code = 200)
     {
         return response()->json([
             'success' => true,
-            'code' => 200,
+            'code' => $code,
             'message' => "Success",
             'data' => $data ?? $this->getData(),
         ]);
