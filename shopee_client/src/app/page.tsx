@@ -4,10 +4,9 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {useAuthStore} from "@store/authStore";
 import { useRouter } from 'next/navigation';
-import LogoutConfirmModal from "@modal/LogoutConfirmModal";
 import Header from "@component/Header/Header";
+import CategorySection from "@component/HomePage/CategorySection";
 
-// Định nghĩa kiểu dữ liệu cho Sản phẩm bằng TypeScript
 interface Product {
 	id: number;
 	name: string;
@@ -18,32 +17,7 @@ interface Product {
 	discount?: string;
 }
 
-// Định nghĩa kiểu dữ liệu cho Danh mục
-interface Category {
-	id: number;
-	name: string;
-	icon: string;
-}
-
 export default function HomePage() {
-	// 1. Dữ liệu giả lập cho Danh mục ngành hàng (Categories)
-	const categories: Category[] = [
-		{ id: 1, name: 'Thời Trang Nam', icon: '👕' },
-		{ id: 2, name: 'Điện Thoại & Phụ Kiện', icon: '📱' },
-		{ id: 3, name: 'Thiết Bị Điện Tử', icon: '📺' },
-		{ id: 4, name: 'Máy Tính & Laptop', icon: '💻' },
-		{ id: 5, name: 'Máy Ảnh & Quay Phim', icon: '📷' },
-		{ id: 6, name: 'Đồng Hồ', icon: '⌚' },
-		{ id: 7, name: 'Giày Dép Nam', icon: '👟' },
-		{ id: 8, name: 'Thiết Bị Điện Gia Dụng', icon: '🔌' },
-		{ id: 9, name: 'Thể Thao & Du Lịch', icon: '⚽' },
-		{ id: 10, name: 'Ô Tô & Xe Máy', icon: '🏍️' },
-		{ id: 11, name: 'Thời Trang Nữ', icon: '👗' },
-		{ id: 12, name: 'Mẹ & Bé', icon: '🍼' },
-		{ id: 13, name: 'Sắc Đẹp', icon: '💄' },
-		{ id: 14, name: 'Sức Khỏe', icon: '💊' },
-	];
-
 	// 2. Dữ liệu giả lập Danh sách sản phẩm ban đầu (Gợi ý hôm nay)
 	const initialProducts: Product[] = [
 		{ id: 1, name: 'Áo sơ mi nam tay ngắn cổ vest URBAN lịch lãm thoáng mát', price: 302000, sold: '352', imageColor: 'bg-blue-100', tag: 'Mall', discount: '-11%' },
@@ -70,72 +44,22 @@ export default function HomePage() {
 	const [hasMore, setHasMore] = useState<boolean>(true);
 	const [cartCount, setCartCount] = useState<number>(0);
 
-	const { logout, isOpenLogoutConfirmModal, setIsOpenLogoutConfirm} = useAuthStore();
-	const router = useRouter();
-
-	// Khôi phục trạng thái đăng nhập từ localStorage khi reload trang (Hydration)
-	useEffect(() => {
-		console.log('check is login')
-		const user = localStorage.getItem('user');
-		const accessToken = localStorage.getItem('token');
-
-		if (user && accessToken) {
-			useAuthStore.setState({
-				user: JSON.parse(user),
-				token: accessToken
-			});
-		}
-	}, [])
-
 	// Hàm tải thêm sản phẩm khi click "Xem thêm"
 	const handleLoadMore = () => {
 		setProducts([...products, ...moreProducts]);
 		setHasMore(false); // Đã tải hết dữ liệu giả
 	};
 
-	const handleConfirmLogout = () => {
-		logout()
-		setIsOpenLogoutConfirm(false)
-		router.push('/login');
-	}
-
-	const handleAddToCart = (e: React.MouseEvent) => {
-		e.preventDefault(); // Tránh bị nhảy vào trang chi tiết khi click nút mua
-		setCartCount(cartCount + 1);
-	};
-
-	// Lọc sản phẩm theo từ khóa tìm kiếm (Real-time Filter)
 	const filteredProducts = products.filter(product =>
 		product.name.toLowerCase().includes(searchQuery.toLowerCase())
 	);
 
 	return (
 		<div className="min-h-screen bg-gray-100 font-sans pb-12">
-			<Header
-				cartCount={cartCount}
-			/>
+			<Header cartCount={cartCount}/>
 
 			<div className="max-w-[1200px] mx-auto px-4 mt-6">
-
-				{/* ────────────────── SECTION 2: DANH MỤC NGÀNH HÀNG ────────────────── */}
-				<section className="bg-white rounded-sm shadow-sm p-4 mb-6">
-					<h2 className="font-medium text-lg text-[#0000008a] uppercase tracking-wider mb-4 pb-2 border-b border-gray-100">
-						Danh mục
-					</h2>
-
-					{/* Lưới danh mục 7 cột trên Desktop, tự động xuống hàng và co giãn */}
-					<div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 border-t border-l border-gray-100">
-						{categories.map((cat) => (
-							<div
-								key={cat.id}
-								className="flex flex-col items-center justify-center p-4 border-r border-b border-gray-100 hover:shadow-md hover:border-gray-300 transition-all cursor-pointer text-center"
-							>
-								<span className="text-3xl mb-2">{cat.icon}</span>
-								<span className="text-sm text-gray-700 font-light leading-tight">{cat.name}</span>
-							</div>
-						))}
-					</div>
-				</section>
+				<CategorySection />
 
 				{/* ────────────────── SECTION 3: GỢI Ý HÔM NAY ────────────────── */}
 				<section className="space-y-4">
@@ -211,12 +135,6 @@ export default function HomePage() {
 								Xem Thêm
 							</button>
 						</div>
-					)}
-
-					{isOpenLogoutConfirmModal && (
-						<LogoutConfirmModal
-							onConfirm={handleConfirmLogout}
-						/>
 					)}
 				</section>
 			</div>

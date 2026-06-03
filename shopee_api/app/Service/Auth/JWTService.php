@@ -42,8 +42,9 @@ class JWTService
 
     /**
      * Giải mã và kiểm tra Token
+     * $token: string
      */
-    public function decodeToken(string $token)
+    public function decodeToken($token)
     {
         $parts = explode('.', $token);
         if (count($parts) !== 3) {

@@ -1,9 +1,10 @@
 "use client";
-import React from 'react';
+import React, {useEffect} from 'react';
 import Link from 'next/link';
 import { FacebookIcon, TikTokIcon } from '@icon';
 import {FaRegQuestionCircle} from "react-icons/fa";
 import dynamic from 'next/dynamic';
+import {useAuthStore} from "@store/authStore";
 
 interface HeaderProps {
 	cartCount: number;
@@ -19,8 +20,20 @@ const HeaderUser = dynamic(() => import('./HeaderUser'), {
 	)
 });
 
-
 export default function Header({ cartCount }: HeaderProps) {
+	// Khôi phục trạng thái đăng nhập từ localStorage khi reload trang (Hydration)
+	useEffect(() => {
+		const user = localStorage.getItem('user');
+		const accessToken = localStorage.getItem('token');
+
+		if (user && accessToken) {
+			useAuthStore.setState({
+				user: JSON.parse(user),
+				token: accessToken
+			});
+		}
+	}, [])
+
 	return (
 		<header className="bg-[#ee4d2d] text-white pt-2 pb-4 px-4 sticky top-0 z-50 shadow-md">
 			<div className="max-w-[1200px] mx-auto">

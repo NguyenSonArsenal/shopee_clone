@@ -81,4 +81,43 @@ class AuthController extends Controller
         ];
         return $this->success($data, "Đăng nhập thành công!");
     }
+
+    /**
+     * API Làm mới Access Token bằng Refresh Token
+     * POST /api/refresh-token
+     */
+    public function postRefreshToken(Request $request)
+    {
+        $rfToken = $request->input('refresh_token');
+
+        if (!$rfToken) {
+            return $this->error(401, null, "Refresh token không được để trống.");
+        }
+
+        // Decode và kiểm tra refresh token
+        $payload = $this->jwtService->decodeToken($rfToken);
+        if (!$payload || empty($payload['id'])) {
+            return $this->error(401, null, "Refresh token không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.");
+        }
+
+        // Kiểm tra refresh token có khớp với DB không (tránh dùng token cũ đã logout)
+        $user = User::where('id', $payload['id'])
+            ->where('rf_token', $rfToken)
+            ->where('status', User::STATUS_ACTIVE)
+            ->first();
+
+        if (!$user) {
+            return $this->error(401, null, "Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.");
+        }
+
+        // Cấp Access Token mới
+        $newAccessToken = $this->jwtService->generateToken(
+            ['id' => $user->id, 'username' => $user->username],
+            getConstant('EXP_ACCESS_TOKEN')
+        );
+
+        return $this->success([
+            'access_token' => $newAccessToken,
+        ], "Làm mới token thành công!");
+    }
 }

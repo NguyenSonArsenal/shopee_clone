@@ -1,0 +1,1 @@
+export const TIME_REFRESH = 60 * 1000; // 1 minutes
