@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7d155386-269a-4524-9e65-dccbff4280b1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../shopee_api/.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/.env.example" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/.styleci.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Console/Kernel.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Exceptions/Handler.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Helper/Helper.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Controllers/Api/AuthController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Controllers/Api/ProductController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Controllers/Api/UserController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Controllers/AuthController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Controllers/Controller.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Kernel.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Middleware/ApiJwtAuth.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Middleware/AuthBackend.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Middleware/AuthClient.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Middleware/Authenticate.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Middleware/CheckPermission.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Middleware/EncryptCookies.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Middleware/InternalApiOnly.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Middleware/PreventRequestsDuringMaintenance.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Middleware/RedirectIfAuthenticated.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Middleware/TrimStrings.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Middleware/TrustHosts.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Middleware/TrustProxies.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Middleware/VerifyCsrfToken.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Requests/Api/Auth/LoginRequest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Requests/Api/Auth/RegisterRequest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Requests/BaseApiFormRequest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Http/Resources/Api/User/ProfileResource.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Models/Base/BaseModel.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Models/Category.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Models/Product.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Models/User.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Providers/AppServiceProvider.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Providers/AuthServiceProvider.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Providers/BroadcastServiceProvider.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Providers/EventServiceProvider.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Providers/RouteServiceProvider.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Service/ApiResponseService.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/Service/Auth/JWTService.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/app/View/Composers/HeaderComposer.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/artisan" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/bootstrap/app.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/bootstrap/cache/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/composer.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/composer.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/app.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/auth.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/broadcasting.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/cache.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/config.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/constant.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/cors.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/database.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/filesystems.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/hashing.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/logging.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/mail.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/queue.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/sanctum.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/services.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/session.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/config/view.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/database/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/database/factories/ProductFactory.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/database/factories/UserFactory.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/database/migrations/2026_06_01_225333_create_user_table.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/database/migrations/2026_06_03_000001_create_category_table.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/database/migrations/2026_06_03_000002_create_product_table.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/database/seeders/CategorySeeder.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/database/seeders/DatabaseSeeder.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/database/seeders/ProductSeeder.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/phpunit.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/public/.htaccess" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/public/index.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/public/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/css/app.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/js/app.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/js/bootstrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/lang/en/auth.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/lang/en/pagination.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/lang/en/passwords.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/lang/en/validation.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/lang/vn/error_code.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/lang/vn/messages.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/lang/vn/validation.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/admin/permissions/index.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/admin/permissions/show.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/auth/login.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/daily/index.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/dashboard.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/errors/404.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/frontend/log/log.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/kpis/index.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/kpis/show.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/layouts/app.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/monthly/calendar.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/monthly/index.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/monthly/revenue.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/monthly/show.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/payrolls/index.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/profile/index.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/settings/index.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/staff/create.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/staff/edit.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/staff/index.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/stores/index.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/users/index.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/vendor/pagination/bootstrap-4.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/vendor/pagination/default.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/vendor/pagination/semantic-ui.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/vendor/pagination/simple-bootstrap-4.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/vendor/pagination/simple-default.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/vendor/pagination/simple-tailwind.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/resources/views/vendor/pagination/tailwind.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/routes/admin.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/routes/api.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/routes/channels.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/routes/console.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/routes/web.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/server.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/storage/app/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/storage/app/public/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/storage/framework/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/storage/framework/cache/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/storage/framework/cache/data/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/storage/framework/sessions/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/storage/framework/testing/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/storage/framework/views/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/storage/logs/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/tests/CreatesApplication.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/tests/Feature/BusinessEngineTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/tests/Feature/ExampleTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/tests/TestCase.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/tests/Unit/ExampleTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/walkthrough.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_api/webpack.mix.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/AGENTS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/CLAUDE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/eslint.config.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/jsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/next.config.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/postcss.config.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/public/file.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/public/globe.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/public/image/shopee.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/public/next.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/public/vercel.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/public/window.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/api/categoryApi.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/app/globals.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/app/layout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/app/login/layout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/app/login/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/app/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/app/profile/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/app/register/layout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/app/register/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/component/FormErrors.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/component/Header/Header.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/component/Header/HeaderUser.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/component/HomePage/CategorySection.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/component/Providers.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/component/StateDebugger.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/component/icon/icon.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/component/modal/LogoutConfirmModal.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/constant/category.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/constant/constant.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/constant/user.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/feature/profile/component/FormMe.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/feature/profile/model/type.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/feature/profile/page/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/feature/profile/profileApi.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/lib/axios.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/store/authStore.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/src/utils/helper.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopee_client/tsconfig.json" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\xampp\php\php.exe" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
+  <component name="ProjectId" id="3FrQ5qVfRyJGW0fskoI5mjpZnAl" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "D:/project/vanson/shopee_clone",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-php-predefined-ba97393d7c68-6f8e3395a2b4-com.jetbrains.php.sharedIndexes-PS-233.15619.9" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7d155386-269a-4524-9e65-dccbff4280b1" name="Changes" comment="" />
+      <created>1782830527322</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1782830527322</updated>
+      <workItem from="1782830528619" duration="12000" />
+    </task>
+    <servers />
+  </component>
+</project>

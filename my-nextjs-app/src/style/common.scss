@@ -1,0 +1,15 @@
+/* Style dùng chung toàn app */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-size: var(--fs-normal);
+    font-family: 'Roboto', sans-serif;
+    color: var(--text);
+    background: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+
+}
