@@ -1,4 +1,5 @@
-import "./login.scss"   // ← import CSS ở đây, không phải trong page.tsx
+import "./auth.scss"
+import "./login.scss"
 
 export default function LoginLayout({
                                       children,

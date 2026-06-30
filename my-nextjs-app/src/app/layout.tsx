@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.scss";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Next.js tự host font, tự sinh @font-face — không cần CSS thủ công
+const roboto = Roboto({
+  variable: "--font-roboto",   // dùng qua var(--font-roboto) trong SCSS
+  subsets: ["latin", "vietnamese"],
+  weight: ["300", "400", "500", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -23,10 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="vi" className={`${roboto.variable} h-full`}>
+      {/* roboto.variable gắn --font-roboto vào <html> */}
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

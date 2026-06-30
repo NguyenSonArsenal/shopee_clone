@@ -1,20 +1,22 @@
 :root {
     --be:       #FDFBF2;
     --red:      #b20707;
-    /*--red-dark: #c62828;*/
-    /*--red-soft: #ffebee;*/
-    /*--border:   #e0e0e0;*/
-    /*--text:     #212121;*/
+    --primary:      #b20707;
+    --red-dark: #9a0606;
+    --red-soft: #ffebee;
+    --border:   #e0e0e0;
+    --text:     #212121;
     --muted:    #757575;
-    /*--light:    #fafafa;*/
-    /*--white:    #ffffff;*/
-    /*--success:  #0f5132;*/
-    /*--danger:   #f8d7da;*/
+    --light:    #fafafa;
+    --white:    #ffffff;
+    --success:  #0f5132;
+    --danger:   #f8d7da;
 
-    --fs-xl:  20px;
-    --fs-lg:  18px;
-    --fs-md:  16px;
-    --fs-normal:  14px;
+    --fs-xl:     20px;
+    --fs-lg:     18px;
+    --fs-md:     16px;
+    --fs-sm:     14px;
+    --fs-normal: 14px;
 
     --radius: 10px;
     --shadow: 0 2px 12px rgba(0, 0, 0, .08);
