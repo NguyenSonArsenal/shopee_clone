@@ -24,3 +24,9 @@ a {
 .required-star {
   color: var(--primary);
 }
+
+.field-error {
+  font-size: 13px;
+  color: var(--red);
+  margin-top: 5px;
+}
