@@ -51,35 +51,41 @@ class AuthController extends Controller
      */
     public function postLogin(LoginRequest $request)
     {
-        $user = User::where('username', $request->username)
-            ->where('status', User::STATUS_ACTIVE)
-            ->first();
+        try {
+            sleep(3);
+            $user = User::where('email', $request->email)
+                ->where('status', User::STATUS_ACTIVE)
+                ->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->error(401, null, "Tài khoản hoặc mật khẩu không chính xác, hoặc đã bị khóa!");
-        }
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return $this->error("Tài khoản hoặc mật khẩu không chính xác, hoặc đã bị khóa!", 401);
+            }
 
-        // Sinh JWT Token chứa thông tin cơ bản
-        $tokenPayload = [
-            'id' => $user->id,
-            'username' => $user->username,
-        ];
-
-        $accessToken = $this->jwtService->generateToken($tokenPayload, getConstant('EXP_ACCESS_TOKEN'));
-        $refreshToken = $this->jwtService->generateToken(['id' => $user->id], getConstant('EXP_RF_TOKEN'));
-
-        // Lưu Refresh Token vào Database để quản lý trạng thái (Stateful)
-        $user->rf_token = $refreshToken;
-        $user->save();
-
-        $data = [
-            'access_token' => $accessToken,
-            'refresh_token' => $refreshToken,
-            'user' => [
+            // Sinh JWT Token chứa thông tin cơ bản
+            $tokenPayload = [
+                'id' => $user->id,
                 'username' => $user->username,
-            ]
-        ];
-        return $this->success($data, "Đăng nhập thành công!");
+            ];
+
+            $accessToken = $this->jwtService->generateToken($tokenPayload, getConstant('EXP_ACCESS_TOKEN'));
+            $refreshToken = $this->jwtService->generateToken(['id' => $user->id], getConstant('EXP_RF_TOKEN'));
+
+            // Lưu Refresh Token vào Database để quản lý trạng thái (Stateful)
+            $user->rf_token = $refreshToken;
+            $user->save();
+
+            $data = [
+                'access_token' => $accessToken,
+                'refresh_token' => $refreshToken,
+                'user' => [
+                    'username' => $user->username,
+                ]
+            ];
+            return $this->success($data, "Đăng nhập thành công!");
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->systemError();
+        }
     }
 
     /**
@@ -91,13 +97,13 @@ class AuthController extends Controller
         $rfToken = $request->input('refresh_token');
 
         if (!$rfToken) {
-            return $this->error(401, null, "Refresh token không được để trống.");
+            return $this->error("Refresh token không được để trống.", 401);
         }
 
         // Decode và kiểm tra refresh token
         $payload = $this->jwtService->decodeToken($rfToken);
         if (!$payload || empty($payload['id'])) {
-            return $this->error(401, null, "Refresh token không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.");
+            return $this->error("Refresh token không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.", 401);
         }
 
         // Kiểm tra refresh token có khớp với DB không (tránh dùng token cũ đã logout)
@@ -107,7 +113,7 @@ class AuthController extends Controller
             ->first();
 
         if (!$user) {
-            return $this->error(401, null, "Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.");
+            return $this->error("Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.", 401);
         }
 
         // Cấp Access Token mới

@@ -24,7 +24,7 @@ class LoginRequest extends BaseApiFormRequest
     public function rules()
     {
         $rules = [
-            'username' => 'bail|required',
+            'email' => 'bail|required',
             'password' => 'bail|required',
         ];
         return $rules;

@@ -4,12 +4,19 @@ import FieldLabel from "@component/FieldLabel";
 import {IconEmail, IconEye, IconEyeOff, IconLock, IconLogin} from "@icon";
 import Link from "next/link";
 import {useState} from "react";
+import { useRouter } from 'next/navigation';
+import { login } from "@module/auth/api/auth"
+import DebugPanel from "@component/DebugPanel"
+import Notification from "@component/Notification"
 
 export default function LoginForm({}) {
   const [showPass, setShowPass] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [errors, setErrors] = useState({ email: "", password: "" })
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [serverError, setServerError] = useState("")
 
   const validate = () => {
     const newErrors = { email: "", password: "" }
@@ -32,21 +39,33 @@ export default function LoginForm({}) {
     return !newErrors.email && !newErrors.password
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     console.log('// start validate')
-
     if (!validate()) return   // có lỗi → dừng lại
-    console.log({ email, password })  // không lỗi → tiếp tục
-
     console.log(email, password, '// input')
+
+    setServerError("")
+    setIsSubmitting(true)
+
+    try {
+      const data = await login({ email: email, password })
+      localStorage.setItem("access_token", data.access_token)
+      router.push("/")
+    } catch (err) {
+      setServerError(err instanceof Error ? err.message : "Đăng nhập thất bại")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
     <div className="right">
       <div className="login-card">
         <h1 className="login-title text-center">Đăng nhập</h1>
+
+        <Notification type="error" message={serverError} />
 
         {/* Form */}
         <form className="login-form" noValidate onSubmit={handleSubmit}>
@@ -106,9 +125,9 @@ export default function LoginForm({}) {
           </div>
 
           {/* Nút đăng nhập */}
-          <button type="submit" className="btn-login btn-primary">
+          <button type="submit" className="btn-login btn-primary" disabled={isSubmitting}>
             <IconLogin/>
-            Đăng nhập
+            {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
         </form>
 
@@ -119,6 +138,8 @@ export default function LoginForm({}) {
         </p>
         <p className="footer-text">banghang.net © 2026 &nbsp;·&nbsp; Tân Long Land</p>
       </div>
+
+      <DebugPanel data={{ email, password, errors, isSubmitting, serverError }} />
     </div>
     )
 }

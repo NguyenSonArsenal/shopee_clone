@@ -4,92 +4,49 @@ namespace App\Service;
 
 trait ApiResponseService
 {
-    protected $data = null;
-    protected $message;
-    protected $code;
-    protected $errors = [];
-
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    public function setData($data)
-    {
-        $this->data = $data;
-    }
-
-    public function getMessage()
-    {
-        return $this->message;
-    }
-
-    public function setMessage($message)
-    {
-        $this->message = $message;
-    }
-
-    public function getErrors()
-    {
-        return $this->errors;
-    }
-
-    public function setErrors($errors)
-    {
-        $this->errors = $errors;
-    }
-
-    public function getCode()
-    {
-        return $this->code;
-    }
-
-    public function setCode($code)
-    {
-        $this->code = $code;
-    }
-
-    public function success($data = null, $message = '', $code = 200)
+    public function success($data = null, string $message = 'Success', int $code = 200)
     {
         return response()->json([
             'success' => true,
-            'code' => $code,
-            'message' => "Success",
-            'data' => $data ?? $this->getData(),
-        ]);
+            'code'    => $code,
+            'message' => $message,
+            'data'    => $data,
+        ], $code);
     }
 
-    public function error($code = 500, $data = null, $message = '')
+    public function error(string $message = 'Something went wrong', int $code = 500, $errors = null)
     {
-        return response()->json([
+        $payload = [
             'success' => false,
-            'code' => $code,
-            'message' => $message ? $message : 'Có loi say ra',
-            'data' => $data,
-        ]);
+            'code'    => $code,
+            'message' => $message,
+        ];
+
+        if ($errors !== null) {
+            $payload['errors'] = $errors;
+        }
+
+        return response()->json($payload, $code);
     }
 
-    public function systemError()
+    public function systemError(string $message = 'System error')
     {
-        return response()->json([
-            'success' => false,
-            'code' => 500,
-            'message' => "System error"
-        ]);
+        return $this->error($message, 500);
     }
 
-    protected function successWithPaging($total, $data, $page, $perPage)
+    protected function successWithPaging($total, $data, $page, $perPage, string $message = 'Success', int $code = 200)
     {
         return response()->json([
-            'code' => 200,
             'success' => true,
+            'code'    => $code,
+            'message' => $message,
             'pagination' => [
                 'current_page' => (int) $page,
-                'last_page' => (int) ceil($total/$perPage),
+                'last_page' => (int) ceil($total / $perPage),
                 'per_page' => (int) $perPage,
                 'total' => (int) $total,
             ],
-            'data' => $data
-        ]);
+            'data' => $data,
+        ], $code);
     }
 }

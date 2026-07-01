@@ -30,3 +30,20 @@ a {
   color: var(--red);
   margin-top: 5px;
 }
+
+.alert {
+  font-size: var(--fs-sm);
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+}
+
+.alert-danger {
+  background: var(--danger);
+  color: var(--danger-text);
+}
+
+.alert-success {
+  background: var(--success-bg);
+  color: var(--success);
+}
