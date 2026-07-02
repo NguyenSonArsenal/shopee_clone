@@ -1,9 +1,5 @@
 /* Style dùng chung toàn app */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* Reset margin/padding/box-sizing đã có sẵn trong Tailwind Preflight (@layer base), không cần tự viết lại */
 
 body {
   font-size: var(--fs-normal);

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.scss";
 
-// Next.js tự host font, tự sinh @font-face — không cần CSS thủ công
 const roboto = Roboto({
   variable: "--font-roboto",   // dùng qua var(--font-roboto) trong SCSS
   subsets: ["latin", "vietnamese"],
@@ -22,7 +21,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className={`${roboto.variable} h-full`}>
-      {/* roboto.variable gắn --font-roboto vào <html> */}
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

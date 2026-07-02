@@ -25,7 +25,7 @@ export default function LoginForm({}) {
 
     if (!email) {
       newErrors.email = "Email không được để trống"
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    } else if (!AUTH_CONFIG.EMAIL_REGEX.test(email)) {
       newErrors.email = "Email không đúng định dạng"
     }
 
@@ -43,10 +43,7 @@ export default function LoginForm({}) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
-    console.log('// start validate')
-    if (!validate()) return   // có lỗi → dừng lại
-    console.log(email, password, '// input')
+    if (!validate()) return
 
     setServerError("")
     setIsSubmitting(true)
@@ -54,7 +51,7 @@ export default function LoginForm({}) {
     try {
       const data = await login({ email: email, password })
       localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.access_token)
-      localStorage.setItem(STORAGE_KEYS.USER_INFO, data.user.username)
+      localStorage.setItem(STORAGE_KEYS.USER_INFO, JSON.stringify(data.user))
       router.push(ROUTES.HOME)
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Đăng nhập thất bại")

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\RegisterRequest;
+use App\Http\Resources\Api\Auth\LoginResource;
 use App\Models\User;
 use App\Service\Auth\JWTService;
 use Illuminate\Http\Request;
@@ -52,7 +53,7 @@ class AuthController extends Controller
     public function postLogin(LoginRequest $request)
     {
         try {
-            sleep(3); // @todo
+            sleep(2); // @todo
             $user = User::where('email', $request->email)
                 ->where('status', User::STATUS_ACTIVE)
                 ->first();
@@ -74,14 +75,13 @@ class AuthController extends Controller
             $user->rf_token = $refreshToken;
             $user->save();
 
-            $data = [
-                'access_token' => $accessToken,
+            $loginResponse = new LoginResource([
+                'user'          => $user,
+                'access_token'  => $accessToken,
                 'refresh_token' => $refreshToken,
-                'user' => [
-                    'username' => $user->username,
-                ]
-            ];
-            return $this->success($data, "Đăng nhập thành công!");
+            ]);
+
+            return $this->success($loginResponse, "Đăng nhập thành công!");
         } catch (\Exception $e) {
             Log::error($e);
             return $this->systemError();

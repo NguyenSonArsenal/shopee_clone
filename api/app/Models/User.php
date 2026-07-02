@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Enum\UserGender;
+use App\Models\Enum\UserStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -30,5 +32,11 @@ class User extends Authenticatable
         'gender',
         'avatar',
         'birthday',
+    ];
+
+    // Khai báo cast kiểu dữ liệu sang Enum
+    protected $casts = [
+        'status' => UserStatus::class,
+        'gender' => UserGender::class,
     ];
 }
