@@ -9,6 +9,8 @@ import { login } from "@module/auth/api/auth"
 import DebugPanel from "@component/DebugPanel"
 import Notification from "@component/Notification"
 
+import {AUTH_CONFIG, ROUTES, STORAGE_KEYS} from "@/config/constant";
+
 export default function LoginForm({}) {
   const [showPass, setShowPass] = useState(false)
   const [email, setEmail] = useState("")
@@ -29,8 +31,8 @@ export default function LoginForm({}) {
 
     if (!password) {
       newErrors.password = "Mật khẩu không được để trống"
-    } else if (password.length < 6) {
-      newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự"
+    } else if (password.length < AUTH_CONFIG.MIN_PASSWORD_LENGTH) {
+      newErrors.password = "Mật khẩu phải có ít nhất " +  AUTH_CONFIG.MIN_PASSWORD_LENGTH  + " ký tự"
     }
 
     setErrors(newErrors)
@@ -51,8 +53,9 @@ export default function LoginForm({}) {
 
     try {
       const data = await login({ email: email, password })
-      localStorage.setItem("access_token", data.access_token)
-      router.push("/")
+      localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.access_token)
+      localStorage.setItem(STORAGE_KEYS.USER_INFO, data.user.username)
+      router.push(ROUTES.HOME)
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Đăng nhập thất bại")
     } finally {

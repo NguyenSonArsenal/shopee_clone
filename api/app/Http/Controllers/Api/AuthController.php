@@ -52,7 +52,7 @@ class AuthController extends Controller
     public function postLogin(LoginRequest $request)
     {
         try {
-            sleep(3);
+            sleep(3); // @todo
             $user = User::where('email', $request->email)
                 ->where('status', User::STATUS_ACTIVE)
                 ->first();
