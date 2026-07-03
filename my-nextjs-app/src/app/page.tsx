@@ -34,7 +34,8 @@ export default function Home() {
   const handleLogout = () => {
     localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
     localStorage.removeItem(STORAGE_KEYS.USER_INFO);
-    router.push(ROUTES.LOGIN);
+    localStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, "Bạn đã đăng xuất")
+    router.replace(ROUTES.LOGIN);
     setUsername("");
   };
 

@@ -123,9 +123,9 @@
 
 .login-title {
   font-size: 28px;
-  font-weight: 700;
+  font-weight: 600;
   color: #212121;
-  margin-bottom: 6px;
+  margin-bottom: 12px;
   letter-spacing: -.4px;
 }
 
@@ -279,19 +279,6 @@
   }
 }
 
-/* Nút đăng nhập */
-.btn-login {
-  &:hover {
-    background: #9a0606;
-    box-shadow: 0 6px 18px rgba(178, 7, 7, .35);
-    transform: translateY(-1px);
-  }
-
-  &:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(178, 7, 7, .25);
-  }
-}
 
 /* Divider */
 .divider {

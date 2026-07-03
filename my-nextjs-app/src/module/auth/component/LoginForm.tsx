@@ -4,10 +4,11 @@ import FieldLabel from "@component/FieldLabel";
 import {IconEmail, IconEye, IconEyeOff, IconLock, IconLogin} from "@icon";
 import Link from "next/link";
 import {useState} from "react";
-import { useRouter } from 'next/navigation';
+import {useRouter} from 'next/navigation';
 import { login } from "@module/auth/api/auth"
 import DebugPanel from "@component/DebugPanel"
 import Notification from "@component/Notification"
+import {Spin} from 'antd';
 
 import {AUTH_CONFIG, ROUTES, STORAGE_KEYS} from "@/config/constant";
 
@@ -45,14 +46,13 @@ export default function LoginForm({}) {
     e.preventDefault()
     if (!validate()) return
 
-    setServerError("")
     setIsSubmitting(true)
 
     try {
       const data = await login({ email: email, password })
       localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.access_token)
       localStorage.setItem(STORAGE_KEYS.USER_INFO, JSON.stringify(data.user))
-      router.push(ROUTES.HOME)
+      router.replace(ROUTES.HOME)
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Đăng nhập thất bại")
     } finally {
@@ -125,8 +125,8 @@ export default function LoginForm({}) {
           </div>
 
           {/* Nút đăng nhập */}
-          <button type="submit" className="btn-login btn-primary" disabled={isSubmitting}>
-            <IconLogin/>
+          <button type="submit" className="btn btn-primary btn-submit" disabled={isSubmitting}>
+            {isSubmitting ? <Spin size="small" /> : <IconLogin />}
             {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
         </form>

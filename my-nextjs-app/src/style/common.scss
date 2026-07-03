@@ -43,3 +43,31 @@ a {
   background: var(--success-bg);
   color: var(--success);
 }
+
+.btn {
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Roboto', sans-serif;
+  font-size: var(--fs-normal);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+  position: relative;
+}
+
+.btn-primary {
+  @extend .btn;
+  background: var(--red);
+  color: #fff;
+}
+.ant-spin-dot-item {
+  background-color: #ffffff !important;
+}
+
+.btn-submit {
+  &:disabled {
+    opacity: 0.65;
+  }
+}
