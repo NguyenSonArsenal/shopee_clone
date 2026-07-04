@@ -22,7 +22,7 @@ export default function LoginPage() {
       toast.success(flashMessage);
       localStorage.removeItem(STORAGE_KEYS.FLASH_MESSAGE);
     }
-  }, [router]);
+  }, [router, toast]);
 
   return (
     <div className="login-page">

@@ -55,7 +55,6 @@ export default function LoginForm({}) {
       router.replace(ROUTES.HOME)
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Đăng nhập thất bại")
-    } finally {
       setIsSubmitting(false)
     }
   }
