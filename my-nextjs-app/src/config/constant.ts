@@ -13,4 +13,11 @@ export const ROUTES = {
   HOME: "/",
   LOGIN: "/login",
   REGISTER: "/register",
+  FORGOT_PASSWORD: "/forgot-password",
 } as const;
+
+export const USER_ROLES = [
+  { value: "f2", label: "Công ty (F2)" },
+  { value: "ctv", label: "CTV" },
+  { value: "kh", label: "Khách hàng" },
+] as const;
