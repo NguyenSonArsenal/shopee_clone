@@ -384,3 +384,22 @@
     padding: 24px 0;
   }
 }
+
+/* ── STEP BAR ────────────────────────────────────────────────────── */
+.step-bar { display: flex; gap: 6px; margin-bottom: 20px; }
+.step-bar span { flex: 1; height: 3px; border-radius: 2px; background: var(--border); transition: background .3s; }
+.step-bar span.on { background: var(--red); }
+
+/* ── OTP CHUNG ───────────────────────────────────────────────────── */
+.otp-hint { font-size: var(--fs-sm); color: var(--muted); margin-bottom: 18px; line-height: 1.7; }
+.otp-hint strong { color: var(--text); }
+.countdown { color: var(--red); font-weight: 500; font-variant-numeric: tabular-nums; }
+.resend { color: var(--red); cursor: pointer; font-weight: 500; }
+.resend.disabled { color: var(--muted); cursor: default; pointer-events: none; }
+
+.otp-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-bottom: 6px;
+}

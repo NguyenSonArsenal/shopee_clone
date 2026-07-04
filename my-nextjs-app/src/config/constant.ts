@@ -14,6 +14,11 @@ export const ROUTES = {
   LOGIN: "/login",
   REGISTER: "/register",
   FORGOT_PASSWORD: "/forgot-password",
+  PROFILE: "/tai-khoan/ho-so",
+  CHANGE_PASSWORD: "/tai-khoan/doi-mat-khau",
+  REFERRALS: "/tai-khoan/thanh-vien-gioi-thieu",
+  FAVORITES: "/tai-khoan/bds-quan-tam",
+  VERIFY_OTP: "/register/verify",
 } as const;
 
 export const USER_ROLES = [
