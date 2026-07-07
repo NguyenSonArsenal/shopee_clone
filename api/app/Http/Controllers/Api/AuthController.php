@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Auth\ForgotPasswordSendOtpRequest;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Http\Resources\Api\Auth\LoginResource;
@@ -11,17 +12,32 @@ use App\Service\Auth\JWTService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use App\Service\Auth\AuthService;
+use App\Service\Otp\OtpService;
+use App\Service\Otp\OtpStrategyFactory;
+use App\Http\Requests\Api\Auth\SendOtpRequest;
+use App\Http\Requests\Api\Auth\VerifyOtpRequest;
+use App\Http\Requests\Api\Auth\ResetPasswordRequest;
 
 class AuthController extends Controller
 {
     protected $jwtService;
+    protected $authService;
+    protected $otpService;
+    protected $otpStrategyFactory;
 
-    public function __construct(JWTService $jwtService)
-    {
+    public function __construct(
+        JWTService $jwtService,
+        AuthService $authService,
+        OtpService $otpService,
+        OtpStrategyFactory $otpStrategyFactory
+    ) {
         $this->jwtService = $jwtService;
+        $this->authService = $authService;
+        $this->otpService = $otpService;
+        $this->otpStrategyFactory = $otpStrategyFactory;
     }
 
     /**
@@ -132,41 +148,39 @@ class AuthController extends Controller
     /**
      * Gửi mã OTP Quên mật khẩu
      */
-    public function forgotPasswordSendOtp(Request $request)
+    public function forgotPasswordSendOtp(ForgotPasswordSendOtpRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'identifier' => 'required|email'
-        ], [
-            'identifier.required' => 'Email không được để trống.',
-            'identifier.email' => 'Email không đúng định dạng.'
-        ]);
+        try {
+//            Cache::flush();
+            $user = $this->authService->findUserByIdentifier(trim($request->email));
 
-        if ($validator->fails()) {
-            return $this->error($validator->errors()->first(), 422);
+            if (empty($user)) {
+                return $this->error('Tài khoản không tồn tại.', 404);
+            }
+
+            if ($user->status !== \App\Models\Enum\UserStatus::ACTIVE) {
+                return $this->error('Tài khoản chưa được kích hoạt. Vui lòng liên hệ quản trị viên.', 403);
+            }
+
+            $strategy = $this->otpStrategyFactory->make($user->email);
+            $result = $this->otpService->send($strategy, $user->email, $user->id, 'forgot');
+
+            if ($result['success']) {
+                // Lưu thời gian gửi để làm countdown ở phía client
+                Cache::put('forgot_password_otp_sent_at:' . $user->id, now()->timestamp, 120);
+            }
+
+            return response()->json(
+                [
+                    'success' => $result['success'],
+                    'message' => $result['message'] ?? null
+                ],
+                $result['success'] ? 200 : ($result['code'] ?? 500)
+            );
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->systemError();
         }
-
-        $email = trim($request->identifier);
-        $user = User::where('email', $email)->first();
-
-        if (!$user) {
-            return $this->error('Tài khoản không tồn tại.', 404);
-        }
-
-        if ($user->status !== User::STATUS_ACTIVE) {
-            return $this->error('Tài khoản chưa được kích hoạt. Vui lòng liên hệ quản trị viên.', 403);
-        }
-
-        // Tạo mã OTP 6 số ngẫu nhiên
-        $otp = (string) rand(100000, 999999);
-        
-        // Ghi log để tiện test
-        Log::info("OTP Forgot Password for {$email}: {$otp}");
-
-        // Lưu vào Cache 2 phút (120 giây)
-        Cache::put('otp_forgot_' . $email, $otp, 120);
-        Cache::put('otp_forgot_sent_at_' . $email, now()->timestamp, 120);
-
-        return $this->success(null, 'Gửi mã OTP thành công. Vui lòng kiểm tra email.');
     }
 
     /**
@@ -179,111 +193,69 @@ class AuthController extends Controller
             return $this->error('Thông tin email không hợp lệ.', 422);
         }
 
-        $sentAt = Cache::get('otp_forgot_sent_at_' . $email);
+        $user = $this->authService->findUserByIdentifier($email);
+        if (!$user) {
+            return $this->error('Tài khoản không tồn tại.', 404);
+        }
+
+        $sentAt = Cache::get('forgot_password_otp_sent_at:' . $user->id);
         if (!$sentAt) {
             return $this->error('Mã OTP đã hết hạn hoặc không tồn tại. Vui lòng gửi lại.', 404);
         }
 
+        $ttlMinutes = config('config.otp.email.ttl_minutes', 2);
         $elapsed = now()->timestamp - $sentAt;
-        $ttlSeconds = 120 - $elapsed;
+        $ttlSeconds = ($ttlMinutes * 60) - $elapsed;
 
         if ($ttlSeconds <= 0) {
-            Cache::forget('otp_forgot_' . $email);
-            Cache::forget('otp_forgot_sent_at_' . $email);
+            Cache::forget('forgot_password_otp_sent_at:' . $user->id);
+            Cache::forget('otp:' . $user->id);
             return $this->error('Mã OTP đã hết hạn. Vui lòng gửi lại.', 404);
         }
 
-        $maskedEmail = $this->maskIdentifier($email);
+        $maskedIdentifier = $this->maskIdentifier($user->email);
 
         return $this->success([
-            'email' => $email,
-            'masked_email' => $maskedEmail,
-            'ttl_seconds' => max(0, $ttlSeconds),
+            'identifier' => $user->email,
+            'maskedIdentifier' => $maskedIdentifier,
+            'ttlSeconds' => max(0, $ttlSeconds),
         ], 'Lấy thông tin OTP thành công.');
     }
 
     /**
      * Xác thực mã OTP
      */
-    public function forgotPasswordVerifyOtp(Request $request)
+    public function forgotPasswordVerifyOtp(ForgotPasswordSendOtpRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'identifier' => 'required|email',
-            'otp' => 'required|string|size:6'
-        ], [
-            'identifier.required' => 'Email không được để trống.',
-            'identifier.email' => 'Email không đúng định dạng.',
-            'otp.required' => 'Mã OTP không được để trống.',
-            'otp.size' => 'Mã OTP phải gồm 6 chữ số.'
-        ]);
-
-        if ($validator->fails()) {
-            return $this->error($validator->errors()->first(), 422);
+        dd(123);
+        $identifier = $request->email;
+        $user = $this->authService->findUserByIdentifier(trim($identifier));
+        if (!$user) {
+            return $this->error('Tài khoản không tồn tại.', 404);
         }
 
-        $email = trim($request->identifier);
-        $otp = trim($request->otp);
+        $result = $this->authService->verifyOtp($user, $request->otp);
 
-        $cachedOtp = Cache::get('otp_forgot_' . $email);
-
-        if (!$cachedOtp || $cachedOtp !== $otp) {
-            return $this->error('Mã OTP không chính xác hoặc đã hết hạn.', 422);
+        if ($result['success']) {
+            Cache::forget('forgot_password_otp_sent_at:' . $user->id);
         }
 
-        // Tạo reset token ngẫu nhiên
-        $resetToken = Str::random(40);
-
-        // Lưu reset token trong 10 phút
-        Cache::put('reset_token_' . $resetToken, $email, 600);
-
-        // Xóa OTP khỏi cache
-        Cache::forget('otp_forgot_' . $email);
-        Cache::forget('otp_forgot_sent_at_' . $email);
-
-        return $this->success([
-            'reset_token' => $resetToken
-        ], 'Xác thực OTP thành công.');
+        return response()->json(
+            array_diff_key($result, ['code' => '']),
+            $result['success'] ? 200 : ($result['code'] ?? 422)
+        );
     }
 
     /**
      * Đặt lại mật khẩu mới
      */
-    public function forgotPasswordReset(Request $request)
+    public function forgotPasswordReset(ResetPasswordRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'reset_token' => 'required|string',
-            'password' => 'required|string|min:6'
-        ], [
-            'reset_token.required' => 'Token không hợp lệ.',
-            'password.required' => 'Mật khẩu mới không được để trống.',
-            'password.min' => 'Mật khẩu mới phải có ít nhất 6 ký tự.'
-        ]);
-
-        if ($validator->fails()) {
-            return $this->error($validator->errors()->first(), 422);
-        }
-
-        $resetToken = $request->reset_token;
-        $password = $request->password;
-
-        $email = Cache::get('reset_token_' . $resetToken);
-
-        if (!$email) {
-            return $this->error('Liên kết đặt lại mật khẩu đã hết hạn hoặc không hợp lệ.', 422);
-        }
-
-        $user = User::where('email', $email)->first();
-        if (!$user) {
-            return $this->error('Tài khoản không tồn tại.', 404);
-        }
-
-        $user->password = bcrypt($password);
-        $user->save();
-
-        // Xóa reset token khỏi cache
-        Cache::forget('reset_token_' . $resetToken);
-
-        return $this->success(null, 'Đặt lại mật khẩu thành công. Vui lòng đăng nhập lại.');
+        $result = $this->authService->resetPassword($request->reset_token, $request->password);
+        return response()->json(
+            array_diff_key($result, ['code' => '']),
+            $result['success'] ? 200 : ($result['code'] ?? 422)
+        );
     }
 
     /**

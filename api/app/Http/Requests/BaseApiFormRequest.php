@@ -37,7 +37,7 @@ class BaseApiFormRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success' => false,
             'code' => 422,
-            'message' => "Error validate",
+            'message' => "Lỗi validate",
             'errors' => $errors,
         ], Response::HTTP_UNPROCESSABLE_ENTITY));
     }
