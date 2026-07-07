@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -125,5 +127,177 @@ class AuthController extends Controller
         return $this->success([
             'access_token' => $newAccessToken,
         ], "Làm mới token thành công!");
+    }
+
+    /**
+     * Gửi mã OTP Quên mật khẩu
+     */
+    public function forgotPasswordSendOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'identifier' => 'required|email'
+        ], [
+            'identifier.required' => 'Email không được để trống.',
+            'identifier.email' => 'Email không đúng định dạng.'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error($validator->errors()->first(), 422);
+        }
+
+        $email = trim($request->identifier);
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return $this->error('Tài khoản không tồn tại.', 404);
+        }
+
+        if ($user->status !== User::STATUS_ACTIVE) {
+            return $this->error('Tài khoản chưa được kích hoạt. Vui lòng liên hệ quản trị viên.', 403);
+        }
+
+        // Tạo mã OTP 6 số ngẫu nhiên
+        $otp = (string) rand(100000, 999999);
+        
+        // Ghi log để tiện test
+        Log::info("OTP Forgot Password for {$email}: {$otp}");
+
+        // Lưu vào Cache 2 phút (120 giây)
+        Cache::put('otp_forgot_' . $email, $otp, 120);
+        Cache::put('otp_forgot_sent_at_' . $email, now()->timestamp, 120);
+
+        return $this->success(null, 'Gửi mã OTP thành công. Vui lòng kiểm tra email.');
+    }
+
+    /**
+     * Lấy thông tin xác thực OTP (thời gian còn lại, email bị ẩn)
+     */
+    public function forgotPasswordShowVerify(Request $request)
+    {
+        $email = $request->query('email');
+        if (empty($email)) {
+            return $this->error('Thông tin email không hợp lệ.', 422);
+        }
+
+        $sentAt = Cache::get('otp_forgot_sent_at_' . $email);
+        if (!$sentAt) {
+            return $this->error('Mã OTP đã hết hạn hoặc không tồn tại. Vui lòng gửi lại.', 404);
+        }
+
+        $elapsed = now()->timestamp - $sentAt;
+        $ttlSeconds = 120 - $elapsed;
+
+        if ($ttlSeconds <= 0) {
+            Cache::forget('otp_forgot_' . $email);
+            Cache::forget('otp_forgot_sent_at_' . $email);
+            return $this->error('Mã OTP đã hết hạn. Vui lòng gửi lại.', 404);
+        }
+
+        $maskedEmail = $this->maskIdentifier($email);
+
+        return $this->success([
+            'email' => $email,
+            'masked_email' => $maskedEmail,
+            'ttl_seconds' => max(0, $ttlSeconds),
+        ], 'Lấy thông tin OTP thành công.');
+    }
+
+    /**
+     * Xác thực mã OTP
+     */
+    public function forgotPasswordVerifyOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'identifier' => 'required|email',
+            'otp' => 'required|string|size:6'
+        ], [
+            'identifier.required' => 'Email không được để trống.',
+            'identifier.email' => 'Email không đúng định dạng.',
+            'otp.required' => 'Mã OTP không được để trống.',
+            'otp.size' => 'Mã OTP phải gồm 6 chữ số.'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error($validator->errors()->first(), 422);
+        }
+
+        $email = trim($request->identifier);
+        $otp = trim($request->otp);
+
+        $cachedOtp = Cache::get('otp_forgot_' . $email);
+
+        if (!$cachedOtp || $cachedOtp !== $otp) {
+            return $this->error('Mã OTP không chính xác hoặc đã hết hạn.', 422);
+        }
+
+        // Tạo reset token ngẫu nhiên
+        $resetToken = Str::random(40);
+
+        // Lưu reset token trong 10 phút
+        Cache::put('reset_token_' . $resetToken, $email, 600);
+
+        // Xóa OTP khỏi cache
+        Cache::forget('otp_forgot_' . $email);
+        Cache::forget('otp_forgot_sent_at_' . $email);
+
+        return $this->success([
+            'reset_token' => $resetToken
+        ], 'Xác thực OTP thành công.');
+    }
+
+    /**
+     * Đặt lại mật khẩu mới
+     */
+    public function forgotPasswordReset(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'reset_token' => 'required|string',
+            'password' => 'required|string|min:6'
+        ], [
+            'reset_token.required' => 'Token không hợp lệ.',
+            'password.required' => 'Mật khẩu mới không được để trống.',
+            'password.min' => 'Mật khẩu mới phải có ít nhất 6 ký tự.'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error($validator->errors()->first(), 422);
+        }
+
+        $resetToken = $request->reset_token;
+        $password = $request->password;
+
+        $email = Cache::get('reset_token_' . $resetToken);
+
+        if (!$email) {
+            return $this->error('Liên kết đặt lại mật khẩu đã hết hạn hoặc không hợp lệ.', 422);
+        }
+
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            return $this->error('Tài khoản không tồn tại.', 404);
+        }
+
+        $user->password = bcrypt($password);
+        $user->save();
+
+        // Xóa reset token khỏi cache
+        Cache::forget('reset_token_' . $resetToken);
+
+        return $this->success(null, 'Đặt lại mật khẩu thành công. Vui lòng đăng nhập lại.');
+    }
+
+    /**
+     * Helper ẩn bớt ký tự email/SĐT
+     */
+    private function maskIdentifier(string $identifier): string
+    {
+        if (str_contains($identifier, '@')) {
+            $parts = explode('@', $identifier);
+            return substr($parts[0], 0, 2) . '***@' . $parts[1];
+        }
+        if (strlen($identifier) <= 5) {
+            return $identifier;
+        }
+        return substr($identifier, 0, 3) . '***' . substr($identifier, -2);
     }
 }

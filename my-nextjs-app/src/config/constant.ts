@@ -14,11 +14,13 @@ export const ROUTES = {
   LOGIN: "/login",
   REGISTER: "/register",
   FORGOT_PASSWORD: "/forgot-password",
+  FORGOT_PASSWORD_VERIFY: "/forgot-password/verify",
+  VERIFY_OTP: "/register/verify",
   PROFILE: "/tai-khoan/ho-so",
   CHANGE_PASSWORD: "/tai-khoan/doi-mat-khau",
   REFERRALS: "/tai-khoan/thanh-vien-gioi-thieu",
   FAVORITES: "/tai-khoan/bds-quan-tam",
-  VERIFY_OTP: "/register/verify",
+  RESET_PASSWORD: "/forgot-password/reset",
 } as const;
 
 export const USER_ROLES = [
@@ -26,3 +28,4 @@ export const USER_ROLES = [
   { value: "ctv", label: "CTV" },
   { value: "kh", label: "Khách hàng" },
 ] as const;
+

@@ -2,7 +2,7 @@
 /* Reset margin/padding/box-sizing đã có sẵn trong Tailwind Preflight (@layer base), không cần tự viết lại */
 
 body {
-  font-size: var(--fs-normal);
+  font-size: var(--fs);
   //font-family: var(--font-roboto), 'Roboto', sans-serif;
   font-family: 'Roboto', sans-serif;
   color: var(--text);
@@ -28,7 +28,7 @@ a {
 }
 
 .alert {
-  font-size: var(--fs-sm);
+  font-size: var(--fs);
   padding: 10px 14px;
   border-radius: var(--radius);
   margin-bottom: 16px;
@@ -50,7 +50,7 @@ a {
   border: none;
   border-radius: var(--radius);
   font-family: 'Roboto', sans-serif;
-  font-size: var(--fs-normal);
+  font-size: var(--fs);
   font-weight: 500;
   cursor: pointer;
   transition: background .15s, transform .1s;
