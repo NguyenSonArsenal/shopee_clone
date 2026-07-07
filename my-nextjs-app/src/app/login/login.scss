@@ -118,7 +118,7 @@
   border: 1px solid var(--border);
   width: 100%;
   max-width: 480px;
-  padding: 36px 40px 32px;
+  padding: 24px;
 }
 
 .login-title {
@@ -369,7 +369,7 @@
 
 /* ── RESPONSIVE ─────────────────────────────────────────────────── */
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .left {
     display: none;
   }
@@ -381,7 +381,7 @@
 
   .login-card {
     box-shadow: none;
-    padding: 24px 0;
+    padding: 24px 16px;
   }
 }
 

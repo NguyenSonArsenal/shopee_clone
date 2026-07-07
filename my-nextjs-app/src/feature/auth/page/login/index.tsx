@@ -5,10 +5,10 @@ import {IconEmail, IconEye, IconEyeOff, IconLock, IconLogin} from "@icon";
 import Link from "next/link";
 import {useState} from "react";
 import {useRouter} from 'next/navigation';
-import { login } from "@module/auth/api/auth"
 import DebugPanel from "@component/DebugPanel"
 import Notification from "@component/Notification"
 import {Spin} from 'antd';
+import authApi from "@feature/auth/authApi";
 
 import {AUTH_CONFIG, ROUTES, STORAGE_KEYS} from "@/config/constant";
 
@@ -22,6 +22,7 @@ export default function LoginForm({}) {
   const [serverError, setServerError] = useState("")
 
   const validate = () => {
+    return true
     const newErrors = { email: "", password: "" }
 
     if (!email) {
@@ -49,12 +50,21 @@ export default function LoginForm({}) {
     setIsSubmitting(true)
 
     try {
-      const data = await login({ email: email, password })
+      const data = await authApi.login({email, password});
       localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.access_token)
       localStorage.setItem(STORAGE_KEYS.USER_INFO, JSON.stringify(data.user))
       router.replace(ROUTES.HOME)
     } catch (err) {
-      setServerError(err instanceof Error ? err.message : "Đăng nhập thất bại")
+      if (err.response?.status === 422) {
+        const serverErrors = err.response.data.errors;
+        setErrors({
+          email: serverErrors.email ? serverErrors.email[0] : "",
+          password: serverErrors.password ? serverErrors.password[0] : "",
+        });
+      } else {
+        const errMsg = err.response?.data?.message || err.message || "Đăng nhập thất bại";
+        setServerError(errMsg);
+      }
       setIsSubmitting(false)
     }
   }
@@ -142,5 +152,5 @@ export default function LoginForm({}) {
 
       <DebugPanel data={{ email, password, errors, isSubmitting, serverError }} />
     </div>
-    )
+  )
 }

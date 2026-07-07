@@ -1,8 +1,8 @@
 "use client"
 
-import AuthLeftPanel from "@module/auth/component/AuthLeftPanel";
-import LoginForm from "@module/auth/component/LoginForm";
-import {useRouter, useSearchParams} from "next/navigation";
+import AuthLeftPanel from "@/feature/auth/component/AuthLeftPanel";
+import LoginForm from "@feature/auth/page/login";
+import {useRouter} from "next/navigation";
 import {useEffect} from "react";
 import {ROUTES, STORAGE_KEYS} from "@/config/constant";
 import {message} from 'antd';

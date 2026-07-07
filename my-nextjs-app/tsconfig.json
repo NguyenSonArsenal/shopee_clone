@@ -27,7 +27,6 @@
       "@helper": ["./src/utils/helper"],
       "@modal/*": ["./src/component/modal/*"],
       "@feature/*": ["./src/feature/*"],
-      "@module/*": ["./src/module/*"]
     }
   },
   "include": [

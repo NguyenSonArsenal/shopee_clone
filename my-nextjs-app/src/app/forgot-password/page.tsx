@@ -1,5 +1,5 @@
-import AuthLeftPanel from "@module/auth/component/AuthLeftPanel";
-import ForgotPasswordForm from "@module/auth/component/ForgotPasswordForm";
+import AuthLeftPanel from "@/feature/auth/component/AuthLeftPanel";
+import ForgotPasswordForm from "@/feature/auth/page/forgot-password";
 
 export default function ForgotPasswordPage() {
   return (

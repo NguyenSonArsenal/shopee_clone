@@ -71,7 +71,7 @@ class AuthController extends Controller
     public function postLogin(LoginRequest $request)
     {
         try {
-            sleep(2); // @todo
+            sleep(1); // @todo
             $user = User::where('email', $request->email)
                 ->where('status', User::STATUS_ACTIVE)
                 ->first();
@@ -151,7 +151,7 @@ class AuthController extends Controller
     public function forgotPasswordSendOtp(ForgotPasswordSendOtpRequest $request)
     {
         try {
-//            Cache::flush();
+            return $this->success();
             $user = $this->authService->findUserByIdentifier(trim($request->email));
 
             if (empty($user)) {
@@ -170,13 +170,7 @@ class AuthController extends Controller
                 Cache::put('forgot_password_otp_sent_at:' . $user->id, now()->timestamp, 120);
             }
 
-            return response()->json(
-                [
-                    'success' => $result['success'],
-                    'message' => $result['message'] ?? null
-                ],
-                $result['success'] ? 200 : ($result['code'] ?? 500)
-            );
+            return $this->success();
         } catch (\Exception $e) {
             Log::error($e);
             return $this->systemError();

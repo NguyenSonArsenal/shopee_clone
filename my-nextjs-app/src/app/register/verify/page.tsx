@@ -1,5 +1,5 @@
-import AuthLeftPanel from "@module/auth/component/AuthLeftPanel";
-import OtpVerifyForm from "@module/auth/component/OtpVerifyForm";
+import AuthLeftPanel from "@/feature/auth/component/AuthLeftPanel";
+import OtpVerifyForm from "@/feature/auth/component/OtpVerifyForm";
 
 export default function RegisterVerifyPage() {
   return (
