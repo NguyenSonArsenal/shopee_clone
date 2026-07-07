@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\Mail\Strategy;
+namespace App\Service\Mail\Strategy;
 
-use App\Services\Mail\MailSenderInterface;
+use App\Service\Mail\MailSenderInterface;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;

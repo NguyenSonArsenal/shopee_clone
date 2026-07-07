@@ -2,25 +2,28 @@
 
 namespace App\Service\Otp\Channel\Strategy;
 
+use App\Mail\OtpMail;
+use App\Service\Mail\MailSenderInterface;
 use App\Service\Otp\Channel\OtpInterface;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
 
 class EmailOtpStrategy implements OtpInterface
 {
+    /**
+     * @param MailSenderInterface $mailSender Strategy gửi mail (Mailtrap/DbSmtp) được bind trong AppServiceProvider.
+     */
+    public function __construct(private MailSenderInterface $mailSender) {}
+
+    /**
+     * Gửi OTP qua email thông qua chuỗi MailSenderInterface (strategy tự áp cấu hình SMTP runtime).
+     *
+     * @param string    $destination Địa chỉ email nhận OTP.
+     * @param string    $otp         Mã OTP cần gửi.
+     * @param float|int $ttlMinutes  Số phút mã còn hiệu lực.
+     * @return bool                  true nếu gửi thành công.
+     */
     public function send(string $destination, string $otp, float|int $ttlMinutes): bool
     {
-        Log::info("Email OTP for {$destination}: {$otp} (expires in {$ttlMinutes} minutes)");
-        try {
-            Mail::raw("Mã OTP của bạn là: {$otp}. Hiệu lực trong {$ttlMinutes} phút.", function ($message) use ($destination) {
-                $message->to($destination)
-                        ->subject("Mã xác minh OTP");
-            });
-        } catch (\Exception $e) {
-            Log::error("Failed to send OTP email: " . $e->getMessage());
-        }
-
-        return true;
+        return $this->mailSender->send($destination, new OtpMail($otp, (int) $ttlMinutes, $destination));
     }
 
     public function getRateLimitKey(string $destination, string $context): string

@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Services\Mail\MailSenderInterface;
-use App\Services\Mail\Strategy\MailtrapMailSenderStrategy;
+use App\Service\Mail\MailSenderInterface;
+use App\Service\Mail\Strategy\MailtrapMailSenderStrategy;
 use App\View\Composers\HeaderComposer;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
