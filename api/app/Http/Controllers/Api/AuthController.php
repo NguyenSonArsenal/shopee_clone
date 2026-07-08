@@ -15,12 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 use App\Service\Auth\AuthService;
 use App\Service\Otp\OtpService;
 use App\Service\Otp\OtpStrategyFactory;
-use App\Http\Requests\Api\Auth\SendOtpRequest;
-use App\Http\Requests\Api\Auth\VerifyOtpRequest;
 use App\Http\Requests\Api\Auth\ResetPasswordRequest;
 
 class AuthController extends Controller

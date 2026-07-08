@@ -62,32 +62,51 @@ class OtpService
     }
 
     /**
-     * Verify OTP — dùng chung cho mọi channel.
+     * Xác thực OTP — đọc trực tiếp từ bảng `otp`.
+     *
+     * @param string $identifier Email/SĐT đã dùng khi gửi OTP
+     * @param string $purpose    Mục đích (giá trị của OtpPurpose)
+     * @param string $otp        Mã người dùng nhập
+     * @return array{success: bool, message: string, code?: int}
      */
-    public function verify(string $userId, string $otp): array
+    public function verify(string $identifier, string $purpose, string $otp): array
     {
-        $cacheKey = 'otp:' . $userId;
-        $data     = Cache::get($cacheKey);
+        // Chỉ lấy OTP MỚI NHẤT của (identifier, purpose)
+        // -> gửi mã mới thì mã cũ không bao giờ được xét (case: chỉ chấp nhận mã mới nhất)
+        $row = Otp::where('identifier', $identifier)
+            ->where('purpose', $purpose)
+            ->latest('id')
+            ->first();
 
-        if (!$data) {
-            return ['success' => false, 'message' => 'Mã xác thực đã hết hạn.', 'code' => 422];
+        if (!$row) {
+            return ['success' => false, 'message' => 'Mã xác thực không tồn tại. Vui lòng gửi lại.', 'code' => 422];
         }
 
-        $maxAttempts = config('config.otp.max_verify_attempts', 5);
+        // Đã dùng rồi -> không cho dùng lại (case: OTP dùng 1 lần)
+        if ($row->used_at !== null) {
+            return ['success' => false, 'message' => 'Mã xác thực đã được sử dụng. Vui lòng gửi lại.', 'code' => 422];
+        }
 
-        if ($data['attempts'] >= $maxAttempts) {
-            Cache::forget($cacheKey);
+        // Hết hạn
+        if ($row->expires_at->isPast()) {
+            return ['success' => false, 'message' => 'Mã xác thực đã hết hạn. Vui lòng gửi lại.', 'code' => 422];
+        }
+
+        // Nhập sai quá số lần cho phép -> khóa mã (case: chống brute-force)
+        $maxAttempts = (int) config('config.otp.max_verify_attempts', 5);
+        if ($row->attempts >= $maxAttempts) {
             return ['success' => false, 'message' => 'Nhập sai quá nhiều lần. Vui lòng yêu cầu mã mới.', 'code' => 429];
         }
 
-        if (!Hash::check($otp, $data['otp'])) {
-            $data['attempts']++;
-            Cache::put($cacheKey, $data); // giữ nguyên TTL còn lại không đặt lại
-            $left = $maxAttempts - $data['attempts'];
+        // Sai mã -> tăng số lần sai
+        if (!Hash::check($otp, $row->code)) {
+            $row->increment('attempts');
+            $left = max(0, $maxAttempts - $row->attempts);
             return ['success' => false, 'message' => "Mã xác thực không đúng. Còn {$left} lần thử.", 'code' => 422];
         }
 
-        Cache::forget($cacheKey);
+        // Đúng -> đánh dấu đã dùng để không tái sử dụng
+        $row->update(['used_at' => now()]);
         return ['success' => true, 'message' => 'Thành công'];
     }
 }

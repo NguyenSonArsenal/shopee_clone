@@ -2,6 +2,7 @@
 
 namespace App\Service\Auth;
 
+use App\Models\Enum\OtpPurpose;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
@@ -34,7 +35,8 @@ class AuthService
      */
     public function verifyOtp(User $user, string $otp): array
     {
-        $result = $this->otpService->verify($user->id, $otp);
+        // Verify theo đúng identifier đã dùng khi gửi (email) + purpose quên mật khẩu
+        $result = $this->otpService->verify($user->email, OtpPurpose::FORGOT_PASSWORD->value, $otp);
         if (!$result['success']) {
             return $result;
         }

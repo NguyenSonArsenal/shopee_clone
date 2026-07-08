@@ -13,14 +13,8 @@ class ForgotPasswordSendOtpRequest extends BaseApiFormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|string',
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'email.required' => 'Vui lòng nhập email',
+            'email' => 'required|email',
+            'otp' => 'required',
         ];
     }
 }

@@ -13,7 +13,8 @@ return new class extends Migration {
             $table->enum('purpose', ['register', 'forgot_password'])->comment('Mục đích gửi otp');
             $table->string('code');
             $table->timestamp('expires_at');
-            $table->timestamp('used_at')->nullable();
+            $table->timestamp('used_at')->nullable()->comment('Thời điểm mã được dùng -> đảm bảo dùng 1 lần');
+            $table->unsignedTinyInteger('attempts')->default(0)->comment('Số lần nhập sai -> chống brute-force');
             $table->timestamps();
         });
     }

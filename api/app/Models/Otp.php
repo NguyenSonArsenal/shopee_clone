@@ -13,7 +13,11 @@ class Otp extends BaseModel
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'otp';
-    protected $casts = ['purpose' => OtpPurpose::class];
+    protected $casts = [
+        'purpose'    => OtpPurpose::class,
+        'expires_at' => 'datetime',
+        'used_at'    => 'datetime',
+    ];
 
     protected $fillable = [
         'identifier',
@@ -21,5 +25,6 @@ class Otp extends BaseModel
         'code',
         'expires_at',
         'used_at',
+        'attempts',
     ];
 }
