@@ -2,6 +2,8 @@
 
 namespace App\Service\Otp;
 
+use App\Models\Enum\HttpStatus;
+use App\Models\Otp;
 use App\Service\Otp\Channel\OtpInterface;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
@@ -18,18 +20,17 @@ class OtpService
      * Gửi OTP qua channel bất kỳ.
      * Trả về ['success' => bool, 'message' => string]
      */
-    public function send(OtpInterface $channel, string $destination, string $userId, string $context): array
+    public function send(OtpInterface $channel, string $destination, string $userId, string $purpose): array
     {
-        // 1. Kiểm tra rate limit (Fixed Window) — tách biệt theo flow
-        $rateLimitKey = $channel->getRateLimitKey($destination, $context);
-        Cache::add($rateLimitKey, 0, (int) ($channel->getRateLimitMinutes() * 60));
-        $sent = (int) Cache::get($rateLimitKey);
-
+        $sent = Otp::where('identifier', $destination)
+            ->where('purpose', $purpose)
+            ->where('created_at', '>=', now()->subMinutes($channel->getRateLimitMinutes()))
+            ->count();
         if ($sent >= $channel->getRateLimitMax()) {
             return [
                 'success' => false,
                 'message' => "Gửi OTP quá nhiều lần. Vui lòng thử lại sau {$channel->getRateLimitMinutes()} phút.",
-                'code'    => 429,
+                'code'    => HttpStatus::TOO_MANY_REQUESTS->value,
             ];
         }
 
@@ -38,29 +39,25 @@ class OtpService
         Log::info("Otp: $otp"); // @todo remove in production
 
         // 3. Gửi qua channel
-        try {
-            $sentOk = $channel->send($destination, $otp, $channel->getTtlMinutes());
-        } catch (\Exception $e) {
-                dd($e);
-        }
-        if (!$sentOk) {
-            return [
-                'success' => false,
-                'message' => 'Không thể gửi mã xác thực. Vui lòng thử lại.',
-                'code'    => 500,
-            ];
-        }
+//        $sentOk = $channel->send($destination, $otp, $channel->getTtlMinutes());
+//        if (!$sentOk) {
+//            return [
+//                'success' => false,
+//                'message' => 'Không thể gửi mã xác thực. Vui lòng thử lại.',
+//                'code'    => HttpStatus::INTERNAL_SERVER_ERROR->value,
+//            ];
+//        }
 
-        // 4. Lưu OTP vào cache
-        Cache::put(
-            'otp:' . $userId,
-            ['otp' => Hash::make($otp), 'attempts' => 0],
-            (int) ($channel->getTtlMinutes() * 60)
-        );
+        // tăng 1 lần gửi otp
+        Otp::create([
+            'identifier' => $destination,
+            'purpose'    => $purpose,
+            'code'       => Hash::make($otp),
+            'expires_at' => now()->addMinutes($channel->getTtlMinutes()),
+        ]);
 
-        // 5. Tăng rate limit counter (không reset TTL)
-        Cache::increment($rateLimitKey);
 
+        Cache::put('forgot_password_otp_sent_at:' . $userId, now()->timestamp, 120); // Lưu thời gian gửi để làm countdown ở phía client
         return ['success' => true, 'message' => 'Thành công'];
     }
 

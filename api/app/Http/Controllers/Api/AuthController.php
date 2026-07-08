@@ -7,6 +7,8 @@ use App\Http\Requests\Api\Auth\ForgotPasswordSendOtpRequest;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Http\Resources\Api\Auth\LoginResource;
+use App\Models\Enum\OtpPurpose;
+use App\Models\Enum\UserStatus;
 use App\Models\User;
 use App\Service\Auth\JWTService;
 use Illuminate\Http\Request;
@@ -151,26 +153,23 @@ class AuthController extends Controller
     public function forgotPasswordSendOtp(ForgotPasswordSendOtpRequest $request)
     {
         try {
-            return $this->success();
             $user = $this->authService->findUserByIdentifier(trim($request->email));
 
             if (empty($user)) {
                 return $this->error('Tài khoản không tồn tại.', 404);
             }
 
-            if ($user->status !== \App\Models\Enum\UserStatus::ACTIVE) {
+            if ($user->status !== UserStatus::ACTIVE) {
                 return $this->error('Tài khoản chưa được kích hoạt. Vui lòng liên hệ quản trị viên.', 403);
             }
 
             $strategy = $this->otpStrategyFactory->make($user->email);
-            $result = $this->otpService->send($strategy, $user->email, $user->id, 'forgot');
+            $result = $this->otpService->send($strategy, $user->email, $user->id, OtpPurpose::FORGOT_PASSWORD->value);
 
             if ($result['success']) {
-                // Lưu thời gian gửi để làm countdown ở phía client
-                Cache::put('forgot_password_otp_sent_at:' . $user->id, now()->timestamp, 120);
+                return $this->success();
             }
-
-            return $this->success();
+            return $this->error(arrayGet($result, 'message'), arrayGet($result, 'code'));
         } catch (\Exception $e) {
             Log::error($e);
             return $this->systemError();
@@ -221,7 +220,6 @@ class AuthController extends Controller
      */
     public function forgotPasswordVerifyOtp(ForgotPasswordSendOtpRequest $request)
     {
-        dd(123);
         $identifier = $request->email;
         $user = $this->authService->findUserByIdentifier(trim($identifier));
         if (!$user) {

@@ -4,7 +4,7 @@ namespace App\Service;
 
 trait ApiResponseService
 {
-    public function success($data = null, string $message = 'Success', int $code = 200)
+    public function success($data = null, string $message = 'Thành công', int $code = 200)
     {
         return response()->json([
             'success' => true,
@@ -14,7 +14,7 @@ trait ApiResponseService
         ], $code);
     }
 
-    public function error(string $message = 'Something went wrong', int $code = 500, $errors = null)
+    public function error(string $message = 'Lỗi', int $code = 500, $errors = null)
     {
         $payload = [
             'success' => false,
@@ -29,12 +29,12 @@ trait ApiResponseService
         return response()->json($payload, $code);
     }
 
-    public function systemError(string $message = 'System error')
+    public function systemError(string $message = 'Lỗi hệ thống')
     {
         return $this->error($message, 500);
     }
 
-    protected function successWithPaging($total, $data, $page, $perPage, string $message = 'Success', int $code = 200)
+    protected function successWithPaging($total, $data, $page, $perPage, string $message = 'Thành công', int $code = 200)
     {
         return response()->json([
             'success' => true,
