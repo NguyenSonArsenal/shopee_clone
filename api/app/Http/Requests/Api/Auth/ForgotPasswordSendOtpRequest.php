@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\Auth;
 
 use App\Http\Requests\BaseApiFormRequest;
+
 class ForgotPasswordSendOtpRequest extends BaseApiFormRequest
 {
     public function authorize(): bool
@@ -14,7 +15,6 @@ class ForgotPasswordSendOtpRequest extends BaseApiFormRequest
     {
         return [
             'email' => 'required|email',
-            'otp' => 'required',
         ];
     }
 }
