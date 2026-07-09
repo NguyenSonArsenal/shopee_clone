@@ -4,7 +4,8 @@ import AuthLeftPanel from "@/feature/auth/component/AuthLeftPanel";
 import LoginForm from "@feature/auth/page/login";
 import {useRouter} from "next/navigation";
 import {useEffect} from "react";
-import {ROUTES, STORAGE_KEYS} from "@/config/constant";
+import {STORAGE_KEYS} from "@/config/constant";
+import {ROUTES} from "@/config/route";
 import {message} from 'antd';
 
 export default function LoginPage() {

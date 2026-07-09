@@ -1,7 +1,8 @@
 "use client" // Convert serve component to client component to using useState
 
 import {useEffect, useState} from "react";
-import {ROUTES, STORAGE_KEYS} from "@/config/constant";
+import {STORAGE_KEYS} from "@/config/constant";
+import {ROUTES} from "@/config/route";
 import {useRouter} from "next/navigation";
 import Link from "next/link";
 

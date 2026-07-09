@@ -1,7 +1,107 @@
 "use client"
 
-import OtpVerifyForm from "@feature/auth/component/OtpVerifyForm";
+import Link from "next/link";
+import {useRef, useState} from "react";
+import {ROUTES} from "@/config/route";
+import DebugPanel from "@component/DebugPanel";
 
 export default function OtpVerifyForm() {
-  return <OtpVerifyForm />
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+  const [otp, setOtp] = useState('');
+
+  // Refs to control each digit input element
+  const inputRefs = [
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+  ];
+
+  const handlePaste = (e) => {
+    const pastedCode = e.clipboardData.getData('text');
+    if (pastedCode.length === 6) {
+      setOtp(pastedCode);
+      inputRefs.forEach((inputRef, index) => {
+        inputRef.current.value = pastedCode.charAt(index);
+      });
+    }
+  }
+
+  const handleChange = (e, index) => {
+    const value = e.target.value;
+    if (/[^0-9]/.test(value)) {
+      e.target.value = "";
+      return;
+    }
+    const arr = otp.split('')
+    arr[index] = value
+    const tmp = arr.join('')
+    setOtp(tmp)
+    setIsSubmitDisabled(tmp.length != 6)
+    if (value && index < inputRefs.length - 1) {
+      inputRefs[index+1].current.focus()
+    }
+  }
+
+  // delete back
+  const handleKeyDown = (e, index) => {
+    if (e.key == "Backspace" && e.target.value == "" && index > 0) {
+      inputRefs[index-1].current.focus()
+    }
+  }
+
+  return (
+    <div className="right">
+      <div className="login-card">
+        <h1 className="login-title text-center">Xác thực email</h1>
+
+        <div className="flex justify-center gap-1.5 mb-6">
+          <span className="w-6 h-1 bg-[#b20707] rounded-full"></span>
+          <span className="w-6 h-1 bg-[#b20707] rounded-full"></span>
+        </div>
+
+        <p className="text-center text-sm text-gray-500 leading-relaxed">
+          Mã 6 số đã được gửi đến <strong>email@example.com</strong><br />
+          Hết hạn sau <span className="font-bold text-[#b20707]">01:00</span>
+          {" · "}
+          <button type="button" className="font-semibold text-[#b20707] hover:text-[#9a0606] cursor-pointer">
+            Gửi lại
+          </button>
+        </p>
+
+        <form className="mt-4" noValidate>
+          <div className="flex justify-between gap-2 mb-6">
+            {[0, 1, 2, 3, 4, 5].map((index) => (
+              <input
+                key={index}
+                onChange={(e) => handleChange(e, index)}
+                type="text"
+                inputMode="numeric"
+                maxLength={1}
+                ref={inputRefs[index]}
+                onPaste={handlePaste}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                autoFocus={index === 0}
+                className="w-10 h-10 text-center text-sm font-bold border border-gray-200 rounded-xl focus:border-[#b20707]
+                focus:outline-none transition-colors shadow-xs"
+              />
+            ))}
+          </div>
+
+          <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed" disabled={isSubmitDisabled}>
+            Xác nhận →
+          </button>
+        </form>
+
+        <p className="login-register-link" style={{ marginTop: 24 }}>
+          <Link href={ROUTES.FORGOT_PASSWORD}>← Quay lại</Link>
+        </p>
+      </div>
+
+      <DebugPanel data={{ otp, isSubmitDisabled }} />
+    </div>
+  );
 }

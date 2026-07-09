@@ -10,7 +10,8 @@ import Notification from "@component/Notification"
 import {Spin} from 'antd';
 import authApi from "@feature/auth/authApi";
 
-import {AUTH_CONFIG, ROUTES, STORAGE_KEYS} from "@/config/constant";
+import {AUTH_CONFIG, STORAGE_KEYS} from "@/config/constant";
+import {ROUTES} from "@/config/route";
 
 export default function LoginForm({}) {
   const [showPass, setShowPass] = useState(false)
