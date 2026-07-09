@@ -20,7 +20,7 @@ return [
         'max_login_attempts' => 5, // Số lần đăng nhập sai tối đa
     ],
     'otp' => [
-        'max_verify_attempts' => 5, // Số lần nhập sai tối đa
+        'max_verify_attempts' => 3, // Số lần nhập sai tối đa
         'email' => [
             'ttl_minutes'        => 1, // Thời gian hiệu lực OTP email (phút)
             'rate_limit_max'     => 3,  // Số lần gửi tối đa trong 1 window
@@ -32,4 +32,5 @@ return [
             'rate_limit_minutes' => 10, // Rate limit window (phút)
         ],
     ],
+    'format_datetime' => 'Y-m-d H:i:s'
 ];

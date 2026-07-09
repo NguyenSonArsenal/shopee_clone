@@ -2,24 +2,15 @@
 
 namespace App\Service\Auth;
 
-use App\Models\Enum\OtpPurpose;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use App\Service\Otp\OtpService;
 
 class AuthService
 {
     private const RESET_TOKEN_TTL = 600; // 10 phút
-
-    private $otpService;
-
-    public function __construct(OtpService $otpService)
-    {
-        $this->otpService = $otpService;
-    }
 
     /**
      * Tìm kiếm người dùng bằng email hoặc số điện thoại.
@@ -30,21 +21,18 @@ class AuthService
     }
 
     /**
-     * Xác thực OTP cho flow QUÊN MẬT KHẨU.
-     * Tạo reset_token để dùng ở bước đặt lại mật khẩu.
+     * Cấp reset_token (lưu Cache) sau khi OTP đã verify thành công.
+     * Token này là "vé" để đi tiếp bước đặt lại mật khẩu (xem resetPassword).
+     *
+     * @param User $user Người dùng đã xác thực OTP thành công
+     * @return string reset_token dùng 1 lần, hết hạn sau RESET_TOKEN_TTL giây
      */
-    public function verifyOtp(User $user, string $otp): array
+    public function createResetToken(User $user): string
     {
-        // Verify theo đúng identifier đã dùng khi gửi (email) + purpose quên mật khẩu
-        $result = $this->otpService->verify($user->email, OtpPurpose::FORGOT_PASSWORD->value, $otp);
-        if (!$result['success']) {
-            return $result;
-        }
-
         $resetToken = Str::random(64);
         Cache::put('reset_token:' . $resetToken, $user->id, self::RESET_TOKEN_TTL);
 
-        return ['success' => true, 'reset_token' => $resetToken];
+        return $resetToken;
     }
 
     /**

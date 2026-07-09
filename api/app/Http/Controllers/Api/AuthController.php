@@ -7,6 +7,7 @@ use App\Http\Requests\Api\Auth\ForgotPasswordSendOtpRequest;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Http\Resources\Api\Auth\LoginResource;
+use App\Models\Enum\HttpStatus;
 use App\Models\Enum\OtpPurpose;
 use App\Models\Enum\UserStatus;
 use App\Models\User;
@@ -164,7 +165,7 @@ class AuthController extends Controller
             $result = $this->otpService->send($strategy, $user->email, $user->id, OtpPurpose::FORGOT_PASSWORD->value);
 
             if ($result['success']) {
-                return $this->success();
+                return $this->success(arrayGet($result, 'data'));
             }
             return $this->error(arrayGet($result, 'message'), arrayGet($result, 'code'));
         } catch (\Exception $e) {
@@ -217,22 +218,23 @@ class AuthController extends Controller
      */
     public function forgotPasswordVerifyOtp(ForgotPasswordSendOtpRequest $request)
     {
-        $identifier = $request->email;
-        $user = $this->authService->findUserByIdentifier(trim($identifier));
-        if (!$user) {
-            return $this->error('Tài khoản không tồn tại.', 404);
+        try {
+            $user = $this->authService->findUserByIdentifier(trim($request->email));
+            if (!$user) {
+                return $this->error('Tài khoản không tồn tại.', HttpStatus::NOT_FOUND->value);
+            }
+
+            $result = $this->otpService->verify($user->email, OtpPurpose::FORGOT_PASSWORD->value, $request->otp);
+            if (!$result['success']) {
+                return $this->error($result['message'], $result['code'] ?? HttpStatus::UNPROCESSABLE_ENTITY->value);
+            }
+
+            $resetToken = $this->authService->createResetToken($user);
+            return $this->success(['reset_token' => $resetToken], 'Xác thực thành công.');
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->systemError();
         }
-
-        $result = $this->authService->verifyOtp($user, $request->otp);
-
-        if ($result['success']) {
-            Cache::forget('forgot_password_otp_sent_at:' . $user->id);
-        }
-
-        return response()->json(
-            array_diff_key($result, ['code' => '']),
-            $result['success'] ? 200 : ($result['code'] ?? 422)
-        );
     }
 
     /**
