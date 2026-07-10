@@ -1,14 +1,30 @@
 "use client"
 
 import Link from "next/link";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {ROUTES} from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
 
+const TIME_LEFT = 10 // s
+
 export default function OtpVerifyForm() {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-
   const [otp, setOtp] = useState('');
+  const [timeLeft, setTimeLeft] = useState(TIME_LEFT);
+  const [countResend, setCountReSend] = useState(0)
+
+  useEffect(() => {
+    let timer = setInterval(() => {
+      setTimeLeft(timeLeft => {
+        if (timeLeft <= 0) {
+          clearInterval(timer)
+          return 0
+        }
+        return timeLeft - 1
+      })
+    }, 1000);
+    return () => clearInterval(timer)
+  }, [countResend]);
 
   // Refs to control each digit input element
   const inputRefs = [
@@ -53,6 +69,11 @@ export default function OtpVerifyForm() {
     }
   }
 
+  const handleResend = () => {
+    setTimeLeft(TIME_LEFT)
+    setCountReSend(v => v + 1)
+  }
+
   return (
     <div className="right">
       <div className="login-card">
@@ -65,11 +86,18 @@ export default function OtpVerifyForm() {
 
         <p className="text-center text-sm text-gray-500 leading-relaxed">
           Mã 6 số đã được gửi đến <strong>email@example.com</strong><br />
-          Hết hạn sau <span className="font-bold text-[#b20707]">01:00</span>
-          {" · "}
-          <button type="button" className="font-semibold text-[#b20707] hover:text-[#9a0606] cursor-pointer">
-            Gửi lại
-          </button>
+          {
+            timeLeft > 0 && <>Hết hạn sau <span className="font-bold text-[#b20707]">{timeLeft}</span> giây</>
+          }
+          {
+            timeLeft == 0 &&
+            <button type="button"
+                    className="font-semibold text-[#b20707] hover:text-[#9a0606] cursor-pointer"
+                    onClick={handleResend}
+            >
+              Gửi lại
+            </button>
+          }
         </p>
 
         <form className="mt-4" noValidate>
@@ -91,7 +119,7 @@ export default function OtpVerifyForm() {
             ))}
           </div>
 
-          <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed" disabled={isSubmitDisabled}>
+          <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed" disabled={isSubmitDisabled || timeLeft == 0}>
             Xác nhận →
           </button>
         </form>
@@ -101,7 +129,7 @@ export default function OtpVerifyForm() {
         </p>
       </div>
 
-      <DebugPanel data={{ otp, isSubmitDisabled }} />
+      <DebugPanel data={{ otp, isSubmitDisabled, timeLeft, countResend }} />
     </div>
   );
 }
