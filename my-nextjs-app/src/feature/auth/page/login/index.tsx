@@ -70,8 +70,6 @@ export default function LoginForm({}) {
     }
   }
 
-  console.log('re-render')
-
   return (
     <div className="right">
       <div className="login-card">

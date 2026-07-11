@@ -1,20 +1,23 @@
 "use client"
 
+import Cookies from 'js-cookie'
 import { useState } from "react";
 import FieldLabel from "@component/FieldLabel";
 import {IconEmail, IconLogin} from "@icon";
 import Link from "next/link";
-import {AUTH_CONFIG} from "@/config/constant";
+import {AUTH_CONFIG, STORAGE_KEYS} from "@/config/constant";
 import {ROUTES} from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
 import {delay} from "@/helper/helper";
 import axiosInstance from "@/lib/axios";
 import {Spin} from "antd";
 import {useRouter} from "next/navigation";
+import Notification from "@component/Notification";
+import authApi from "@feature/auth/authApi";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
-  const [errors, setErrors] = useState({ email: "", password: "" })
+  const [errors, setErrors] = useState({ email: ""})
   const [serverError, setServerError] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false); // Điều khiển màn hình chuyển đổi
@@ -33,28 +36,31 @@ export default function ForgotPasswordForm() {
     return !newErrors.email && !newErrors.password
   }
 
+  const clearInputError = () => {
+    setErrors({
+      email: ""
+    });
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Submit forgot password with email:", email);
     setIsSubmitting(true)
-    delay(1000)
+    delay(3000)
     if (!validate()) {
       setIsSubmitting(false)
       return
     }
-    console.log('pass validate')
+    clearInputError()
     try {
-      return router.push('/forgot-password/verify')
-      const response = await axiosInstance.post('forgot-password/send-otp', {
-        email: email,
-      });
-      console.log(response, '// response')
+      const data = await authApi.forgotPasswordSendOtp({email})
+      Cookies.set(STORAGE_KEYS.OTP_TTL, data.expires_at,  { expires: new Date(data.expires_at) })
+      return router.replace(ROUTES.FORGOT_PASSWORD_VERIFY)
     } catch (err) {
       if (err.response?.status === 422) {
         const serverErrors = err.response.data.errors;
         setErrors({
-          email: serverErrors.email ? serverErrors.email[0] : "",
-          password: serverErrors.password ? serverErrors.password[0] : "",
+          email: serverErrors.email ? serverErrors.email[0] : ""
         });
       } else {
         const errMsg = err.response?.data?.message || err.message || "Đăng nhập thất bại";
@@ -68,6 +74,8 @@ export default function ForgotPasswordForm() {
     <div className="right">
       <div className="login-card">
         <h1 className="login-title text-center">Khôi phục mật khẩu</h1>
+
+        <Notification type="error" message={serverError} />
 
         <form className="login-form" noValidate onSubmit={handleSubmit}>
           {/* Email */}
@@ -90,7 +98,7 @@ export default function ForgotPasswordForm() {
             {errors.email && <p className="field-error">{errors.email}</p>}
           </div>
 
-          <button type="submit" className="btn btn-primary btn-submit" disabled={isSubmitting}>
+          <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed" disabled={isSubmitting}>
             {isSubmitting ? <Spin size="small"/> : ""}
             {isSubmitting ? "Đang gửi mã OTP..." : "Gửi mã OTP"}
           </button>
@@ -102,7 +110,7 @@ export default function ForgotPasswordForm() {
         </p>
       </div>
 
-      <DebugPanel data={{email, isSubmitting, errors}}/>
+      <DebugPanel data={{email, isSubmitting, errors, serverError}}/>
     </div>
   );
 }

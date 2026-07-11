@@ -22,7 +22,7 @@ return [
     'otp' => [
         'max_verify_attempts' => 3, // Số lần nhập sai tối đa
         'email' => [
-            'ttl_minutes'        => 1, // Thời gian hiệu lực OTP email (phút)
+            'ttl_minutes'        => 3, // Thời gian hiệu lực OTP email (phút)
             'rate_limit_max'     => 3,  // Số lần gửi tối đa trong 1 window
             'rate_limit_minutes' => 10, // Rate limit window (phút)
         ],

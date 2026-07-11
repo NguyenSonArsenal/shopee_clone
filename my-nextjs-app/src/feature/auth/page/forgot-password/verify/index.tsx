@@ -4,17 +4,22 @@ import Link from "next/link";
 import {useEffect, useRef, useState} from "react";
 import {ROUTES} from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
-
-const TIME_LEFT = 10 // s
+import Cookies from 'js-cookie'
+import {STORAGE_KEYS} from "@/config/constant";
 
 export default function OtpVerifyForm() {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [otp, setOtp] = useState('');
-  const [timeLeft, setTimeLeft] = useState(TIME_LEFT);
-  const [countResend, setCountReSend] = useState(0)
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [countResend, setCountResend] = useState(0)
 
   useEffect(() => {
+    console.log('useEffect')
+    const expiresAt = Cookies.get(STORAGE_KEYS.OTP_TTL);
+    const initTimeLeft = Math.floor(Math.max(0, (expiresAt - Date.now()) / 1000));
+    setTimeLeft(initTimeLeft)
     let timer = setInterval(() => {
+      console.log('timer')
       setTimeLeft(timeLeft => {
         if (timeLeft <= 0) {
           clearInterval(timer)
@@ -70,8 +75,12 @@ export default function OtpVerifyForm() {
   }
 
   const handleResend = () => {
-    setTimeLeft(TIME_LEFT)
-    setCountReSend(v => v + 1)
+    setCountResend(v => v + 1)
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    alert(otp)
   }
 
   return (
@@ -100,7 +109,7 @@ export default function OtpVerifyForm() {
           }
         </p>
 
-        <form className="mt-4" noValidate>
+        <form className="mt-4" noValidate onSubmit={handleSubmit}>
           <div className="flex justify-between gap-2 mb-6">
             {[0, 1, 2, 3, 4, 5].map((index) => (
               <input
@@ -129,7 +138,7 @@ export default function OtpVerifyForm() {
         </p>
       </div>
 
-      <DebugPanel data={{ otp, isSubmitDisabled, timeLeft, countResend }} />
+      <DebugPanel data={{ otp, isSubmitDisabled, countResend, timeLeft }} />
     </div>
   );
 }

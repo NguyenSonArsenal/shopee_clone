@@ -57,9 +57,12 @@ class OtpService
             'expires_at' => $expiresAt,
         ]);
 
-
-        Cache::put('forgot_password_otp_sent_at:' . $userId, now()->timestamp, 120); // Lưu thời gian gửi để làm countdown ở phía client
-        return ['success' => true, 'message' => 'Thành công', 'data' => ['expires_at' => $expiresAt->format(getConfig('format_datetime'))]];
+//        Cache::put('forgot_password_otp_sent_at:' . $userId, now()->timestamp, 120); // Lưu thời gian gửi để làm countdown ở phía client
+        $data = [
+            'expires_at_formated' => $expiresAt->format(getConfig('format_datetime')),
+            'expires_at' => $expiresAt->getTimestamp() * 1000 // x 1000 to convert s (php) to ms (for js using)
+        ];
+        return ['success' => true, 'message' => 'Thành công', 'data' => $data];
     }
 
     /**

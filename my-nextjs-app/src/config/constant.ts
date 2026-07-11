@@ -3,6 +3,7 @@ export const STORAGE_KEYS = {
   REFRESH_TOKEN: "refresh_token",
   USER_INFO: "user_info",
   FLASH_MESSAGE: "flash_message",
+  OTP_TTL: "otp_ttl",
 } as const;
 
 export const AUTH_CONFIG = {
