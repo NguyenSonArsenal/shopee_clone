@@ -14,6 +14,7 @@ import {AUTH_CONFIG, DELAY_TIME, STORAGE_KEYS} from "@/config/constant";
 import {ROUTES} from "@/config/route";
 import {delay} from "@/helper/helper";
 import FieldError from "@component/form/FieldError";
+import AppSpin from "@component/AppSpin";
 
 export default function LoginForm({}) {
   const [showPass, setShowPass] = useState(false)
@@ -141,8 +142,8 @@ export default function LoginForm({}) {
           </div>
 
           {/* Nút đăng nhập */}
-          <button type="submit" className="btn btn-primary btn-submit" disabled={isSubmitting}>
-            {isSubmitting ? <Spin size="small" /> : <IconLogin />}
+          <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed" disabled={isSubmitting}>
+            {isSubmitting ? <AppSpin size="small" /> : <IconLogin />}
             {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
         </form>

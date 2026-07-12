@@ -145,15 +145,30 @@ class OtpService
         $row = Otp::where('reset_token', $resetToken)->latest('id')->first();
 
         if (!$row) {
-            return ['success' => false, 'message' => 'Token không hợp lệ.', 'code' => HttpStatus::UNPROCESSABLE_ENTITY->value];
+            return [
+                'success' => false,
+                'message' => 'Token không hợp lệ.',
+                'code' => HttpStatus::UNPROCESSABLE_ENTITY->value,
+                'errorCode' => ErrorCode::RESET_TOKEN_INVALID->value,
+            ];
         }
 
         if ($row->reset_token_used_at !== null) {
-            return ['success' => false, 'message' => 'Token đã được sử dụng.', 'code' => HttpStatus::UNPROCESSABLE_ENTITY->value];
+            return [
+                'success' => false,
+                'message' => 'Token đã được sử dụng.',
+                'code' => HttpStatus::UNPROCESSABLE_ENTITY->value,
+                'errorCode' => ErrorCode::RESET_TOKEN_USED->value,
+            ];
         }
 
         if ($row->reset_token_expires_at->isPast()) {
-            return ['success' => false, 'message' => 'Token đã hết hạn. Vui lòng thực hiện lại.', 'code' => HttpStatus::UNPROCESSABLE_ENTITY->value];
+            return [
+                'success' => false,
+                'message' => 'Token đã hết hạn. Vui lòng thực hiện lại.',
+                'code' => HttpStatus::UNPROCESSABLE_ENTITY->value,
+                'errorCode' => ErrorCode::RESET_TOKEN_EXPIRED->value,
+            ];
         }
 
         return ['success' => true, 'identifier' => $row->identifier];

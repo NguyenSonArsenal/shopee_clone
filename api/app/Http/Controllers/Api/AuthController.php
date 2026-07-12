@@ -251,6 +251,7 @@ class AuthController extends Controller
                 return $this->error(
                     message: $result['message'],
                     code: $result['code'] ?? HttpStatus::UNPROCESSABLE_ENTITY->value,
+                    errorCode: $result['errorCode'] ?? null,
                 );
             }
 

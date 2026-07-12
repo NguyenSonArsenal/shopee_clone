@@ -5,6 +5,7 @@ export const STORAGE_KEYS = {
   FLASH_MESSAGE: "flash_message",
   OTP_TTL: "otp_ttl",
   OTP_IDENTIFIER_FIELD: "email",
+  RESET_TOKEN: "reset_token",
 } as const;
 
 export const AUTH_CONFIG = {
@@ -18,5 +19,5 @@ export const USER_ROLES = [
   { value: "kh", label: "Khách hàng" },
 ] as const;
 
-export const DELAY_TIME = 5000; // MS
+export const DELAY_TIME = 2000; // MS
 

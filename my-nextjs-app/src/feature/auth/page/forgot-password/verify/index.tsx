@@ -4,8 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import {ROUTES} from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
 import Cookies from 'js-cookie'
-import {AUTH_CONFIG, STORAGE_KEYS} from "@/config/constant";
-import {delay} from "@/helper/helper";
+import {STORAGE_KEYS} from "@/config/constant";
 import authApi from "@feature/auth/authApi";
 import {useRouter} from "next/navigation";
 import Notification from "@component/Notification";
@@ -91,8 +90,8 @@ export default function OtpVerifyForm({ email, initialTimeLeft }: OtpVerifyFormP
     setIsResending(true)
     try {
       const data = await authApi.forgotPasswordSendOtp(email)
-      Cookies.set(STORAGE_KEYS.OTP_TTL, data.expires_at, { expires: new Date(data.expires_at) })
-      Cookies.set(STORAGE_KEYS.OTP_IDENTIFIER_FIELD, email, {expires: new Date(data.expires_at)})
+      Cookies.set(STORAGE_KEYS.OTP_TTL, data.otp_expires_at, { expires: new Date(data.otp_expires_at) })
+      Cookies.set(STORAGE_KEYS.OTP_IDENTIFIER_FIELD, email, {expires: new Date(data.otp_expires_at)})
       const initialTimeLeft = Math.floor(Math.max(0, (data.expires_at - Date.now()) / 1000));
       setTimeLeft(initialTimeLeft)
       setCountResend(v => v + 1)
@@ -108,6 +107,7 @@ export default function OtpVerifyForm({ email, initialTimeLeft }: OtpVerifyFormP
     setServerError('');
     try {
       const data = await authApi.forgotPasswordVerifyOtp(email, otp);
+      Cookies.set(STORAGE_KEYS.RESET_TOKEN, data.reset_token, { expires: new Date(data.reset_token_expires_at) })
       setIsSubmitting(false)
       return router.replace(ROUTES.FORGOT_PASSWORD_FORM_RESET)
     } catch (err) {

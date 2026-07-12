@@ -8,20 +8,17 @@ import Link from "next/link";
 import {AUTH_CONFIG, STORAGE_KEYS} from "@/config/constant";
 import {ROUTES} from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
-import {delay} from "@/helper/helper";
-import axiosInstance from "@/lib/axios";
-import {Spin} from "antd";
 import {useRouter} from "next/navigation";
 import Notification from "@component/Notification";
 import authApi from "@feature/auth/authApi";
 import AppSpin from "@component/AppSpin";
+import FieldError from "@component/form/FieldError";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({ email: ""})
   const [serverError, setServerError] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false); // Điều khiển màn hình chuyển đổi
   const router = useRouter()
 
   const validate = () => {
@@ -46,17 +43,16 @@ export default function ForgotPasswordForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submit forgot password with email:", email);
-    setIsSubmitting(true)
     if (!validate()) {
       setIsSubmitting(false)
       return
     }
+    setIsSubmitting(true)
     clearError()
     try {
       const data = await authApi.forgotPasswordSendOtp(email)
-      Cookies.set(STORAGE_KEYS.OTP_TTL, data.expires_at, { expires: new Date(data.expires_at) })
-      Cookies.set(STORAGE_KEYS.OTP_IDENTIFIER_FIELD, email, {expires: new Date(data.expires_at)})
+      Cookies.set(STORAGE_KEYS.OTP_TTL, data.otp_expires_at, { expires: new Date(data.otp_expires_at) })
+      Cookies.set(STORAGE_KEYS.OTP_IDENTIFIER_FIELD, email, {expires: new Date(data.otp_expires_at)})
       return router.replace(ROUTES.FORGOT_PASSWORD_VERIFY)
     } catch (err) {
       if (err.response?.status === 422) {
@@ -96,7 +92,7 @@ export default function ForgotPasswordForm() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            {errors.email && <p className="field-error">{errors.email}</p>}
+            <FieldError message={errors.email}/>
           </div>
 
           <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed"
