@@ -4,6 +4,7 @@ export const STORAGE_KEYS = {
   USER_INFO: "user_info",
   FLASH_MESSAGE: "flash_message",
   OTP_TTL: "otp_ttl",
+  OTP_IDENTIFIER_FIELD: "email",
 } as const;
 
 export const AUTH_CONFIG = {

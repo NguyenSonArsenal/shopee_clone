@@ -6,15 +6,33 @@ import {ROUTES} from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
 import Cookies from 'js-cookie'
 import {STORAGE_KEYS} from "@/config/constant";
+import {delay} from "@/helper/helper";
+import authApi from "@feature/auth/authApi";
+import {useRouter} from "next/navigation";
+import Notification from "@component/Notification";
+import {Spin} from "antd";
 
 export default function OtpVerifyForm() {
-  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [otp, setOtp] = useState('');
   const [timeLeft, setTimeLeft] = useState(0);
   const [countResend, setCountResend] = useState(0)
+  const router = useRouter();
+  const [serverError, setServerError] = useState("")
+  const [email, setEmail] = useState("")
 
   useEffect(() => {
-    console.log('useEffect')
+    // @todo fix error blink UI
+    console.log('useEffect 1')
+    const email = Cookies.get(STORAGE_KEYS.OTP_IDENTIFIER_FIELD);
+    if (email) {
+      return setEmail(email)
+    }
+    return router.replace(ROUTES.FORGOT_PASSWORD)
+  }, [])
+
+  useEffect(() => {
+    console.log('useEffect 2')
     const expiresAt = Cookies.get(STORAGE_KEYS.OTP_TTL);
     const initTimeLeft = Math.floor(Math.max(0, (expiresAt - Date.now()) / 1000));
     setTimeLeft(initTimeLeft)
@@ -61,7 +79,6 @@ export default function OtpVerifyForm() {
     arr[index] = value
     const tmp = arr.join('')
     setOtp(tmp)
-    setIsSubmitDisabled(tmp.length != 6)
     if (value && index < inputRefs.length - 1) {
       inputRefs[index+1].current.focus()
     }
@@ -80,7 +97,19 @@ export default function OtpVerifyForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    alert(otp)
+    setIsSubmitting(true)
+    setServerError('');
+    await delay(2000)
+    try {
+      const data = await authApi.forgotPasswordVerifyOtp(email, otp);
+      console.log(data, '// data')
+      setIsSubmitting(false)
+      return router.replace(ROUTES.FORGOT_PASSWORD_FORM_RESET)
+    } catch (err) {
+      const errMsg = err.response?.data?.message || err.message || "Lỗi hệ thống";
+      setServerError(errMsg);
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -93,8 +122,8 @@ export default function OtpVerifyForm() {
           <span className="w-6 h-1 bg-[#b20707] rounded-full"></span>
         </div>
 
-        <p className="text-center text-sm text-gray-500 leading-relaxed">
-          Mã 6 số đã được gửi đến <strong>email@example.com</strong><br />
+        <p className="text-center text-sm text-gray-500 leading-relaxed mb-2">
+          Mã 6 số đã được gửi đến <strong>{email}</strong><br />
           {
             timeLeft > 0 && <>Hết hạn sau <span className="font-bold text-[#b20707]">{timeLeft}</span> giây</>
           }
@@ -108,6 +137,8 @@ export default function OtpVerifyForm() {
             </button>
           }
         </p>
+
+        <Notification type="error" message={serverError} />
 
         <form className="mt-4" noValidate onSubmit={handleSubmit}>
           <div className="flex justify-between gap-2 mb-6">
@@ -128,13 +159,15 @@ export default function OtpVerifyForm() {
             ))}
           </div>
 
-          <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed" disabled={isSubmitDisabled || timeLeft == 0}>
-            Xác nhận →
+          <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed"
+                  disabled={otp.length !== 6 || timeLeft <= 0 || isSubmitting}>
+            {isSubmitting ? <Spin size="small"/> : ""}
+            {isSubmitting ? "Đang xác nhận..." : "Xác nhận"}
           </button>
         </form>
       </div>
 
-      <DebugPanel data={{ otp, isSubmitDisabled, countResend, timeLeft }} />
+      <DebugPanel data={{otp, isSubmitting, countResend, timeLeft}}/>
     </div>
   );
 }

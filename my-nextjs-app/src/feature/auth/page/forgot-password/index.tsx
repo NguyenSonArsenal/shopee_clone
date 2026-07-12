@@ -53,8 +53,9 @@ export default function ForgotPasswordForm() {
     }
     clearInputError()
     try {
-      const data = await authApi.forgotPasswordSendOtp({email})
+      const data = await authApi.forgotPasswordSendOtp(email)
       Cookies.set(STORAGE_KEYS.OTP_TTL, data.expires_at,  { expires: new Date(data.expires_at) })
+      Cookies.set(STORAGE_KEYS.OTP_IDENTIFIER_FIELD, email,  1)
       return router.replace(ROUTES.FORGOT_PASSWORD_VERIFY)
     } catch (err) {
       if (err.response?.status === 422) {
@@ -78,7 +79,6 @@ export default function ForgotPasswordForm() {
         <Notification type="error" message={serverError} />
 
         <form className="login-form" noValidate onSubmit={handleSubmit}>
-          {/* Email */}
           <div className="field-group">
             <FieldLabel htmlFor="email" required>Email</FieldLabel>
             <div className="field-wrap">
@@ -98,7 +98,8 @@ export default function ForgotPasswordForm() {
             {errors.email && <p className="field-error">{errors.email}</p>}
           </div>
 
-          <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed" disabled={isSubmitting}>
+          <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed"
+                  disabled={isSubmitting}>
             {isSubmitting ? <Spin size="small"/> : ""}
             {isSubmitting ? "Đang gửi mã OTP..." : "Gửi mã OTP"}
           </button>
