@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests\Api\Auth;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseApiFormRequest;
 
-class VerifyOtpRequest extends FormRequest
+class VerifyOtpRequest extends BaseApiFormRequest
 {
-    public function authorize(): bool
+    public function authorize()
     {
         return true;
     }
@@ -14,15 +14,15 @@ class VerifyOtpRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'identifier' => 'required|string',
-            'otp'        => 'required|string|size:6',
+            'email' => 'required|string',
+            'otp'        => 'required|size:6',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'identifier.required' => 'Vui lòng nhập email hoặc số điện thoại.',
+            'email.required'      => 'Vui lòng nhập email',
             'otp.required'        => 'Vui lòng nhập mã OTP.',
             'otp.size'            => 'Mã OTP phải đúng 6 ký tự.',
         ];

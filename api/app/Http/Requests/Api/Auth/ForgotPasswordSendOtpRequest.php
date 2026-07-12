@@ -14,7 +14,7 @@ class ForgotPasswordSendOtpRequest extends BaseApiFormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
+            'email' => 'required|email'
         ];
     }
 }

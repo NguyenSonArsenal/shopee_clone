@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\ForgotPasswordSendOtpRequest;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\RegisterRequest;
+use App\Http\Requests\Api\Auth\VerifyOtpRequest;
 use App\Http\Resources\Api\Auth\LoginResource;
 use App\Models\Enum\HttpStatus;
 use App\Models\Enum\OtpPurpose;
@@ -216,7 +217,7 @@ class AuthController extends Controller
     /**
      * Xác thực mã OTP
      */
-    public function forgotPasswordVerifyOtp(ForgotPasswordSendOtpRequest $request)
+    public function forgotPasswordVerifyOtp(VerifyOtpRequest $request)
     {
         try {
             $user = $this->authService->findUserByIdentifier(trim($request->email));
@@ -230,7 +231,7 @@ class AuthController extends Controller
             }
 
             $resetToken = $this->authService->createResetToken($user);
-            return $this->success(['reset_token' => $resetToken], 'Xác thực thành công.');
+            return $this->success(['reset_token' => $resetToken], 'Xác thực thành công');
         } catch (\Exception $e) {
             Log::error($e);
             return $this->systemError();

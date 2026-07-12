@@ -5,7 +5,6 @@ namespace App\Service\Otp;
 use App\Models\Enum\HttpStatus;
 use App\Models\Otp;
 use App\Service\Otp\Channel\OtpInterface;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -13,12 +12,12 @@ class OtpService
 {
     public static function genOtp()
     {
+        return 123456; // @todo remove this line in production
         return str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
     }
 
     /**
      * Gửi OTP qua channel bất kỳ.
-     * Trả về ['success' => bool, 'message' => string]
      */
     public function send(OtpInterface $channel, string $destination, string $userId, string $purpose): array
     {
@@ -57,7 +56,6 @@ class OtpService
             'expires_at' => $expiresAt,
         ]);
 
-//        Cache::put('forgot_password_otp_sent_at:' . $userId, now()->timestamp, 120); // Lưu thời gian gửi để làm countdown ở phía client
         $data = [
             'expires_at_formated' => $expiresAt->format(getConfig('format_datetime')),
             'expires_at' => $expiresAt->getTimestamp() * 1000 // x 1000 to convert s (php) to ms (for js using)

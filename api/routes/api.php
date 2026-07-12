@@ -10,11 +10,12 @@ Route::post('login', [AuthController::class, 'postLogin']);
 Route::post('register', [AuthController::class, 'postRegister']);
 Route::post('refresh-token', [AuthController::class, 'postRefreshToken']);
 
-// Forgot Password API routes
-Route::post('forgot-password/send-otp', [AuthController::class, 'forgotPasswordSendOtp']);
-Route::get('forgot-password/verify', [AuthController::class, 'forgotPasswordShowVerify']);
-Route::post('forgot-password/verify-otp', [AuthController::class, 'forgotPasswordVerifyOtp']);
-Route::post('forgot-password/reset', [AuthController::class, 'forgotPasswordReset']);
+Route::controller(AuthController::class)->prefix('forgot-password')->group(function () {
+    Route::post('send-otp', 'forgotPasswordSendOtp');
+    Route::get('verify', 'forgotPasswordShowVerify');
+    Route::post('verify-otp', 'forgotPasswordVerifyOtp');
+    Route::post('reset', 'forgotPasswordReset');
+});
 
 // Public - không cần đăng nhập
 Route::get('category', [ProductController::class, 'getCategory']);

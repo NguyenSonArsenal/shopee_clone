@@ -132,10 +132,6 @@ export default function OtpVerifyForm() {
             Xác nhận →
           </button>
         </form>
-
-        <p className="login-register-link" style={{ marginTop: 24 }}>
-          <Link href={ROUTES.FORGOT_PASSWORD}>← Quay lại</Link>
-        </p>
       </div>
 
       <DebugPanel data={{ otp, isSubmitDisabled, countResend, timeLeft }} />
