@@ -1,7 +1,7 @@
 "use client"
 
 import FieldLabel from "@component/form/FieldLabel";
-import {IconEye, IconLock} from "@icon";
+import {IconEye, IconEyeOff, IconLock} from "@icon";
 import Link from "next/link";
 import {ROUTES} from "@/config/route";
 import {useState} from "react";
@@ -18,8 +18,8 @@ export default function ResetPasswordForm() {
   const router = useRouter()
   const [password, setPassword] = useState<string>("")
   const [password_confirmation, setPasswordConfirmation] = useState<string>("")
-  const [hidePassword, setHidePassword] = useState<boolean>(true)
-  const [hidePasswordConfirmation, setToggleShowPasswordConfirmation] = useState<boolean>(true)
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState<boolean>(false)
 
   const [errors, setErrors] = useState({ password: "", password_confirmation: ""})
   const [serverError, setServerError] = useState<string>("")
@@ -90,7 +90,7 @@ export default function ResetPasswordForm() {
               </span>
               <input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 className="field-input"
@@ -102,8 +102,9 @@ export default function ResetPasswordForm() {
                 type="button"
                 className="field-eye"
                 aria-label="Hiện/ẩn mật khẩu"
+                onClick={() => setShowPassword(p => !p)}
               >
-                <IconEye/>
+                {showPassword ? <IconEyeOff/> : <IconEye/>}
               </button>
             </div>
             <FieldError message={errors.password}/>
@@ -118,7 +119,7 @@ export default function ResetPasswordForm() {
               </span>
               <input
                 id="confirmPassword"
-                type="password"
+                type={showPasswordConfirmation ? "text" : "password"}
                 className="field-input"
                 placeholder="••••••••"
                 autoComplete="new-password"
@@ -129,8 +130,9 @@ export default function ResetPasswordForm() {
                 type="button"
                 className="field-eye"
                 aria-label="Hiện/ẩn mật khẩu"
+                onClick={() => setShowPasswordConfirmation(p => !p)}
               >
-                <IconEye/>
+                {showPasswordConfirmation ? <IconEyeOff/> : <IconEye/>}
               </button>
             </div>
             <FieldError message={errors.password_confirmation}/>
@@ -148,7 +150,7 @@ export default function ResetPasswordForm() {
         </p>
 
 
-        <DebugPanel data={{password, password_confirmation, isSubmitting, errors, serverError}}/>
+        <DebugPanel data={{password, password_confirmation, showPassword, showPasswordConfirmation, isSubmitting, errors, serverError}}/>
       </div>
     </div>
   )
