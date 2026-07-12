@@ -1,0 +1,2 @@
+export const OTP_MAX_ATTEMPTS = "OTP_MAX_ATTEMPTS";
+

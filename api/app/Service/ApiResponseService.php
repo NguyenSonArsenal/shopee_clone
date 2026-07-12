@@ -14,13 +14,17 @@ trait ApiResponseService
         ], $code);
     }
 
-    public function error(string $message = 'Lỗi', int $code = 500, $errors = null)
+    public function error(string $message = 'Lỗi', int $code = 500, $errors = null, ?string $errorCode = null)
     {
         $payload = [
             'success' => false,
             'code'    => $code,
             'message' => $message,
         ];
+
+        if ($errorCode !== null) {
+            $payload['error_code'] = $errorCode;
+        }
 
         if ($errors !== null) {
             $payload['errors'] = $errors;

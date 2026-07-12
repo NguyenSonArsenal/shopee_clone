@@ -227,7 +227,11 @@ class AuthController extends Controller
 
             $result = $this->otpService->verify($user->email, OtpPurpose::FORGOT_PASSWORD->value, $request->otp);
             if (!$result['success']) {
-                return $this->error($result['message'], $result['code'] ?? HttpStatus::UNPROCESSABLE_ENTITY->value);
+                return $this->error(
+                    message: $result['message'],
+                    code: $result['code'] ?? HttpStatus::UNPROCESSABLE_ENTITY->value,
+                    errorCode: $result['errorCode'] ?? null,
+                );
             }
 
             $resetToken = $this->authService->createResetToken($user);

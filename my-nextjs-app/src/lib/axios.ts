@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {STORAGE_KEYS} from "@/config/constant";
+import {DELAY_TIME, STORAGE_KEYS} from "@/config/constant";
 
 const myAxios = axios.create({
 	baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -12,11 +12,12 @@ const myAxios = axios.create({
 
 // ─── Request Interceptor ───────────────────────────────────────────────
 // Tự động gắn Bearer token vào mỗi request
-myAxios.interceptors.request.use((config) => {
+myAxios.interceptors.request.use(async (config) => {
 	const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
 	if (token) {
 		config.headers.Authorization = `Bearer ${token}`;
 	}
+  await new Promise((resolve) => setTimeout(resolve, DELAY_TIME));
 	return config;
 });
 

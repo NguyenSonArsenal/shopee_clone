@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import FieldLabel from "@component/FieldLabel";
+import FieldLabel from "@component/form/FieldLabel";
 import {
   IconEmail,
   IconLock,

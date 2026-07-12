@@ -18,3 +18,5 @@ export const USER_ROLES = [
   { value: "kh", label: "Khách hàng" },
 ] as const;
 
+export const DELAY_TIME = 5000; // MS
+

@@ -2,7 +2,7 @@
 
 import Cookies from 'js-cookie'
 import { useState } from "react";
-import FieldLabel from "@component/FieldLabel";
+import FieldLabel from "@component/form/FieldLabel";
 import {IconEmail, IconLogin} from "@icon";
 import Link from "next/link";
 import {AUTH_CONFIG, STORAGE_KEYS} from "@/config/constant";
@@ -14,6 +14,7 @@ import {Spin} from "antd";
 import {useRouter} from "next/navigation";
 import Notification from "@component/Notification";
 import authApi from "@feature/auth/authApi";
+import AppSpin from "@component/AppSpin";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -36,26 +37,26 @@ export default function ForgotPasswordForm() {
     return !newErrors.email && !newErrors.password
   }
 
-  const clearInputError = () => {
+  const clearError = () => {
     setErrors({
       email: ""
     });
+    setServerError("")
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Submit forgot password with email:", email);
     setIsSubmitting(true)
-    delay(3000)
     if (!validate()) {
       setIsSubmitting(false)
       return
     }
-    clearInputError()
+    clearError()
     try {
       const data = await authApi.forgotPasswordSendOtp(email)
-      Cookies.set(STORAGE_KEYS.OTP_TTL, data.expires_at,  { expires: new Date(data.expires_at) })
-      Cookies.set(STORAGE_KEYS.OTP_IDENTIFIER_FIELD, email,  1)
+      Cookies.set(STORAGE_KEYS.OTP_TTL, data.expires_at, { expires: new Date(data.expires_at) })
+      Cookies.set(STORAGE_KEYS.OTP_IDENTIFIER_FIELD, email, {expires: new Date(data.expires_at)})
       return router.replace(ROUTES.FORGOT_PASSWORD_VERIFY)
     } catch (err) {
       if (err.response?.status === 422) {
@@ -100,7 +101,7 @@ export default function ForgotPasswordForm() {
 
           <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed"
                   disabled={isSubmitting}>
-            {isSubmitting ? <Spin size="small"/> : ""}
+            {isSubmitting ? <AppSpin size="small" /> : ""}
             {isSubmitting ? "Đang gửi mã OTP..." : "Gửi mã OTP"}
           </button>
 

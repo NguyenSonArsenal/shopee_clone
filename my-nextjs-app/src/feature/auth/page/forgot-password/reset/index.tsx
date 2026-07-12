@@ -1,6 +1,6 @@
 "use client"
 
-import FieldLabel from "@component/FieldLabel";
+import FieldLabel from "@component/form/FieldLabel";
 import {IconEye, IconLock, IconLogin} from "@icon";
 import Link from "next/link";
 import {ROUTES} from "@/config/constant";

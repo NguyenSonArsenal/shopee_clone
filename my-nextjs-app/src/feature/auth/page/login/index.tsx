@@ -1,6 +1,6 @@
 "use client"
 
-import FieldLabel from "@component/FieldLabel";
+import FieldLabel from "@component/form/FieldLabel";
 import {IconEmail, IconEye, IconEyeOff, IconLock, IconLogin} from "@icon";
 import Link from "next/link";
 import {useState} from "react";
@@ -10,8 +10,10 @@ import Notification from "@component/Notification"
 import {Spin} from 'antd';
 import authApi from "@feature/auth/authApi";
 
-import {AUTH_CONFIG, STORAGE_KEYS} from "@/config/constant";
+import {AUTH_CONFIG, DELAY_TIME, STORAGE_KEYS} from "@/config/constant";
 import {ROUTES} from "@/config/route";
+import {delay} from "@/helper/helper";
+import FieldError from "@component/form/FieldError";
 
 export default function LoginForm({}) {
   const [showPass, setShowPass] = useState(false)
@@ -47,9 +49,8 @@ export default function LoginForm({}) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!validate()) return
-
     setIsSubmitting(true)
-
+    _clear()
     try {
       const data = await authApi.login({email, password});
       localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.access_token)
@@ -68,6 +69,11 @@ export default function LoginForm({}) {
       }
       setIsSubmitting(false)
     }
+  }
+
+  const _clear = () => {
+    setErrors({ email: "", password: "" })
+    setServerError('')
   }
 
   return (
@@ -97,7 +103,7 @@ export default function LoginForm({}) {
                 onChange={e => setEmail(e.target.value)}
               />
             </div>
-            {errors.email && <p className="field-error">{errors.email}</p>}
+            <FieldError message={errors.email} />
           </div>
 
           {/* Mật khẩu */}
@@ -125,7 +131,7 @@ export default function LoginForm({}) {
                 {showPass ? <IconEyeOff/> : <IconEye/>}
               </button>
             </div>
-            {errors.password && <p className="field-error">{errors.password}</p>}
+            <FieldError message={errors.password} />
           </div>
 
           <div className="login-meta">

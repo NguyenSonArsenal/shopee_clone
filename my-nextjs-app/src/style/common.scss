@@ -28,10 +28,29 @@ a {
 }
 
 .alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   font-size: var(--fs);
   padding: 10px 14px;
   border-radius: var(--radius);
   margin-bottom: 16px;
+}
+
+.alert-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.6;
+  padding: 0;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .alert-danger {
@@ -61,12 +80,24 @@ a {
   background: var(--red);
   color: #fff;
 }
-.ant-spin-dot-item {
-  background-color: #ffffff !important;
-}
-
 .btn-submit {
   &:disabled {
     opacity: 0.65;
+  }
+}
+
+.app-spin {
+  display: inline-block;
+  vertical-align: middle;
+  border-style: solid;
+  border-color: currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: app-spin-rotate 0.8s linear infinite;
+}
+
+@keyframes app-spin-rotate {
+  to {
+    transform: rotate(360deg);
   }
 }

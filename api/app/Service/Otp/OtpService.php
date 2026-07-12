@@ -2,6 +2,7 @@
 
 namespace App\Service\Otp;
 
+use App\Models\Enum\ErrorCode;
 use App\Models\Enum\HttpStatus;
 use App\Models\Otp;
 use App\Service\Otp\Channel\OtpInterface;
@@ -90,7 +91,7 @@ class OtpService
         // Nhập sai quá số lần cho phép -> khóa mã (case: chống brute-force)
         $maxAttempts = (int) config('config.otp.max_verify_attempts', 5);
         if ($row->attempts >= $maxAttempts) {
-            return ['success' => false, 'message' => 'Nhập sai quá nhiều lần. Vui lòng yêu cầu mã mới.', 'code' => HttpStatus::TOO_MANY_REQUESTS->value];
+            return $this->__maxAttemptsExceededResponse();
         }
 
         // Sai mã -> tăng số lần sai
@@ -99,7 +100,7 @@ class OtpService
             $left = $maxAttempts - $row->attempts;
 
             if ($left <= 0) {
-                return ['success' => false, 'message' => 'Bạn đã nhập sai quá số lần cho phép. Vui lòng yêu cầu mã mới.', 'code' => HttpStatus::TOO_MANY_REQUESTS->value];
+                return $this->__maxAttemptsExceededResponse();
             }
 
             return ['success' => false, 'message' => "Mã xác thực không đúng. Còn {$left} lần thử.", 'code' => HttpStatus::UNPROCESSABLE_ENTITY->value];
@@ -108,5 +109,15 @@ class OtpService
         // Đúng -> đánh dấu đã dùng để không tái sử dụng
         $row->update(['used_at' => now()]);
         return ['success' => true, 'message' => 'Thành công'];
+    }
+
+    private function __maxAttemptsExceededResponse(): array
+    {
+        return [
+            'success' => false,
+            'message' => 'Bạn đã nhập sai quá số lần cho phép. Vui lòng yêu cầu mã mới.',
+            'code' => HttpStatus::TOO_MANY_REQUESTS->value,
+            'errorCode' => ErrorCode::OTP_MAX_ATTEMPTS->value,
+        ];
     }
 }

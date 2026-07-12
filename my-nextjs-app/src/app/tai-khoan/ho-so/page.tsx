@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react";
-import FieldLabel from "@component/FieldLabel";
+import FieldLabel from "@component/form/FieldLabel";
 import { IconSave, IconCamera, IconCopy, IconUser, IconLink } from "@icon";
 import { message } from "antd";
 
@@ -33,7 +33,7 @@ export default function ProfilePage() {
 
       {/* ═══ PROFILE CARD ═══ */}
       <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-xs">
-        
+
         {/* Header */}
         <div className="flex items-center gap-3 border-b border-gray-100 pb-5 mb-6">
           <div className="w-10 h-10 rounded-full bg-red-50 text-[#b20707] flex items-center justify-center">
@@ -46,7 +46,7 @@ export default function ProfilePage() {
 
         {/* Form */}
         <form onSubmit={handleSave} className="flex flex-col gap-6">
-          
+
           {/* Avatar Section */}
           <div className="flex flex-col sm:flex-row items-center gap-6 bg-gray-50/50 p-6 rounded-2xl border border-gray-100">
             <div className="w-24 h-24 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-3xl border-4 border-white shadow-md relative group">
@@ -55,7 +55,7 @@ export default function ProfilePage() {
                 <IconCamera className="w-6 h-6 text-white" />
               </div>
             </div>
-            
+
             <div className="flex flex-col items-center sm:items-start gap-2">
               <button
                 type="button"
@@ -72,7 +72,7 @@ export default function ProfilePage() {
 
           {/* Form Fields Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
+
             {/* Họ và tên */}
             <div className="flex flex-col gap-2">
               <FieldLabel htmlFor="fullname" required>Họ và tên</FieldLabel>
@@ -155,7 +155,7 @@ export default function ProfilePage() {
 
       {/* ═══ REFERRAL PROGRAM CARD ═══ */}
       <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-xs flex flex-col gap-5">
-        
+
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-red-50 text-[#b20707] flex items-center justify-center">
             <IconLink className="w-5 h-5" />
@@ -171,7 +171,7 @@ export default function ProfilePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-red-50/30 p-6 rounded-2xl border border-red-50">
-          
+
           {/* Mã giới thiệu */}
           <div className="flex flex-col gap-2 md:col-span-1">
             <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">Mã giới thiệu</label>

@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react";
-import FieldLabel from "@component/FieldLabel";
+import FieldLabel from "@component/form/FieldLabel";
 import { IconSave, IconLock, IconEye, IconEyeOff, IconKey } from "@icon";
 import { message } from "antd";
 
@@ -56,7 +56,7 @@ export default function ChangePasswordPage() {
 
       {/* Form */}
       <form onSubmit={handleUpdatePassword} className="flex flex-col gap-6 max-w-xl">
-        
+
         {/* Mật khẩu hiện tại */}
         <div className="flex flex-col gap-2">
           <FieldLabel htmlFor="currentPassword" required>Mật khẩu hiện tại</FieldLabel>
