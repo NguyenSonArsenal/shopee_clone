@@ -2,65 +2,47 @@
 
 namespace App\Service\Auth;
 
+use App\Models\Enum\HttpStatus;
 use App\Models\User;
-use Illuminate\Support\Facades\Cache;
+use App\Service\Otp\OtpService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class AuthService
 {
-    private const RESET_TOKEN_TTL = 600; // 10 phút
+    private $otpService;
 
-    /**
-     * Tìm kiếm người dùng bằng email hoặc số điện thoại.
-     */
+    public function __construct(OtpService $otpService)
+    {
+        $this->otpService = $otpService;
+    }
+
     public function findUserByIdentifier(string $identifier)
     {
         return User::where('email', $identifier)->first();
     }
 
     /**
-     * Cấp reset_token (lưu Cache) sau khi OTP đã verify thành công.
-     * Token này là "vé" để đi tiếp bước đặt lại mật khẩu (xem resetPassword).
-     *
-     * @param User $user Người dùng đã xác thực OTP thành công
-     * @return string reset_token dùng 1 lần, hết hạn sau RESET_TOKEN_TTL giây
-     */
-    public function createResetToken(User $user): string
-    {
-        $resetToken = Str::random(64);
-        Cache::put('reset_token:' . $resetToken, $user->id, self::RESET_TOKEN_TTL);
-
-        return $resetToken;
-    }
-
-    /**
-     * Thực hiện đổi mật khẩu dựa trên reset_token.
+     * Thực hiện đổi mật khẩu dựa trên reset_token (validate/consume qua OtpService).
      */
     public function resetPassword(string $resetToken, string $password): array
     {
-        $tokenKey = 'reset_token:' . $resetToken;
-        $userId   = Cache::get($tokenKey);
-
-        if (!$userId) {
-            return ['success' => false, 'message' => 'Phiên đặt lại mật khẩu đã hết hạn.', 'code' => 422];
+        $check = $this->otpService->validateResetToken($resetToken);
+        if (!$check['success']) {
+            return $check;
         }
 
-        $user = User::find($userId);
+        $user = $this->findUserByIdentifier($check['identifier']);
         if (!$user) {
-            return ['success' => false, 'message' => 'Tài khoản không tồn tại.', 'code' => 404];
+            return ['success' => false, 'message' => 'Tài khoản không tồn tại.', 'code' => HttpStatus::NOT_FOUND->value];
         }
 
-        // Cập nhật trường password (ở API project dùng 'password' thay vì 'password_hash')
         $user->password = Hash::make($password);
         $user->save();
 
-        Cache::forget($tokenKey);
-        Cache::forget('otp:' . $user->id);
+        $this->otpService->markResetTokenUsed($resetToken);
 
-        Log::info('Password reset successful via API', ['user_id' => $user->id]);
-        return ['success' => true];
+        return ['success' => true, 'message' => 'Đặt lại mật khẩu thành công.'];
     }
 
     /**

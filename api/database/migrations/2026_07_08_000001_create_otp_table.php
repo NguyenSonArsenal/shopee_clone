@@ -11,10 +11,13 @@ return new class extends Migration {
             $table->id();
             $table->string('identifier', 100);
             $table->enum('purpose', ['register', 'forgot_password'])->comment('Mục đích gửi otp');
-            $table->string('code');
-            $table->dateTime('expires_at')->comment('Thời gian hết hạn mã otp');
-            $table->timestamp('used_at')->nullable()->comment('Thời điểm mã được dùng -> đảm bảo dùng 1 lần');
-            $table->unsignedTinyInteger('attempts')->default(0)->comment('Số lần nhập sai -> chống brute-force');
+            $table->string('otp')->comment('Đã mã hóa');
+            $table->dateTime('otp_expires_at')->comment('Thời gian hết hạn mã otp');
+            $table->dateTime('otp_used_at')->nullable()->comment('Thời điểm mã được dùng -> đảm bảo dùng 1 lần');
+            $table->unsignedTinyInteger('attempts')->default(0)->comment('Số lần nhập sai mã otp -> chống brute-force');
+            $table->string('reset_token')->nullable()->comment('Mã cho màn hình form password reset');
+            $table->dateTime('reset_token_expires_at')->nullable()->comment('Thời gian hết hạn mã reset token');
+            $table->dateTime('reset_token_used_at')->nullable()->comment('Mã reset token được sử dụng khi nào ');
             $table->timestamps();
         });
     }

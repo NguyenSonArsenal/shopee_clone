@@ -162,8 +162,7 @@ class AuthController extends Controller
                 return $this->error('Tài khoản chưa được kích hoạt. Vui lòng liên hệ quản trị viên.', 403);
             }
 
-            $strategy = $this->otpStrategyFactory->make($user->email);
-            $result = $this->otpService->send($strategy, $user->email, $user->id, OtpPurpose::FORGOT_PASSWORD->value);
+            $result = $this->otpService->send($user->email, OtpPurpose::FORGOT_PASSWORD->value);
 
             if ($result['success']) {
                 return $this->success(arrayGet($result, 'data'));
@@ -234,8 +233,7 @@ class AuthController extends Controller
                 );
             }
 
-            $resetToken = $this->authService->createResetToken($user);
-            return $this->success(['reset_token' => $resetToken], 'Xác thực thành công');
+            return $this->success(arrayGet($result, 'data'), 'Xác thực thành công');
         } catch (\Exception $e) {
             Log::error($e);
             return $this->systemError();
@@ -247,11 +245,20 @@ class AuthController extends Controller
      */
     public function forgotPasswordReset(ResetPasswordRequest $request)
     {
-        $result = $this->authService->resetPassword($request->reset_token, $request->password);
-        return response()->json(
-            array_diff_key($result, ['code' => '']),
-            $result['success'] ? 200 : ($result['code'] ?? 422)
-        );
+        try {
+            $result = $this->authService->resetPassword($request->reset_token, $request->password);
+            if (!$result['success']) {
+                return $this->error(
+                    message: $result['message'],
+                    code: $result['code'] ?? HttpStatus::UNPROCESSABLE_ENTITY->value,
+                );
+            }
+
+            return $this->success();
+        } catch (\Exception $e) {
+              Log::error($e);
+            return $this->systemError();
+        }
     }
 
     /**

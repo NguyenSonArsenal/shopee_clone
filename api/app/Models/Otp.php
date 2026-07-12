@@ -15,16 +15,21 @@ class Otp extends BaseModel
     protected $table = 'otp';
     protected $casts = [
         'purpose'    => OtpPurpose::class,
-        'expires_at' => 'datetime',
-        'used_at'    => 'datetime',
+        'otp_expires_at' => 'datetime',
+        'otp_used_at'    => 'datetime',
+        'reset_token_expires_at'    => 'datetime',
+        'reset_token_used_at'    => 'datetime',
     ];
 
     protected $fillable = [
         'identifier',
         'purpose',
-        'code',
-        'expires_at',
-        'used_at',
+        'otp',
+        'otp_expires_at',
+        'otp_used_at',
         'attempts',
+        'reset_token',
+        'reset_token_expires_at',
+        'reset_token_used_at',
     ];
 }

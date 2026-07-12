@@ -21,6 +21,7 @@ class User extends Authenticatable
 
     const GENDER_BOY = 1;
     const GENDER_GIRL = 2;
+
     protected $fillable = [
         'username',
         'password',

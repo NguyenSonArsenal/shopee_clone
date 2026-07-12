@@ -3,7 +3,7 @@
 import FieldLabel from "@component/form/FieldLabel";
 import {IconEye, IconLock, IconLogin} from "@icon";
 import Link from "next/link";
-import {ROUTES} from "@/config/constant";
+import {ROUTES} from "@/config/route";
 
 export default function ResetPasswordForm() {
   return (
@@ -61,15 +61,13 @@ export default function ResetPasswordForm() {
             </div>
           </div>
 
-          {/* Nút submit */}
           <button type="submit" className="btn btn-primary btn-submit">
-            <IconLogin />
             Đặt lại mật khẩu
           </button>
         </form>
 
         <p className="login-register-link" style={{marginTop: 24}}>
-          <Link href={ROUTES.LOGIN}>← Quay lại đăng nhập</Link>
+          <Link href={ROUTES.LOGIN}>Quay lại đăng nhập</Link>
         </p>
       </div>
     </div>

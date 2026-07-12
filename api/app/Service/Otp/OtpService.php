@@ -8,9 +8,17 @@ use App\Models\Otp;
 use App\Service\Otp\Channel\OtpInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class OtpService
 {
+    private $otpStrategyFactory;
+
+    public function __construct(OtpStrategyFactory $otpStrategyFactory)
+    {
+        $this->otpStrategyFactory = $otpStrategyFactory;
+    }
+
     public static function genOtp()
     {
         return 123456; // @todo remove this line in production
@@ -20,8 +28,9 @@ class OtpService
     /**
      * Gửi OTP qua channel bất kỳ.
      */
-    public function send(OtpInterface $channel, string $destination, string $userId, string $purpose): array
+    public function send($destination, string $purpose): array
     {
+        $channel = $this->otpStrategyFactory->make($destination);
         $sent = Otp::where('identifier', $destination)
             ->where('purpose', $purpose)
             ->where('created_at', '>=', now()->subMinutes($channel->getRateLimitMinutes()))
@@ -53,13 +62,13 @@ class OtpService
         Otp::create([
             'identifier' => $destination,
             'purpose'    => $purpose,
-            'code'       => Hash::make($otp),
-            'expires_at' => $expiresAt,
+            'otp'       => bcrypt($otp),
+            'otp_expires_at' => $expiresAt,
         ]);
 
         $data = [
-            'expires_at_formated' => $expiresAt->format(getConfig('format_datetime')),
-            'expires_at' => $expiresAt->getTimestamp() * 1000 // x 1000 to convert s (php) to ms (for js using)
+            'otp_expires_at_formated' => $expiresAt->format(getConfig('format_datetime')),
+            'otp_expires_at' => $expiresAt->getTimestamp() * 1000 // x 1000 to convert s (php) to ms (for js using)
         ];
         return ['success' => true, 'message' => 'Thành công', 'data' => $data];
     }
@@ -67,8 +76,9 @@ class OtpService
     /**
      * Xác thực OTP — đọc trực tiếp từ bảng `otp`.
      */
-    public function verify(string $identifier, string $purpose, string $otp): array
+    public function verify($identifier, string $purpose, string $otp): array
     {
+        $channel = $this->otpStrategyFactory->make($identifier);
         $row = Otp::where('identifier', $identifier)
             ->where('purpose', $purpose)
             ->latest('id')
@@ -79,12 +89,12 @@ class OtpService
         }
 
         // Đã dùng rồi -> không cho dùng lại (case: OTP dùng 1 lần)
-        if ($row->used_at !== null) {
+        if ($row->otp_used_at !== null) {
             return ['success' => false, 'message' => 'Mã xác thực đã được sử dụng. Vui lòng gửi lại.', 'code' => HttpStatus::UNPROCESSABLE_ENTITY->value];
         }
 
         // Hết hạn
-        if ($row->expires_at->isPast()) {
+        if ($row->otp_expires_at->isPast()) {
             return ['success' => false, 'message' => 'Mã xác thực đã hết hạn. Vui lòng gửi lại.', 'code' => HttpStatus::UNPROCESSABLE_ENTITY->value];
         }
 
@@ -95,7 +105,7 @@ class OtpService
         }
 
         // Sai mã -> tăng số lần sai
-        if (!Hash::check($otp, $row->code)) {
+        if (!Hash::check($otp, $row->otp)) {
             $row->increment('attempts');
             $left = $maxAttempts - $row->attempts;
 
@@ -103,12 +113,58 @@ class OtpService
                 return $this->__maxAttemptsExceededResponse();
             }
 
-            return ['success' => false, 'message' => "Mã xác thực không đúng. Còn {$left} lần thử.", 'code' => HttpStatus::UNPROCESSABLE_ENTITY->value];
+            return [
+                'success' => false,
+                'message' => "Mã xác thực không đúng. Còn {$left} lần thử.",
+                'code' => HttpStatus::UNPROCESSABLE_ENTITY->value
+            ];
         }
 
-        // Đúng -> đánh dấu đã dùng để không tái sử dụng
-        $row->update(['used_at' => now()]);
-        return ['success' => true, 'message' => 'Thành công'];
+        $resetToken = Str::random(64);
+        $resetTokenExpiresAt = now()->addMinutes($channel->getTtlMinutes());
+        $row->update([
+            'otp_used_at' => now(),
+            'reset_token' => $resetToken,
+            'reset_token_expires_at' => $resetTokenExpiresAt
+        ]);
+        return [
+            'success' => true,
+            'message' => 'Thành công',
+            'data' => [
+                'reset_token' => $resetToken,
+                'reset_token_expires_at' => $resetTokenExpiresAt->getTimestamp() * 1000
+            ]
+        ];
+    }
+
+    /**
+     * Kiểm tra reset_token còn hợp lệ để đổi mật khẩu hay không.
+     */
+    public function validateResetToken(string $resetToken): array
+    {
+        $row = Otp::where('reset_token', $resetToken)->latest('id')->first();
+
+        if (!$row) {
+            return ['success' => false, 'message' => 'Token không hợp lệ.', 'code' => HttpStatus::UNPROCESSABLE_ENTITY->value];
+        }
+
+        if ($row->reset_token_used_at !== null) {
+            return ['success' => false, 'message' => 'Token đã được sử dụng.', 'code' => HttpStatus::UNPROCESSABLE_ENTITY->value];
+        }
+
+        if ($row->reset_token_expires_at->isPast()) {
+            return ['success' => false, 'message' => 'Token đã hết hạn. Vui lòng thực hiện lại.', 'code' => HttpStatus::UNPROCESSABLE_ENTITY->value];
+        }
+
+        return ['success' => true, 'identifier' => $row->identifier];
+    }
+
+    /**
+     * Đánh dấu reset_token đã được sử dụng.
+     */
+    public function markResetTokenUsed(string $resetToken): void
+    {
+        Otp::where('reset_token', $resetToken)->update(['reset_token_used_at' => now()]);
     }
 
     private function __maxAttemptsExceededResponse(): array
