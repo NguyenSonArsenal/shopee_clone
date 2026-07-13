@@ -11,6 +11,7 @@
     --white:    #ffffff;
     --success:  #0f5132;
     --success-bg: #d1e7dd;
+    --success-bg: #d1e7dd;
     --danger:   #f8d7da;
     --danger-text: #842029;
 
@@ -21,4 +22,7 @@
 
     --radius: 10px;
     --shadow: 0 2px 12px rgba(0, 0, 0, .08);
+
+    --modal-min-width: "280px";
+    --modal-max-width: "75vw";
 }

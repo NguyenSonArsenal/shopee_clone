@@ -26,7 +26,6 @@ export default function ResetPasswordForm() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const validate = () => {
-    return true
     const newErrors = { password: "", password_confirmation: "" }
 
     if (!password) {

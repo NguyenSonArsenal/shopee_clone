@@ -13,8 +13,13 @@ import {
   IconBuilding
 } from "@icon";
 import Link from "next/link";
+import { Radio } from "antd";
 import { USER_ROLES } from "@/config/constant";
 import { ROUTES } from "@/config/route";
+import DebugPanel from "@component/DebugPanel";
+import MyModal from "@modal/MyModal";
+import TermOfUseContent from "./TermOfUseContent";
+import TermOfPolicyContent from "./TermOfPolicyContent";
 
 export default function RegisterForm() {
   const [role, setRole] = useState("");
@@ -29,6 +34,9 @@ export default function RegisterForm() {
   const [showPass, setShowPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
   const [agree, setAgree] = useState(true);
+
+  const [openTermModal, setOpenTermModal] = useState(false)
+  const [openPolicyModal, setOpenPolicyModal] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,33 +55,21 @@ export default function RegisterForm() {
 
   return (
     <div className="right">
-      <div className="login-card" style={{ maxWidth: 520 }}>
+      <div className="login-card" style={{ maxWidth: 600 }}>
         <h1 className="login-title text-center">Tạo tài khoản mới</h1>
 
         <form className="login-form" noValidate onSubmit={handleSubmit}>
 
           {/* Vai trò */}
-          <div className="field-group">
+          <div className="flex flex-row items-center gap-3">
             <FieldLabel htmlFor="role" required>Vai trò</FieldLabel>
-            <div className="field-wrap">
-              <span className="field-icon">
-                <IconUser />
-              </span>
-              <select
-                id="role"
-                className="field-input select-control"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                style={{ appearance: "none", background: "transparent" }}
-              >
-                <option value="" disabled>Chọn vai trò</option>
-                {USER_ROLES.map((item) => (
-                  <option key={item.value} value={item.value}>
-                    {item.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Radio.Group
+              id="role"
+              className="role-radio-group"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              options={USER_ROLES.map((item) => ({ value: item.value, label: item.label }))}
+            />
           </div>
 
           {/* Tên công ty (Chỉ hiển thị khi chọn Công ty F2 - 'f2') */}
@@ -234,20 +230,20 @@ export default function RegisterForm() {
           <div className="terms" style={{ display: "flex", alignItems: "center", gap: 8, margin: "16px 0", fontSize: 13 }}>
             <input
               type="checkbox"
-              id="agree"
               checked={agree}
               onChange={(e) => setAgree(e.target.checked)}
               style={{ cursor: "pointer" }}
             />
-            <label htmlFor="agree" style={{ cursor: "pointer", color: "#666" }}>
+            <label htmlFor="agree" className="text-(--muted)">
               Tôi đồng ý với{" "}
-              <Link href="/terms" target="_blank" style={{ color: "var(--primary)", textDecoration: "underline" }}>
+              <button type="button" onClick={() => setOpenTermModal(true)} className="text-(--primary) cursor-pointer">
                 Điều khoản dịch vụ
-              </Link>{" "}
+              </button>
+              {" "}
               và{" "}
-              <Link href="/privacy" target="_blank" style={{ color: "var(--primary)", textDecoration: "underline" }}>
+              <button type="button" onClick={() => setOpenPolicyModal(true)} className="text-(--primary) cursor-pointer">
                 Chính sách bảo mật
-              </Link>
+              </button>
             </label>
           </div>
 
@@ -261,6 +257,16 @@ export default function RegisterForm() {
           <Link href={ROUTES.LOGIN}>Đăng nhập</Link>
         </p>
       </div>
+
+      <MyModal open={openTermModal} title={"Điều khoản & Điều kiện"} onClose={() => setOpenTermModal(false)}>
+        <TermOfUseContent />
+      </MyModal>
+
+      <MyModal open={openPolicyModal} title={"Chính sách bảo mật"} onClose={() => setOpenPolicyModal(false)}>
+        <TermOfPolicyContent />
+      </MyModal>
+
+      <DebugPanel data={{ openTermModal, openPolicyModal  }} />
     </div>
   );
 }

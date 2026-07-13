@@ -101,3 +101,48 @@ a {
     transform: rotate(360deg);
   }
 }
+
+.role-radio-group {
+  .ant-radio-checked {
+    background-color: var(--red);
+    border-color: var(--red);
+  }
+
+  .ant-radio-wrapper:hover .ant-radio {
+    border-color: var(--red);
+  }
+}
+
+/* Modal */
+//.ant-modal {
+//  min-width: var(--modal-min-width);
+//  max-width: var(--modal-max-width);
+//}
+//
+//.ant-modal-container {
+//  width: 100%;
+//  @media (min-width:600px) {
+//    width: var(--modal-max-width);
+//  }
+//}
+
+.term-modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.ant-modal-title {
+  font-weight: 700;
+  font-size: var(--adm-font-size-10);
+  line-height: 25px;
+  text-align: center;
+}
+.ant-modal-body {
+  padding: 12px 0;
+  text-align: justify;
+  border-bottom: 1px solid #eeeeee;
+}
+/* End modal */
+

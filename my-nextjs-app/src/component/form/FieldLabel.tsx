@@ -21,7 +21,7 @@ export default function FieldLabel({
   return (
     <label htmlFor={htmlFor} className={className}>
       {children} &nbsp;
-      {required && <span className="required-star" aria-hidden="true">*</span>}
+      {required && <span className="text-(--primary)" aria-hidden="true">*</span>}
     </label>
   )
 }
