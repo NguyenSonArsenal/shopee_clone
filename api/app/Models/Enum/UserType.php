@@ -2,10 +2,11 @@
 
 namespace App\Models\Enum;
 
-enum UserStatus: int
+enum UserType: string
 {
-    case ACTIVE = 1;
-    case BLOCKED = 0;
+    case F2 = 'f2';
+    case CTV = 'ctv';
+    case KH = 'kh';
 
     /**
      * Lấy tên hiển thị tiếng Việt tương ứng
@@ -13,8 +14,9 @@ enum UserStatus: int
     public function label(): string
     {
         return match ($this) {
-            self::ACTIVE => 'Hoạt động',
-            self::BLOCKED => 'Đã khóa',
+            self::F2 => 'Công ty (F2)',
+            self::CTV => 'CTV',
+            self::KH => 'Khách hàng',
         };
     }
 }

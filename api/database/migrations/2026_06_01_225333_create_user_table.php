@@ -6,15 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateUserTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('user', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('username')->unique();
             $table->string('password');
             $table->string('full_name')->nullable();
@@ -24,17 +19,16 @@ class CreateUserTable extends Migration
             $table->date('birthday')->nullable();
             $table->string('avatar')->nullable();
             $table->text('rf_token')->nullable();
-            $table->tinyInteger('status')->default(1)->nullable()->comment('1 active, 2 block');
+            $table->enum('type', ['ctv', 'f2', 'kh'])->comment('CTV, f2, kh');
+            $table->string('company_name')->nullable()->comment('Chỉ có khi type = f2');
+            $table->string('referral_code')->nullable()->unique()->comment('Mã giới thiệu');
+            $table->uuid('sponsor_id')->nullable()->comment("ID user giới thiệu");
+            $table->boolean('status')->default(true)->comment("Trạng thái hoạt động true/false");
             $table->timestamps();
             $table->softDeletes();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('user');

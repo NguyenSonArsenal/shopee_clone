@@ -3,10 +3,12 @@
 namespace App\Service\Auth;
 
 use App\Models\Enum\HttpStatus;
+use App\Models\Enum\UserStatus;
 use App\Models\User;
 use App\Service\Otp\OtpService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class AuthService
 {
@@ -46,17 +48,52 @@ class AuthService
     }
 
     /**
-     * Chuẩn hóa định dạng số điện thoại.
+     * Đăng ký tài khoản mới (bỏ qua bước xác thực OTP, validate xong lưu DB luôn).
      */
-    public function normalizePhone(string $phone): string
+    public function register(array $data): User
     {
-        $phone = preg_replace('/[\s\-\.\(\)]/', '', $phone);
-        if (str_starts_with($phone, '+84')) {
-            $phone = '0' . substr($phone, 3);
-        } elseif (str_starts_with($phone, '84') && strlen($phone) === 11) {
-            $phone = '0' . substr($phone, 2);
+        $sponsor = $this->resolveSponsor($data['ref_code'] ?? null);
+
+        return User::create([
+            'username' => $this->generateUsername($data['email']),
+            'full_name' => $data['full_name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'password' => Hash::make($data['password']),
+            'type' => $data['type'],
+            'company_name' => $data['company_name'] ?? null,
+            'referral_code' => $this->generateReferralCode(),
+            'sponsor_id' => $sponsor?->id,
+            'status' => UserStatus::ACTIVE,
+        ]);
+    }
+
+    private function resolveSponsor(?string $refCode): ?User
+    {
+        if (!$refCode) {
+            return null;
         }
-        return $phone;
+        return User::where('referral_code', strtoupper($refCode))->first();
+    }
+
+    private function generateReferralCode(): string
+    {
+        do {
+            $code = strtoupper(Str::random(8));
+        } while (User::where('referral_code', $code)->exists());
+
+        return $code;
+    }
+
+    private function generateUsername(string $email): string
+    {
+        $base = Str::slug(explode('@', $email)[0], '_');
+        $username = $base;
+        $i = 0;
+        while (User::where('username', $username)->exists()) {
+            $username = $base . '_' . ++$i;
+        }
+        return $username;
     }
 
     /**

@@ -47,22 +47,16 @@ class AuthController extends Controller
     public function postRegister(RegisterRequest $request)
     {
         try {
-            $user = User::create([
-                'username' => $request->username,
-                'password' => bcrypt($request->password),
-                'email' => $request->email,
-                'status' => User::STATUS_ACTIVE,
-                'gender' => $request->gender,
-            ]);
+            $user = $this->authService->register($request->validated());
 
             $data = [
                 'id' => $user->id,
-                'username' => $user->username
+                'username' => $user->username,
             ];
-            return $this->success($data, "Đăng ký tài khoản thành công!", 201);
+            return $this->success($data, "Đăng ký tài khoản thành công!", HttpStatus::CREATED->value);
         } catch (\Exception $e) {
             Log::error($e);
-            return $this->error($e->getMessage());
+            return $this->systemError();
         }
     }
 
@@ -74,7 +68,7 @@ class AuthController extends Controller
         try {
             sleep(1); // @todo
             $user = User::where('email', $request->email)
-                ->where('status', User::STATUS_ACTIVE)
+                ->where('status', UserStatus::ACTIVE)
                 ->first();
 
             if (!$user || !Hash::check($request->password, $user->password)) {
@@ -128,7 +122,7 @@ class AuthController extends Controller
         // Kiểm tra refresh token có khớp với DB không (tránh dùng token cũ đã logout)
         $user = User::where('id', $payload['id'])
             ->where('rf_token', $rfToken)
-            ->where('status', User::STATUS_ACTIVE)
+            ->where('status', UserStatus::ACTIVE)
             ->first();
 
         if (!$user) {

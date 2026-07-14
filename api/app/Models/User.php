@@ -3,24 +3,31 @@
 namespace App\Models;
 
 use App\Models\Enum\UserGender;
+use App\Models\Enum\UserType;
 use App\Models\Enum\UserStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $table = 'user';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
-    const STATUS_ACTIVE = 1;
-    const STATUS_BLOCKED = 2;
-
-    const GENDER_BOY = 1;
-    const GENDER_GIRL = 2;
+    protected static function booted()
+    {
+        static::creating(function (User $user) {
+            if (!$user->id) {
+                $user->id = (string) Str::uuid();
+            }
+        });
+    }
 
     protected $fillable = [
         'username',
@@ -33,11 +40,21 @@ class User extends Authenticatable
         'gender',
         'avatar',
         'birthday',
+        'type',
+        'company_name',
+        'referral_code',
+        'sponsor_id',
     ];
 
     // Khai báo cast kiểu dữ liệu sang Enum
     protected $casts = [
         'status' => UserStatus::class,
         'gender' => UserGender::class,
+        'type' => UserType::class,
     ];
+
+    public function sponsor()
+    {
+        return $this->belongsTo(User::class, 'sponsor_id');
+    }
 }

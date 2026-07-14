@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Enum\UserStatus;
 use App\Models\User;
 use App\Service\Auth\JWTService;
 use Closure;
@@ -40,7 +41,7 @@ class ApiJwtAuth
         }
 
         $user = User::where('id', $payload['id'])
-            ->where('status', User::STATUS_ACTIVE)
+            ->where('status', UserStatus::ACTIVE)
             ->first();
 
         if (!$user) {
