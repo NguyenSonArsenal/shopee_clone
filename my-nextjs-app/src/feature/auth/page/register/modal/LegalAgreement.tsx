@@ -11,12 +11,9 @@ type LegalAgreementProps = {
 }
 
 // memo: prevent re-render
-
-export default memo(function LegalAgreement({ checked, setAgree }: LegalAgreementProps) {
+const LegalAgreement = ({ checked, setAgree }: LegalAgreementProps) => {
   const [openTermModal, setOpenTermModal] = useState<boolean>(false)
   const [openPolicyModal, setOpenPolicyModal] = useState<boolean>(false)
-
-  console.log(checked, '// Component LegalAgreement: agree')
 
   return (
     <>
@@ -48,11 +45,9 @@ export default memo(function LegalAgreement({ checked, setAgree }: LegalAgreemen
       <MyModal open={openPolicyModal} title={"Chính sách bảo mật"} onClose={() => setOpenPolicyModal(false)}>
         <TermOfPolicyContent />
       </MyModal>
-
-      {/*<DebugPanel data={{ openTermModal, openPolicyModal  }} />*/}
     </>
   );
-})
+}
 
-// export default LegalAgreement;
+export default LegalAgreement;
 
