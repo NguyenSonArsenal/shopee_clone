@@ -26,7 +26,7 @@ export default function MyModal({ open, title, onClose, confirmText = "Tôi đã
       mask={{ closable: false }}
       className="term-modal"
     >
-      <div className="term-modal-body">
+      <div className="term-modal-body pb-4">
         {children}
       </div>
     </Modal>

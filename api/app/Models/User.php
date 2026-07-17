@@ -24,7 +24,7 @@ class User extends Authenticatable
     {
         static::creating(function (User $user) {
             if (!$user->id) {
-                $user->id = (string) Str::uuid();
+                $user->id = (string) Str::orderedUuid();
             }
         });
     }

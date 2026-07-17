@@ -17,9 +17,7 @@ import { Radio } from "antd";
 import { USER_ROLES } from "@/config/constant";
 import { ROUTES } from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
-import MyModal from "@modal/MyModal";
-import TermOfUseContent from "./TermOfUseContent";
-import TermOfPolicyContent from "./TermOfPolicyContent";
+import LegalAgreement from "@feature/auth/page/register/modal/LegalAgreement";
 
 export default function RegisterForm() {
   const [role, setRole] = useState("");
@@ -33,7 +31,7 @@ export default function RegisterForm() {
 
   const [showPass, setShowPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
-  const [agree, setAgree] = useState(true);
+  const [agree, setAgree] = useState(false);
 
   const [openTermModal, setOpenTermModal] = useState(false)
   const [openPolicyModal, setOpenPolicyModal] = useState(false)
@@ -226,26 +224,7 @@ export default function RegisterForm() {
             </div>
           </div>
 
-          {/* Điều khoản */}
-          <div className="terms" style={{ display: "flex", alignItems: "center", gap: 8, margin: "16px 0", fontSize: 13 }}>
-            <input
-              type="checkbox"
-              checked={agree}
-              onChange={(e) => setAgree(e.target.checked)}
-              style={{ cursor: "pointer" }}
-            />
-            <label htmlFor="agree" className="text-(--muted)">
-              Tôi đồng ý với{" "}
-              <button type="button" onClick={() => setOpenTermModal(true)} className="text-(--primary) cursor-pointer">
-                Điều khoản dịch vụ
-              </button>
-              {" "}
-              và{" "}
-              <button type="button" onClick={() => setOpenPolicyModal(true)} className="text-(--primary) cursor-pointer">
-                Chính sách bảo mật
-              </button>
-            </label>
-          </div>
+          <LegalAgreement checked={agree} setAgree={setAgree}/>
 
           <button type="submit" className="btn btn-primary btn-submit">
             Tạo tài khoản
@@ -258,15 +237,7 @@ export default function RegisterForm() {
         </p>
       </div>
 
-      <MyModal open={openTermModal} title={"Điều khoản & Điều kiện"} onClose={() => setOpenTermModal(false)}>
-        <TermOfUseContent />
-      </MyModal>
-
-      <MyModal open={openPolicyModal} title={"Chính sách bảo mật"} onClose={() => setOpenPolicyModal(false)}>
-        <TermOfPolicyContent />
-      </MyModal>
-
-      <DebugPanel data={{ openTermModal, openPolicyModal  }} />
+      <DebugPanel data={{ openTermModal, openPolicyModal, agree  }} />
     </div>
   );
 }

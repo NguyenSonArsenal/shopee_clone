@@ -42,7 +42,6 @@ class RegisterRequest extends BaseApiFormRequest
             'password_confirmation' => 'required',
             'type' => 'required|string|in:' . implode(',', array_column(UserType::cases(), 'value')),
             'company_name' => 'required_if:type,' . UserType::F2->value . '|nullable|string|max:255',
-            'agree' => 'accepted',
             'ref_code' => 'nullable|string',
         ];
     }
@@ -52,7 +51,6 @@ class RegisterRequest extends BaseApiFormRequest
         return [
             'type.in' => 'Vai trò không hợp lệ.',
             'company_name.required_if' => 'Vui lòng nhập tên công ty khi đăng ký với vai trò Công ty.',
-            'agree.accepted' => 'Bạn phải đồng ý với điều khoản dịch vụ.',
         ];
     }
 
@@ -62,7 +60,6 @@ class RegisterRequest extends BaseApiFormRequest
             'full_name' => 'họ và tên',
             'type' => 'vai trò',
             'company_name' => 'tên công ty',
-            'agree' => 'điều khoản dịch vụ',
         ];
     }
 }
