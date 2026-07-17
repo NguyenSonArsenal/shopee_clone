@@ -9,7 +9,7 @@ type AppSpinProps = {
  *
  * @example
  * <AppSpin size="small" color="var(--white)" />
- * <AppSpin color="var(--red)" />
+ * <AppSpin color="var(--primary)" />
  */
 export default function AppSpin({ color = "var(--white)", size = "default" }: AppSpinProps) {
   const dimension = size === "small" ? 14 : 20

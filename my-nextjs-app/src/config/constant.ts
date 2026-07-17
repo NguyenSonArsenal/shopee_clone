@@ -13,11 +13,5 @@ export const AUTH_CONFIG = {
   EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
 } as const;
 
-export const USER_ROLES = [
-  { value: "f2", label: "Công ty (F2)" },
-  { value: "ctv", label: "CTV" },
-  { value: "kh", label: "Khách hàng" },
-] as const;
-
 export const DELAY_TIME = 2000; // MS
 

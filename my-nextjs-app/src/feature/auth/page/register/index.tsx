@@ -14,20 +14,17 @@ import {
 } from "@icon";
 import Link from "next/link";
 import { Radio } from "antd";
-import { USER_ROLES } from "@/config/constant";
 import { ROUTES } from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
 import LegalAgreement from "@feature/auth/page/register/modal/LegalAgreement";
+import {USER_ROLES} from "@/config/enum/user-role";
 
 export default function RegisterForm() {
-  const [role, setRole] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [fullname, setFullname] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [refCode, setRefCode] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [form, setForm] = useState(
+    { role: "", company_name: "", full_name: "", phone: "", email: "", ref_code: "", password: "", confirm_password: "" }
+  )
+
+  console.log('Component RegisterForm re-render')
 
   const [showPass, setShowPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
@@ -38,17 +35,11 @@ export default function RegisterForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submit registration:", {
-      role,
-      companyName,
-      fullname,
-      phone,
-      email,
-      refCode,
-      password,
-      confirmPassword,
-      agree
-    });
+    console.log("Submit registration:", form);
+  };
+
+  const onChangeInputForm = (field) => (e) => {
+    setForm(old => ({...old, [field]: e.target.value}))
   };
 
   return (
@@ -64,14 +55,14 @@ export default function RegisterForm() {
             <Radio.Group
               id="role"
               className="role-radio-group"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              options={USER_ROLES.map((item) => ({ value: item.value, label: item.label }))}
+              value={form.role}
+              onChange={onChangeInputForm('role')}
+              options={Object.values(USER_ROLES).map((item) => ({ value: item.value, label: item.label }))}
             />
           </div>
 
           {/* Tên công ty (Chỉ hiển thị khi chọn Công ty F2 - 'f2') */}
-          {role === "f2" && (
+          {form.role === USER_ROLES.F2.value && (
             <div className="field-group">
               <FieldLabel htmlFor="companyName" required>Tên công ty</FieldLabel>
               <div className="field-wrap">
@@ -83,8 +74,8 @@ export default function RegisterForm() {
                   type="text"
                   className="field-input"
                   placeholder="Nhập tên công ty"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
+                  value={form.company_name}
+                  onChange={onChangeInputForm('company_name')}
                 />
               </div>
             </div>
@@ -104,8 +95,8 @@ export default function RegisterForm() {
                   type="text"
                   className="field-input"
                   placeholder="Nguyễn Văn A"
-                  value={fullname}
-                  onChange={(e) => setFullname(e.target.value)}
+                  value={form.full_name}
+                  onChange={onChangeInputForm('full_name')}
                 />
               </div>
             </div>
@@ -123,8 +114,8 @@ export default function RegisterForm() {
                   className="field-input"
                   placeholder="0901234567"
                   maxLength={10}
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  value={form.phone}
+                  onChange={onChangeInputForm('phone')}
                 />
               </div>
             </div>
@@ -144,8 +135,8 @@ export default function RegisterForm() {
                   type="email"
                   className="field-input"
                   placeholder="email@company.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={form.email}
+                  onChange={onChangeInputForm('email')}
                 />
               </div>
             </div>
@@ -162,8 +153,8 @@ export default function RegisterForm() {
                   type="text"
                   className="field-input"
                   placeholder="Nhập mã giới thiệu"
-                  value={refCode}
-                  onChange={(e) => setRefCode(e.target.value)}
+                  value={form.ref_code}
+                  onChange={onChangeInputForm('ref_code')}
                 />
               </div>
             </div>
@@ -183,8 +174,8 @@ export default function RegisterForm() {
                   type={showPass ? "text" : "password"}
                   className="field-input"
                   placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={form.password}
+                  onChange={onChangeInputForm('password')}
                 />
                 <button
                   type="button"
@@ -209,8 +200,8 @@ export default function RegisterForm() {
                   type={showConfirmPass ? "text" : "password"}
                   className="field-input"
                   placeholder="Nhập lại mật khẩu"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  value={form.confirm_password}
+                  onChange={onChangeInputForm('confirm_password')}
                 />
                 <button
                   type="button"
@@ -224,7 +215,7 @@ export default function RegisterForm() {
             </div>
           </div>
 
-          <LegalAgreement checked={agree} setAgree={setAgree}/>
+          <LegalAgreement checked={agree} setAgree={setAgree} />
 
           <button type="submit" className="btn btn-primary btn-submit">
             Tạo tài khoản
@@ -237,7 +228,7 @@ export default function RegisterForm() {
         </p>
       </div>
 
-      <DebugPanel data={{ openTermModal, openPolicyModal, agree  }} />
+      <DebugPanel data={{ openTermModal, openPolicyModal, agree, form  }} />
     </div>
   );
 }

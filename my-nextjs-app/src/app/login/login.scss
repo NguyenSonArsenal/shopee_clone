@@ -27,7 +27,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: var(--red);
+  background: var(--primary);
 }
 
 /* Logo + tên thương hiệu */
@@ -45,7 +45,7 @@
 .brand-icon-box {
   width: 64px;
   height: 64px;
-  background: var(--red);
+  background: var(--primary);
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -73,7 +73,7 @@
 }
 
 .brand-text span {
-  color: var(--red);
+  color: var(--primary);
 }
 
 /* Tagline mô tả */
@@ -95,7 +95,7 @@
 }
 
 .left-footer a {
-  color: var(--red);
+  color: var(--primary);
   text-decoration: none;
 }
 
@@ -181,7 +181,7 @@
   }
 
   &:focus {
-    border-color: var(--red);
+    border-color: var(--primary);
     background: #fff;
     box-shadow: 0 0 0 3px rgba(178, 7, 7, .08);
   }
@@ -233,8 +233,8 @@
   }
 
   input[type="checkbox"]:checked + .checkbox-custom {
-    background: var(--red);
-    border-color: var(--red);
+    background: var(--primary);
+    border-color: var(--primary);
 
     &::after {
       opacity: 1;
@@ -270,7 +270,7 @@
 
 .forgot-link {
   font-size: 13px;
-  color: var(--red);
+  color: var(--primary);
   text-decoration: none;
   font-weight: 500;
   transition: opacity .2s;
@@ -349,7 +349,7 @@
   color: var(--muted);
 
   a {
-    color: var(--red);
+    color: var(--primary);
     font-weight: 600;
     text-decoration: none;
     transition: opacity .2s;
@@ -388,13 +388,13 @@
 /* ── STEP BAR ────────────────────────────────────────────────────── */
 .step-bar { display: flex; gap: 6px; margin-bottom: 20px; }
 .step-bar span { flex: 1; height: 3px; border-radius: 2px; background: var(--border); transition: background .3s; }
-.step-bar span.on { background: var(--red); }
+.step-bar span.on { background: var(--primary); }
 
 /* ── OTP CHUNG ───────────────────────────────────────────────────── */
 .otp-hint { font-size: var(--fs); color: var(--muted); margin-bottom: 18px; line-height: 1.7; }
 .otp-hint strong { color: var(--text); }
-.countdown { color: var(--red); font-weight: 500; font-variant-numeric: tabular-nums; }
-.resend { color: var(--red); cursor: pointer; font-weight: 500; }
+.countdown { color: var(--primary); font-weight: 500; font-variant-numeric: tabular-nums; }
+.resend { color: var(--primary); cursor: pointer; font-weight: 500; }
 .resend.disabled { color: var(--muted); cursor: default; pointer-events: none; }
 
 .otp-row {

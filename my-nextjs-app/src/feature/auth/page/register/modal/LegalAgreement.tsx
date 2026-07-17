@@ -1,7 +1,7 @@
 "use client"
 
 import MyModal from "@modal/MyModal";
-import {useState} from "react";
+import {useState, memo} from "react";
 import TermOfUseContent from "@feature/auth/page/register/TermOfUseContent";
 import TermOfPolicyContent from "@feature/auth/page/register/TermOfPolicyContent";
 
@@ -10,11 +10,13 @@ type LegalAgreementProps = {
   setAgree: (checked: boolean) => void    // báo ngược lên cha khi user tick
 }
 
-export default function LegalAgreement({ checked, setAgree }: LegalAgreementProps) {
+// memo: prevent re-render
+
+export default memo(function LegalAgreement({ checked, setAgree }: LegalAgreementProps) {
   const [openTermModal, setOpenTermModal] = useState<boolean>(false)
   const [openPolicyModal, setOpenPolicyModal] = useState<boolean>(false)
 
-  console.log(checked, '// agree')
+  console.log(checked, '// Component LegalAgreement: agree')
 
   return (
     <>
@@ -50,4 +52,7 @@ export default function LegalAgreement({ checked, setAgree }: LegalAgreementProp
       {/*<DebugPanel data={{ openTermModal, openPolicyModal  }} />*/}
     </>
   );
-}
+})
+
+// export default LegalAgreement;
+

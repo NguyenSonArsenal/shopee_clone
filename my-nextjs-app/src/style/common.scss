@@ -23,7 +23,7 @@ a {
 
 .field-error {
   font-size: 13px;
-  color: var(--red);
+  color: var(--primary);
   margin-top: 5px;
 }
 
@@ -77,7 +77,7 @@ a {
 
 .btn-primary {
   @extend .btn;
-  background: var(--red);
+  background: var(--primary);
   color: #fff;
 }
 .btn-submit {
@@ -104,12 +104,17 @@ a {
 
 .role-radio-group {
   .ant-radio-checked {
-    background-color: var(--red);
-    border-color: var(--red);
+    background-color: var(--primary);
+    border-color: var(--primary);
   }
 
   .ant-radio-wrapper:hover .ant-radio {
-    border-color: var(--red);
+    border-color: var(--primary);
+  }
+
+  .ant-radio-wrapper:hover .ant-radio-checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
   }
 }
 

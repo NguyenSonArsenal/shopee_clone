@@ -136,20 +136,20 @@ export default function OtpVerifyForm({ email, initialTimeLeft }: OtpVerifyFormP
         <h1 className="login-title text-center">Xác thực email</h1>
 
         <div className="flex justify-center gap-1.5 mb-6">
-          <span className="w-6 h-1 bg-(--red) rounded-full"></span>
-          <span className="w-6 h-1 bg-(--red) rounded-full"></span>
+          <span className="w-6 h-1 bg-(--primary) rounded-full"></span>
+          <span className="w-6 h-1 bg-(--primary) rounded-full"></span>
         </div>
 
         <p className="text-center text-sm text-gray-500 leading-relaxed mb-2">
           {
             timeLeft > 0 ?
-            <>Mã 6 số đã được gửi đến <strong>{email}</strong><br />. Hết hạn sau <span className="font-bold text-(--red)">{timeLeft}</span> giây</>
+            <>Mã 6 số đã được gửi đến <strong>{email}</strong><br />. Hết hạn sau <span className="font-bold text-(--primary)">{timeLeft}</span> giây</>
             :
             <button type="button" disabled={isResending}
-                    className="btn-submit font-semibold text-(--red) hover:text-(--red-dark) cursor-pointer disabled:cursor-not-allowed"
+                    className="btn-submit font-semibold text-(--primary) hover:text-(--primary-dark) cursor-pointer disabled:cursor-not-allowed"
                     onClick={handleResend}
             >
-              Gửi lại <>{isResending ? <AppSpin size="small" color="var(--red)" /> : ""}</>
+              Gửi lại <>{isResending ? <AppSpin size="small" color="var(--primary)" /> : ""}</>
             </button>
           }
 
@@ -171,7 +171,7 @@ export default function OtpVerifyForm({ email, initialTimeLeft }: OtpVerifyFormP
                   onPaste={handlePaste}
                   onKeyDown={(e) => handleKeyDown(e, index)}
                   autoFocus={index === 0}
-                  className="w-10 h-10 text-center text-sm font-bold border border-gray-200 rounded-xl focus:border-(--red)
+                  className="w-10 h-10 text-center text-sm font-bold border border-gray-200 rounded-xl focus:border-(--primary)
                 focus:outline-none transition-colors shadow-xs"
                 />
               ))}
