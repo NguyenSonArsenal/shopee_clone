@@ -1,0 +1,6 @@
+@import "@/style/variable";
+@media (min-width: $breakpoint-xl) {
+  .register-page .login-card {
+    max-width: 800px;
+  }
+}

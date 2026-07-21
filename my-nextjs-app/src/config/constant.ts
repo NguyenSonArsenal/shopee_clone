@@ -14,4 +14,5 @@ export const AUTH_CONFIG = {
 } as const;
 
 export const DELAY_TIME = 2000; // MS
+export const MESSAGE_SERVER_ERROR_DEFAULT = "Lỗi hệ thống";
 

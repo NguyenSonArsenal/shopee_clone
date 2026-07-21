@@ -4,6 +4,7 @@ const baseApiUrl = process.env.NEXT_PUBLIC_API_URL
 
 const API_URL = {
   login: `${baseApiUrl}/login`,
+  register: `${baseApiUrl}/register`,
   forgot_password_send_otp: `${baseApiUrl}/forgot-password/send-otp`,
   forgot_password_verify_otp: `${baseApiUrl}/forgot-password/verify-otp`,
   forgot_password_reset: `${baseApiUrl}/forgot-password/reset`,
@@ -13,6 +14,10 @@ const authApi = {
   login(params: LoginRequest): Promise<LoginResponse> {
     return myAxios.post(API_URL.login, params)
       .then(res => res.data.data)
+  },
+  register(params: RegisterRequest) {
+    return myAxios.post(API_URL.register, params)
+      .then(res => res.data)
   },
   forgotPasswordSendOtp(email: string): Promise<ForgotPasswordSendOtpResponse> {
     return myAxios.post(API_URL.forgot_password_send_otp, {email: email})

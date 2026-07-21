@@ -10,7 +10,7 @@ import Notification from "@component/Notification"
 import {Spin} from 'antd';
 import authApi from "@feature/auth/authApi";
 
-import {AUTH_CONFIG, DELAY_TIME, STORAGE_KEYS} from "@/config/constant";
+import {AUTH_CONFIG, DELAY_TIME, MESSAGE_SERVER_ERROR_DEFAULT, STORAGE_KEYS} from "@/config/constant";
 import {ROUTES} from "@/config/route";
 import {delay} from "@/helper/helper";
 import FieldError from "@component/form/FieldError";
@@ -65,7 +65,7 @@ export default function LoginForm({}) {
           password: serverErrors.password ? serverErrors.password[0] : "",
         });
       } else {
-        const errMsg = err.response?.data?.message || err.message || "Đăng nhập thất bại";
+        const errMsg = err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT;
         setServerError(errMsg);
       }
       setIsSubmitting(false)

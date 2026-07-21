@@ -43,6 +43,7 @@ class RegisterRequest extends BaseApiFormRequest
             'type' => 'required|string|in:' . implode(',', array_column(UserType::cases(), 'value')),
             'company_name' => 'required_if:type,' . UserType::F2->value . '|nullable|string|max:255',
             'ref_code' => 'nullable|string',
+            'gender' => 'required:in:1,2',
         ];
     }
 

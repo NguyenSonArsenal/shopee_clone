@@ -1,26 +1,35 @@
 :root {
-    --be:       #FDFBF2;
-    --primary:      #b20707;
-    --primary-dark: #9a0606;
-    --primary-soft: #ffebee;
-    --border:   #e0e0e0;
-    --text:     #212121;
-    --muted:    #757575;
-    --light:    #fafafa;
-    --white:    #ffffff;
-    --success:  #0f5132;
-    --success-bg: #d1e7dd;
-    --danger:   #f8d7da;
-    --danger-text: #842029;
+  --be: #FDFBF2;
+  --primary: #b20707;
+  --primary-dark: #9a0606;
+  --primary-soft: #ffebee;
+  --border: #e0e0e0;
+  --text: #212121;
+  --muted: #757575;
+  --light: #fafafa;
+  --white: #ffffff;
+  --success: #0f5132;
+  --success-bg: #d1e7dd;
+  --danger: #f8d7da;
+  --danger-text: #842029;
 
-    --fs-xl:     20px;
-    --fs-lg:     18px;
-    --fs-md:     16px;
-    --fs: 14px;
+  --fs-xl: 20px;
+  --fs-lg: 18px;
+  --fs-md: 16px;
+  --fs: 14px;
 
-    --radius: 10px;
-    --shadow: 0 2px 12px rgba(0, 0, 0, .08);
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(0, 0, 0, .08);
 
-    --modal-min-width: "280px";
-    --modal-max-width: "75vw";
+  --modal-min-width: "280px";
+  --modal-max-width: "75vw";
+
+  /* Follow by bootstrap */
+  --my-breakpoint-sm: 576px;
+  --my-breakpoint-md: 768px;
+  --my-breakpoint-lg: 992px;
+  --my-breakpoint-xl: 1200px;
+  --my-breakpoint-2xl: 1400px;
 }
+
+$breakpoint-xl: 1200px;

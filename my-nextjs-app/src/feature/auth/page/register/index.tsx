@@ -18,14 +18,23 @@ import { ROUTES } from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
 import LegalAgreement from "@feature/auth/page/register/modal/LegalAgreement";
 import {USER_ROLES} from "@/config/enum/user-role";
+import AppSpin from "@component/AppSpin";
+import {MESSAGE_SERVER_ERROR_DEFAULT, STORAGE_KEYS} from "@/config/constant";
+import authApi from "@feature/auth/authApi";
+import {USER_GENDER} from "@/config/enum/user-gender";
+import {useRouter} from "next/navigation";
+import Notification from "@component/Notification";
+import FieldError from "@component/form/FieldError";
 
 export default function RegisterForm() {
   const [form, setForm] = useState(
-    { role: "", company_name: "", full_name: "", phone: "", email: "", ref_code: "", password: "", confirm_password: "" }
+    { type: "", company_name: "", full_name: "", phone: "", email: "", ref_code: "", password: "", confirm_password: "", gender: "" }
+  )
+  const [errors, setErrors] = useState(
+    { type: "", company_name: "", full_name: "", phone: "", email: "", ref_code: "", password: "", confirm_password: "", gender: "" }
   )
 
-  console.log('Component RegisterForm re-render')
-
+  const router = useRouter();
   const [showPass, setShowPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
   const [agree, setAgree] = useState(false);
@@ -33,36 +42,86 @@ export default function RegisterForm() {
   const [openTermModal, setOpenTermModal] = useState(false)
   const [openPolicyModal, setOpenPolicyModal] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [serverError, setServerError] = useState("")
+
+  const validate = () => {
+    return true
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Submit registration:", form);
+
+    if (!validate()) return
+    _clear()
+    setIsSubmitting(true)
+    try {
+      const res = await authApi.register(toRegisterRequest(form));
+      localStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, res?.message);
+      router.push(ROUTES.LOGIN)
+    } catch (err) {
+      console.log(err.response, '// err.response?')
+      if (err.response?.status === 422) {
+        const serverErrors = err.response.data.errors;
+        setErrors((prev) => ({
+          ...prev,
+          full_name: serverErrors.full_name ? serverErrors.full_name[0] : "",
+          gender: serverErrors.gender ? serverErrors.gender[0] : "",
+        }));
+      } else {
+        const errMsg = err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT;
+        setServerError(errMsg);
+      }
+      setIsSubmitting(false)
+    }
   };
+
+  const _clear = () => {
+    // setErrors({ email: "", password: "" })
+    setServerError('')
+  }
 
   const onChangeInputForm = (field) => (e) => {
     setForm(old => ({...old, [field]: e.target.value}))
   };
 
+  const toRegisterRequest = (form) => {
+    return {
+      full_name: form.full_name,
+      email: form.email,
+      phone: form.phone,
+      password: form.password,
+      password_confirmation: form.confirm_password,
+      gender: form.gender ? Number(form.gender) : "",
+      type: form.role,
+      company_name: form.role === USER_ROLES.F2.value ? form.company_name : undefined,
+    }
+  }
+
+
   return (
     <div className="right">
-      <div className="login-card" style={{ maxWidth: 600 }}>
+      <div className="login-card">
         <h1 className="login-title text-center">Tạo tài khoản mới</h1>
 
-        <form className="login-form" noValidate onSubmit={handleSubmit}>
+        <Notification type="error" message={serverError} />
 
+        <form className="login-form" noValidate onSubmit={handleSubmit}>
           {/* Vai trò */}
           <div className="flex flex-row items-center gap-3">
             <FieldLabel htmlFor="role" required>Vai trò</FieldLabel>
             <Radio.Group
               id="role"
               className="role-radio-group"
-              value={form.role}
+              value={form.type}
               onChange={onChangeInputForm('role')}
               options={Object.values(USER_ROLES).map((item) => ({ value: item.value, label: item.label }))}
             />
           </div>
 
           {/* Tên công ty (Chỉ hiển thị khi chọn Công ty F2 - 'f2') */}
-          {form.role === USER_ROLES.F2.value && (
+          {form.type === USER_ROLES.F2.value && (
             <div className="field-group">
               <FieldLabel htmlFor="companyName" required>Tên công ty</FieldLabel>
               <div className="field-wrap">
@@ -85,13 +144,13 @@ export default function RegisterForm() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {/* Họ và tên */}
             <div className="field-group">
-              <FieldLabel htmlFor="fullname" required>Họ và tên</FieldLabel>
+              <FieldLabel htmlFor="full_name" required>Họ và tên</FieldLabel>
               <div className="field-wrap">
                 <span className="field-icon">
                   <IconUser />
                 </span>
                 <input
-                  id="fullname"
+                  id="full_name"
                   type="text"
                   className="field-input"
                   placeholder="Nguyễn Văn A"
@@ -99,6 +158,7 @@ export default function RegisterForm() {
                   onChange={onChangeInputForm('full_name')}
                 />
               </div>
+              <FieldError message={errors.full_name} />
             </div>
 
             {/* Số điện thoại */}
@@ -213,12 +273,27 @@ export default function RegisterForm() {
                 </button>
               </div>
             </div>
+
+            {/* Vai trò */}
+            <div className="field-group">
+              <div className="flex flex-row items-center gap-3">
+                <FieldLabel htmlFor="role" required>Giới tính</FieldLabel>
+                <Radio.Group
+                  id="gender"
+                  className="role-radio-group"
+                  value={form.gender}
+                  onChange={onChangeInputForm('gender')}
+                  options={Object.values(USER_GENDER).map((item) => ({value: item.value, label: item.label}))}
+                />
+              </div>
+              <FieldError message={errors.gender}/>
+            </div>
           </div>
 
           <LegalAgreement checked={agree} setAgree={setAgree} />
 
-          <button type="submit" className="btn btn-primary btn-submit">
-            Tạo tài khoản
+          <button type="submit" className="btn btn-primary btn-submit disabled:cursor-not-allowed" disabled={isSubmitting}>
+            {isSubmitting ? <AppSpin size="small" /> : ""}  Tạo tài khoản
           </button>
         </form>
 

@@ -3,7 +3,7 @@ import RegisterForm from "@feature/auth/page/register";
 
 export default function RegisterPage() {
   return (
-    <div className="login-page">
+    <div className="auth-page register-page">
       <AuthLeftPanel />
       <RegisterForm />
     </div>
