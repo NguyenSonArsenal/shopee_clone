@@ -26,7 +26,7 @@ export default function LoginPage() {
   }, [router, toast]);
 
   return (
-    <div className="login-page">
+    <div className="auth-page login-page">
       {contextToast}
       <AuthLeftPanel />
       <LoginForm />

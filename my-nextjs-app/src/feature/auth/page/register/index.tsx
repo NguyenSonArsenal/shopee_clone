@@ -22,17 +22,22 @@ import AppSpin from "@component/AppSpin";
 import {MESSAGE_SERVER_ERROR_DEFAULT, STORAGE_KEYS} from "@/config/constant";
 import authApi from "@feature/auth/authApi";
 import {USER_GENDER} from "@/config/enum/user-gender";
+import {LENGTH} from "@/config/validate-length";
 import {useRouter} from "next/navigation";
 import Notification from "@component/Notification";
 import FieldError from "@component/form/FieldError";
 
 export default function RegisterForm() {
   const [form, setForm] = useState(
-    { type: "", company_name: "", full_name: "", phone: "", email: "", ref_code: "", password: "", confirm_password: "", gender: "" }
+    { type: "", company_name: "", full_name: "", phone: "", email: "", ref_code: "", password: "", password_confirmation: "", gender: "" }
   )
   const [errors, setErrors] = useState(
-    { type: "", company_name: "", full_name: "", phone: "", email: "", ref_code: "", password: "", confirm_password: "", gender: "" }
+    { type: "", company_name: "", full_name: "", phone: "", email: "", ref_code: "", password: "", password_confirmation: "", gender: "" }
   )
+
+  const [counter, setCounter] = useState({
+    company_name: 0, full_name: 0, phone: 0, email: 0, ref_code: 0, password: 0, password_confirmation: 0
+  })
 
   const router = useRouter();
   const [showPass, setShowPass] = useState(false);
@@ -64,11 +69,10 @@ export default function RegisterForm() {
       console.log(err.response, '// err.response?')
       if (err.response?.status === 422) {
         const serverErrors = err.response.data.errors;
+        const fields = ["full_name", "gender", "type", "company_name", "phone", "password", "confirm_password"];
         setErrors((prev) => ({
-          ...prev,
-          full_name: serverErrors.full_name ? serverErrors.full_name[0] : "",
-          gender: serverErrors.gender ? serverErrors.gender[0] : "",
-        }));
+          ...prev, ...Object.fromEntries(fields.map((f) => [f, serverErrors[f]?.[0] ?? ""])),
+        }))
       } else {
         const errMsg = err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT;
         setServerError(errMsg);
@@ -83,7 +87,12 @@ export default function RegisterForm() {
   }
 
   const onChangeInputForm = (field) => (e) => {
-    setForm(old => ({...old, [field]: e.target.value}))
+    const newValue = e.target.value
+    setForm(old => ({...old, [field]: newValue}))
+    const fields = ["company_name", "full_name", "phone", "email", "ref_code", "password", "password_confirmation"];
+    if (fields.includes(field)) {
+      setCounter((old) => ({ ...old, [field]: newValue.length + 1 }));
+    }
   };
 
   const toRegisterRequest = (form) => {
@@ -92,9 +101,9 @@ export default function RegisterForm() {
       email: form.email,
       phone: form.phone,
       password: form.password,
-      password_confirmation: form.confirm_password,
+      password_confirmation: form.password_confirmation,
       gender: form.gender ? Number(form.gender) : "",
-      type: form.role,
+      type: form.type,
       company_name: form.role === USER_ROLES.F2.value ? form.company_name : undefined,
     }
   }
@@ -109,15 +118,18 @@ export default function RegisterForm() {
 
         <form className="login-form" noValidate onSubmit={handleSubmit}>
           {/* Vai trò */}
-          <div className="flex flex-row items-center gap-3">
-            <FieldLabel htmlFor="role" required>Vai trò</FieldLabel>
-            <Radio.Group
-              id="role"
-              className="role-radio-group"
-              value={form.type}
-              onChange={onChangeInputForm('role')}
-              options={Object.values(USER_ROLES).map((item) => ({ value: item.value, label: item.label }))}
-            />
+          <div>
+            <div className="flex flex-row items-center gap-3">
+              <FieldLabel htmlFor="type" required>Vai trò</FieldLabel>
+              <Radio.Group
+                id="type"
+                className="role-radio-group"
+                value={form.type}
+                onChange={onChangeInputForm('type')}
+                options={Object.values(USER_ROLES).map((item) => ({value: item.value, label: item.label}))}
+              />
+            </div>
+            <FieldError message={errors.type}/>
           </div>
 
           {/* Tên công ty (Chỉ hiển thị khi chọn Công ty F2 - 'f2') */}
@@ -126,7 +138,7 @@ export default function RegisterForm() {
               <FieldLabel htmlFor="companyName" required>Tên công ty</FieldLabel>
               <div className="field-wrap">
                 <span className="field-icon">
-                  <IconBuilding />
+                  <IconBuilding/>
                 </span>
                 <input
                   id="companyName"
@@ -137,6 +149,7 @@ export default function RegisterForm() {
                   onChange={onChangeInputForm('company_name')}
                 />
               </div>
+              <FieldError message={errors.company_name} />
             </div>
           )}
 
@@ -147,7 +160,7 @@ export default function RegisterForm() {
               <FieldLabel htmlFor="full_name" required>Họ và tên</FieldLabel>
               <div className="field-wrap">
                 <span className="field-icon">
-                  <IconUser />
+                  <IconUser/>
                 </span>
                 <input
                   id="full_name"
@@ -158,7 +171,10 @@ export default function RegisterForm() {
                   onChange={onChangeInputForm('full_name')}
                 />
               </div>
-              <FieldError message={errors.full_name} />
+              <div className={`char-counter ${counter.full_name == LENGTH.user.full_name ? 'is-max' : ''}`}>
+                {counter.full_name}/{LENGTH.user.full_name}
+              </div>
+              <FieldError message={errors.full_name}/>
             </div>
 
             {/* Số điện thoại */}
@@ -166,18 +182,20 @@ export default function RegisterForm() {
               <FieldLabel htmlFor="phone" required>Số điện thoại</FieldLabel>
               <div className="field-wrap">
                 <span className="field-icon">
-                  <IconPhone />
+                  <IconPhone/>
                 </span>
                 <input
                   id="phone"
                   type="tel"
                   className="field-input"
                   placeholder="0901234567"
-                  maxLength={10}
+                  maxLength={LENGTH.user.phone}
                   value={form.phone}
                   onChange={onChangeInputForm('phone')}
                 />
               </div>
+              <div className={`char-counter ${counter.phone == LENGTH.user.phone ? 'is-max' : '' }`}>{counter.phone}/{LENGTH.user.phone}</div>
+              <FieldError message={errors.phone}/>
             </div>
           </div>
 
@@ -199,6 +217,7 @@ export default function RegisterForm() {
                   onChange={onChangeInputForm('email')}
                 />
               </div>
+              <FieldError message={errors.email}/>
             </div>
 
             {/* Mã giới thiệu */}
@@ -246,6 +265,7 @@ export default function RegisterForm() {
                   {showPass ? <IconEyeOff /> : <IconEye />}
                 </button>
               </div>
+              <FieldError message={errors.password}/>
             </div>
 
             {/* Xác nhận mật khẩu */}
@@ -260,8 +280,8 @@ export default function RegisterForm() {
                   type={showConfirmPass ? "text" : "password"}
                   className="field-input"
                   placeholder="Nhập lại mật khẩu"
-                  value={form.confirm_password}
-                  onChange={onChangeInputForm('confirm_password')}
+                  value={form.password_confirmation}
+                  onChange={onChangeInputForm('password_confirmation')}
                 />
                 <button
                   type="button"
@@ -272,6 +292,7 @@ export default function RegisterForm() {
                   {showConfirmPass ? <IconEyeOff /> : <IconEye />}
                 </button>
               </div>
+              <FieldError message={errors.password_confirmation}/>
             </div>
 
             {/* Vai trò */}

@@ -51,7 +51,7 @@ class RegisterRequest extends BaseApiFormRequest
     {
         return [
             'type.in' => 'Vai trò không hợp lệ.',
-            'company_name.required_if' => 'Vui lòng nhập tên công ty khi đăng ký với vai trò Công ty.',
+            'company_name.required_if' => 'Vui lòng nhập tên công ty khi đăng ký với vai trò F2.',
         ];
     }
 

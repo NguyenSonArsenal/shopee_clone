@@ -387,7 +387,7 @@
 .step-bar span.on { background: var(--primary); }
 
 /* ── OTP CHUNG ───────────────────────────────────────────────────── */
-.otp-hint { font-size: var(--fs); color: var(--muted); margin-bottom: 18px; line-height: 1.7; }
+.otp-hint { font-size: var(--fs-primary); color: var(--muted); margin-bottom: 18px; line-height: 1.7; }
 .otp-hint strong { color: var(--text); }
 .countdown { color: var(--primary); font-weight: 500; font-variant-numeric: tabular-nums; }
 .resend { color: var(--primary); cursor: pointer; font-weight: 500; }

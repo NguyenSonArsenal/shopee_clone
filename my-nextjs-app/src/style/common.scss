@@ -2,7 +2,7 @@
 /* Reset margin/padding/box-sizing đã có sẵn trong Tailwind Preflight (@layer base), không cần tự viết lại */
 
 body {
-  font-size: var(--fs);
+  font-size: var(--fs-primary);
   //font-family: var(--font-roboto), 'Roboto', sans-serif;
   font-family: 'Roboto', sans-serif;
   color: var(--text);
@@ -22,9 +22,9 @@ a {
 }
 
 .field-error {
-  font-size: 13px;
+  font-size: var(--fs-xs);
   color: var(--primary);
-  margin-top: 5px;
+  margin-top: 2px;
 }
 
 .alert {
@@ -32,7 +32,7 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  font-size: var(--fs);
+  font-size: var(--fs-primary);
   padding: 10px 14px;
   border-radius: var(--radius);
   margin-bottom: 16px;
@@ -69,7 +69,7 @@ a {
   border: none;
   border-radius: var(--radius);
   font-family: 'Roboto', sans-serif;
-  font-size: var(--fs);
+  font-size: var(--fs-primary);
   font-weight: 500;
   transition: background .15s, transform .1s;
   position: relative;
@@ -157,4 +157,16 @@ a {
   min-height: 100vh;
   align-items: stretch;
 }
+
+/** counter */
+.char-counter {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  margin-top: 2px;
+}
+.char-counter.is-max {
+  color: var(--primary);
+}
+/** End counter */
+
 
