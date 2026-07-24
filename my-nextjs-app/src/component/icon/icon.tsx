@@ -194,3 +194,22 @@ export const IconCopy = ({ className }: IconProps) => (
   </svg>
 );
 
+/* Icon vòng tròn dấu tích — toast/thông báo thành công */
+export const IconCheckCircle = ({ className }: IconProps) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+       strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="8 12 11 15 16 9"/>
+  </svg>
+);
+
+/* Icon vòng tròn dấu X — toast/thông báo lỗi */
+export const IconXCircle = ({ className }: IconProps) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+       strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="15" y1="9" x2="9" y2="15"/>
+    <line x1="9" y1="9" x2="15" y2="15"/>
+  </svg>
+);
+

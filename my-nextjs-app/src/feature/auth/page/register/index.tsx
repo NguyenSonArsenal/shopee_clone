@@ -10,7 +10,9 @@ import {
   IconUser,
   IconPhone,
   IconLink,
-  IconBuilding
+  IconBuilding,
+  IconCheckCircle,
+  IconXCircle
 } from "@icon";
 import Link from "next/link";
 import { Radio } from "antd";
@@ -27,6 +29,7 @@ import {useRouter} from "next/navigation";
 import Notification from "@component/Notification";
 import FieldError from "@component/form/FieldError";
 import InputTextCounter from "@component/form/InputTextCounter";
+import { ToastContainer, useToast } from "@component/Toast";
 
 export default function RegisterForm() {
   const [form, setForm] = useState(
@@ -46,6 +49,7 @@ export default function RegisterForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [serverError, setServerError] = useState("")
+  const { toasts, showToast, closeToast } = useToast()
 
   const validate = () => {
     return true
@@ -106,6 +110,23 @@ export default function RegisterForm() {
     <div className="right">
       <div className="login-card">
         <h1 className="login-title text-center">Tạo tài khoản mới</h1>
+
+        <div style={{ display: "flex", justifyContent: "center", gap: 16, margin: "8px 0 16px" }}>
+          <button
+            type="button"
+            onClick={() => showToast("success", "Thành công!")}
+            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--success)" }}
+          >
+            <IconCheckCircle className="w-6 h-6" />
+          </button>
+          <button
+            type="button"
+            onClick={() => showToast("error", "Có lỗi xảy ra!")}
+            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--primary)" }}
+          >
+            <IconXCircle className="w-6 h-6" />
+          </button>
+        </div>
 
         <Notification type="error" message={serverError} />
 
@@ -327,6 +348,7 @@ export default function RegisterForm() {
       </div>
 
       <DebugPanel data={{ openTermModal, openPolicyModal, agree, form  }} />
+      <ToastContainer toasts={toasts} onClose={closeToast} />
     </div>
   );
 }
