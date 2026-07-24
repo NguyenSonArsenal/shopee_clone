@@ -26,6 +26,7 @@ import {LENGTH} from "@/config/validate-length";
 import {useRouter} from "next/navigation";
 import Notification from "@component/Notification";
 import FieldError from "@component/form/FieldError";
+import InputTextCounter from "@component/form/InputTextCounter";
 
 export default function RegisterForm() {
   const [form, setForm] = useState(
@@ -34,10 +35,6 @@ export default function RegisterForm() {
   const [errors, setErrors] = useState(
     { type: "", company_name: "", full_name: "", phone: "", email: "", ref_code: "", password: "", password_confirmation: "", gender: "" }
   )
-
-  const [counter, setCounter] = useState({
-    company_name: 0, full_name: 0, phone: 0, email: 0, ref_code: 0, password: 0, password_confirmation: 0
-  })
 
   const router = useRouter();
   const [showPass, setShowPass] = useState(false);
@@ -89,10 +86,6 @@ export default function RegisterForm() {
   const onChangeInputForm = (field) => (e) => {
     const newValue = e.target.value
     setForm(old => ({...old, [field]: newValue}))
-    const fields = ["company_name", "full_name", "phone", "email", "ref_code", "password", "password_confirmation"];
-    if (fields.includes(field)) {
-      setCounter((old) => ({ ...old, [field]: newValue.length + 1 }));
-    }
   };
 
   const toRegisterRequest = (form) => {
@@ -147,8 +140,10 @@ export default function RegisterForm() {
                   placeholder="Nhập tên công ty"
                   value={form.company_name}
                   onChange={onChangeInputForm('company_name')}
+                  maxLength={LENGTH.user.company_name}
                 />
               </div>
+              <InputTextCounter maxLength={LENGTH.user.company_name} value={form.company_name}/>
               <FieldError message={errors.company_name} />
             </div>
           )}
@@ -169,11 +164,10 @@ export default function RegisterForm() {
                   placeholder="Nguyễn Văn A"
                   value={form.full_name}
                   onChange={onChangeInputForm('full_name')}
+                  maxLength={LENGTH.user.full_name}
                 />
               </div>
-              <div className={`char-counter ${counter.full_name == LENGTH.user.full_name ? 'is-max' : ''}`}>
-                {counter.full_name}/{LENGTH.user.full_name}
-              </div>
+              <InputTextCounter maxLength={LENGTH.user.full_name} value={form.full_name}/>
               <FieldError message={errors.full_name}/>
             </div>
 
@@ -194,7 +188,7 @@ export default function RegisterForm() {
                   onChange={onChangeInputForm('phone')}
                 />
               </div>
-              <div className={`char-counter ${counter.phone == LENGTH.user.phone ? 'is-max' : '' }`}>{counter.phone}/{LENGTH.user.phone}</div>
+              <InputTextCounter maxLength={LENGTH.user.phone} value={form.phone}/>
               <FieldError message={errors.phone}/>
             </div>
           </div>
@@ -215,8 +209,10 @@ export default function RegisterForm() {
                   placeholder="email@company.com"
                   value={form.email}
                   onChange={onChangeInputForm('email')}
+                  maxLength={LENGTH.user.email}
                 />
               </div>
+              <InputTextCounter maxLength={LENGTH.user.email} value={form.email}/>
               <FieldError message={errors.email}/>
             </div>
 
@@ -233,9 +229,11 @@ export default function RegisterForm() {
                   className="field-input"
                   placeholder="Nhập mã giới thiệu"
                   value={form.ref_code}
+                  maxLength={LENGTH.user.ref_code}
                   onChange={onChangeInputForm('ref_code')}
                 />
               </div>
+              <InputTextCounter maxLength={LENGTH.user.ref_code} value={form.ref_code}/>
             </div>
           </div>
 
@@ -255,6 +253,7 @@ export default function RegisterForm() {
                   placeholder="••••••••"
                   value={form.password}
                   onChange={onChangeInputForm('password')}
+                  maxLength={LENGTH.user.password}
                 />
                 <button
                   type="button"
@@ -265,6 +264,7 @@ export default function RegisterForm() {
                   {showPass ? <IconEyeOff /> : <IconEye />}
                 </button>
               </div>
+              <InputTextCounter maxLength={LENGTH.user.password} value={form.password}/>
               <FieldError message={errors.password}/>
             </div>
 
@@ -281,6 +281,7 @@ export default function RegisterForm() {
                   className="field-input"
                   placeholder="Nhập lại mật khẩu"
                   value={form.password_confirmation}
+                  maxLength={LENGTH.user.password_confirmation}
                   onChange={onChangeInputForm('password_confirmation')}
                 />
                 <button
@@ -292,6 +293,7 @@ export default function RegisterForm() {
                   {showConfirmPass ? <IconEyeOff /> : <IconEye />}
                 </button>
               </div>
+              <InputTextCounter maxLength={LENGTH.user.password_confirmation} value={form.password_confirmation}/>
               <FieldError message={errors.password_confirmation}/>
             </div>
 

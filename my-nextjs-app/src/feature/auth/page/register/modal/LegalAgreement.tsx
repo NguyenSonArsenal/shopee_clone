@@ -1,7 +1,7 @@
 "use client"
 
 import MyModal from "@modal/MyModal";
-import {useState, memo} from "react";
+import {useState} from "react";
 import TermOfUseContent from "@feature/auth/page/register/TermOfUseContent";
 import TermOfPolicyContent from "@feature/auth/page/register/TermOfPolicyContent";
 
@@ -20,12 +20,13 @@ const LegalAgreement = ({ checked, setAgree }: LegalAgreementProps) => {
       {/* Điều khoản */}
       <div className="terms" style={{ display: "flex", alignItems: "center", gap: 8, margin: "16px 0", fontSize: 13 }}>
         <input
+          id="agree"
           type="checkbox"
+          className="agree-checkbox"
           checked={checked}
           onChange={(e) => setAgree(e.target.checked)}
-          style={{ cursor: "pointer" }}
         />
-        <label htmlFor="agree" className="text-(--muted)">
+        <label htmlFor="agree" className="text-(--muted) cursor-pointer">
           Tôi đồng ý với{" "}
           <button type="button" onClick={() => setOpenTermModal(true)} className="text-(--primary) cursor-pointer">
             Điều khoản dịch vụ
