@@ -1,7 +1,7 @@
 "use client"
 
 import MyModal from "@modal/MyModal";
-import {useState} from "react";
+import {memo, useState} from "react";
 import TermOfUseContent from "@feature/auth/page/register/TermOfUseContent";
 import TermOfPolicyContent from "@feature/auth/page/register/TermOfPolicyContent";
 
@@ -50,5 +50,5 @@ const LegalAgreement = ({ checked, setAgree }: LegalAgreementProps) => {
   );
 }
 
-export default LegalAgreement;
+export default memo(LegalAgreement);
 
