@@ -8,7 +8,7 @@ export const USER_ROLES = {
     label: 'CTV',
   },
   KHACH_HANG: {
-    value: 'khach-hang',
+    value: 'kh',
     label: 'Khách hàng',
   },
 } as const;

@@ -19,7 +19,7 @@ import DebugPanel from "@component/DebugPanel";
 import LegalAgreement from "@feature/auth/page/register/modal/LegalAgreement";
 import {USER_ROLES} from "@/config/enum/user-role";
 import AppSpin from "@component/AppSpin";
-import {MESSAGE_SERVER_ERROR_DEFAULT, STORAGE_KEYS, TOAST} from "@/config/constant";
+import {MESSAGE_SERVER_ERROR_DEFAULT, TOAST} from "@/config/constant";
 import authApi from "@feature/auth/authApi";
 import {USER_GENDER} from "@/config/enum/user-gender";
 import {LENGTH} from "@/config/validate-length";
@@ -38,15 +38,14 @@ export default function RegisterForm() {
   )
 
   const router = useRouter();
-  const [showPass, setShowPass] = useState(false);
-  const [showConfirmPass, setShowConfirmPass] = useState(false);
-  const [agree, setAgree] = useState(false);
+  const [showPass, setShowPass] = useState<boolean>(false);
+  const [showConfirmPass, setShowConfirmPass] = useState<boolean>(false);
+  const [agree, setAgree] = useState<boolean>(false);
 
-  const [openTermModal, setOpenTermModal] = useState(false)
-  const [openPolicyModal, setOpenPolicyModal] = useState(false)
+  const [openTermModal, setOpenTermModal] = useState<boolean>(false)
+  const [openPolicyModal, setOpenPolicyModal] = useState<boolean>(false)
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [serverError, setServerError] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const { showToast } = useToast()
 
   const validate = () => {
@@ -62,7 +61,6 @@ export default function RegisterForm() {
     setIsSubmitting(true)
     try {
       const res = await authApi.register(toRegisterRequest(form));
-      // localStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, res?.message);
       showToast(TOAST.TYPE.SUCCESS, res?.message)
       router.push(ROUTES.LOGIN)
     } catch (err) {
@@ -72,21 +70,28 @@ export default function RegisterForm() {
         setErrors((prev) => ({
           ...prev, ...Object.fromEntries(fields.map((f) => [f, serverErrors[f]?.[0] ?? ""])),
         }))
+        if (err.response.data.message) {
+          showToast("error", err.response.data.message)
+        }
       } else {
         const errMsg = err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT;
         showToast("error", errMsg)
       }
+    } finally {
       setIsSubmitting(false)
     }
   };
 
   const _clear = () => {
-    // setErrors({ email: "", password: "" })
-    setServerError('')
+    setErrors({ type: "", company_name: "", full_name: "", phone: "", email: "", ref_code: "", password: "", password_confirmation: "", gender: "" })
   }
 
   const onChangeInputForm = (field) => (e) => {
-    const newValue = e.target.value
+    let newValue = e.target.value
+    if (field == 'phone') {
+      newValue = e.target.value.replace(/\D/g, '');
+    }
+    console.log(newValue, '// newValue')
     setForm(old => ({...old, [field]: newValue}))
   };
 
@@ -108,25 +113,6 @@ export default function RegisterForm() {
     <div className="right">
       <div className="login-card">
         <h1 className="login-title text-center">Tạo tài khoản mới</h1>
-
-        <div style={{ display: "flex", justifyContent: "center", gap: 16, margin: "8px 0 16px" }}>
-          <button
-            type="button"
-            onClick={() => showToast("success", "Thành công!")}
-            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--success)", fontSize: 24 }}
-          >
-            <i className="fa-solid fa-circle-check"/>
-          </button>
-          <button
-            type="button"
-            onClick={() => showToast("error", "Có lỗi xảy ra!")}
-            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--primary)", fontSize: 24 }}
-          >
-            <i className="fa-solid fa-circle-xmark"/>
-          </button>
-        </div>
-
-        <Notification type="error" message={serverError} />
 
         <form className="login-form" noValidate onSubmit={handleSubmit}>
           {/* Vai trò */}
@@ -334,8 +320,8 @@ export default function RegisterForm() {
 
           <LegalAgreement checked={agree} setAgree={setAgree} />
 
-          <button type="submit" className="btn btn-primary btn-submit disabled:cursor-not-allowed" disabled={isSubmitting}>
-            {isSubmitting ? <AppSpin size="small" /> : ""}  Tạo tài khoản
+          <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed" disabled={isSubmitting | !agree}>
+            {isSubmitting ? <AppSpin size="small" /> : <i className="fas fa-plus"/>}  Tạo tài khoản
           </button>
         </form>
 
@@ -344,7 +330,7 @@ export default function RegisterForm() {
           <Link href={ROUTES.LOGIN}>Đăng nhập</Link>
         </p>
       </div>
-      <DebugPanel data={{ openTermModal, openPolicyModal, agree, form  }} />
+      {/*<DebugPanel data={{ openTermModal, openPolicyModal, agree, form  }} />*/}
     </div>
   );
 }

@@ -29,7 +29,7 @@ const authApi = {
   },
   forgotPasswordReset(reset_token: string, password: string, password_confirmation: string): Promise<null> {
     return myAxios.post(API_URL.forgot_password_reset, {reset_token: reset_token, password: password, password_confirmation:password_confirmation})
-      .then(res => res.data.data)
+      .then(res => res.data)
   },
 }
 

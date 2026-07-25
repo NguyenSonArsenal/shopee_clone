@@ -16,7 +16,7 @@ export default async function ForgotPasswordResetPage() {
   }
 
   return (
-    <div className="login-page">
+    <div className="auth-page login-page">
       <AuthLeftPanel />
       <ResetPasswordForm />
     </div>

@@ -17,7 +17,7 @@ export default async function RegisterVerifyPage() {
   const initialTimeLeft = Math.floor(Math.max(0, (expiresAt - Date.now()) / 1000));
 
   return (
-    <div className="login-page">
+    <div className="auth-page login-page">
       <AuthLeftPanel />
       <OtpVerifyForm initialTimeLeft={initialTimeLeft} email={email}/>
     </div>

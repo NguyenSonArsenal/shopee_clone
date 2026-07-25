@@ -181,7 +181,7 @@ export default function OtpVerifyForm({ email, initialTimeLeft }: OtpVerifyFormP
 
             <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed"
                     disabled={otp.length !== 6 || timeLeft <= 0 || isSubmitting}>
-              {isSubmitting ? <AppSpin size="small" /> : ""}
+              {isSubmitting ? <AppSpin size="small" /> : <i className="fa-solid fa-floppy-disk"/>}{" "}
               {isSubmitting ? "Đang xác nhận..." : "Xác nhận"}
             </button>
         </form>

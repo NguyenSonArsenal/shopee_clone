@@ -6,13 +6,14 @@ import Link from "next/link";
 import {ROUTES} from "@/config/route";
 import {useState} from "react";
 import DebugPanel from "@component/DebugPanel";
-import {STORAGE_KEYS} from "@/config/constant";
+import {STORAGE_KEYS, TOAST} from "@/config/constant";
 import AppSpin from "@component/AppSpin";
 import FieldError from "@component/form/FieldError";
 import authApi from "@feature/auth/authApi";
 import Cookies from "js-cookie";
 import {useRouter} from "next/navigation";
 import Notification from "@component/Notification";
+import {useToast} from "@/context/ToastContext";
 
 export default function ResetPasswordForm() {
   const router = useRouter()
@@ -24,6 +25,8 @@ export default function ResetPasswordForm() {
   const [errors, setErrors] = useState({ password: "", password_confirmation: ""})
   const [serverError, setServerError] = useState<string>("")
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const { showToast } = useToast()
 
   const validate = () => {
     const newErrors = { password: "", password_confirmation: "" }
@@ -49,7 +52,7 @@ export default function ResetPasswordForm() {
       const res = await authApi.forgotPasswordReset(Cookies.get(STORAGE_KEYS.RESET_TOKEN), password, password_confirmation)
       console.log(res, '// res')
       Cookies.remove(STORAGE_KEYS.RESET_TOKEN)
-      localStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, "Đổi mật khẩu thành công. Vui lòng đăng nhập lại.")
+      showToast(TOAST.TYPE.SUCCESS, res.message)
       return router.replace(ROUTES.LOGIN)
     } catch (err) {
       const serverErrors = err.response?.data?.errors;
@@ -139,7 +142,7 @@ export default function ResetPasswordForm() {
 
           <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed"
                   disabled={isSubmitting}>
-            {isSubmitting ? <AppSpin size="small"/> : ""}
+            {isSubmitting ? <AppSpin size="small"/> : <i className="fa-solid fa-paper-plane"></i>}
             {isSubmitting ? "Đang đặt lại mật khẩu..." : "Đặt lại mật khẩu"}
           </button>
         </form>
@@ -147,9 +150,6 @@ export default function ResetPasswordForm() {
         <p className="login-register-link" style={{marginTop: 24}}>
           <Link href={ROUTES.LOGIN}>Quay lại đăng nhập</Link>
         </p>
-
-
-        <DebugPanel data={{password, password_confirmation, showPassword, showPasswordConfirmation, isSubmitting, errors, serverError}}/>
       </div>
     </div>
   )
