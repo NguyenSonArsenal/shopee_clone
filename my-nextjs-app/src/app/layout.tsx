@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.scss";
+import {ToastProvider} from "@/context/ToastContext";
 
 const roboto = Roboto({
   variable: "--font-roboto",   // dùng qua var(--font-roboto) trong SCSS
@@ -21,7 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className={`${roboto.variable} h-full`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ToastProvider>
+          {children}
+        </ToastProvider>
+      </body>
     </html>
   );
 }

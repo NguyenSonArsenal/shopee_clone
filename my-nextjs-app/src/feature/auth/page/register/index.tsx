@@ -10,9 +10,7 @@ import {
   IconUser,
   IconPhone,
   IconLink,
-  IconBuilding,
-  IconCheckCircle,
-  IconXCircle
+  IconBuilding
 } from "@icon";
 import Link from "next/link";
 import { Radio } from "antd";
@@ -21,7 +19,7 @@ import DebugPanel from "@component/DebugPanel";
 import LegalAgreement from "@feature/auth/page/register/modal/LegalAgreement";
 import {USER_ROLES} from "@/config/enum/user-role";
 import AppSpin from "@component/AppSpin";
-import {MESSAGE_SERVER_ERROR_DEFAULT, STORAGE_KEYS} from "@/config/constant";
+import {MESSAGE_SERVER_ERROR_DEFAULT, STORAGE_KEYS, TOAST} from "@/config/constant";
 import authApi from "@feature/auth/authApi";
 import {USER_GENDER} from "@/config/enum/user-gender";
 import {LENGTH} from "@/config/validate-length";
@@ -29,7 +27,7 @@ import {useRouter} from "next/navigation";
 import Notification from "@component/Notification";
 import FieldError from "@component/form/FieldError";
 import InputTextCounter from "@component/form/InputTextCounter";
-import { ToastContainer, useToast } from "@component/Toast";
+import { useToast } from "@/context/ToastContext";
 
 export default function RegisterForm() {
   const [form, setForm] = useState(
@@ -49,7 +47,7 @@ export default function RegisterForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [serverError, setServerError] = useState("")
-  const { toasts, showToast, closeToast } = useToast()
+  const { showToast } = useToast()
 
   const validate = () => {
     return true
@@ -64,19 +62,19 @@ export default function RegisterForm() {
     setIsSubmitting(true)
     try {
       const res = await authApi.register(toRegisterRequest(form));
-      localStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, res?.message);
+      // localStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, res?.message);
+      showToast(TOAST.TYPE.SUCCESS, res?.message)
       router.push(ROUTES.LOGIN)
     } catch (err) {
-      console.log(err.response, '// err.response?')
       if (err.response?.status === 422) {
         const serverErrors = err.response.data.errors;
-        const fields = ["full_name", "gender", "type", "company_name", "phone", "password", "confirm_password"];
+        const fields = ["full_name", "gender", "type", "company_name", "phone", "password", "password_confirmation1"];
         setErrors((prev) => ({
           ...prev, ...Object.fromEntries(fields.map((f) => [f, serverErrors[f]?.[0] ?? ""])),
         }))
       } else {
         const errMsg = err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT;
-        setServerError(errMsg);
+        showToast("error", errMsg)
       }
       setIsSubmitting(false)
     }
@@ -101,7 +99,7 @@ export default function RegisterForm() {
       password_confirmation: form.password_confirmation,
       gender: form.gender ? Number(form.gender) : "",
       type: form.type,
-      company_name: form.role === USER_ROLES.F2.value ? form.company_name : undefined,
+      company_name: form.type === USER_ROLES.F2.value ? form.company_name : undefined,
     }
   }
 
@@ -115,16 +113,16 @@ export default function RegisterForm() {
           <button
             type="button"
             onClick={() => showToast("success", "Thành công!")}
-            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--success)" }}
+            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--success)", fontSize: 24 }}
           >
-            <IconCheckCircle className="w-6 h-6" />
+            <i className="fa-solid fa-circle-check"/>
           </button>
           <button
             type="button"
             onClick={() => showToast("error", "Có lỗi xảy ra!")}
-            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--primary)" }}
+            style={{ background: "none", border: "none", cursor: "pointer", color: "var(--primary)", fontSize: 24 }}
           >
-            <IconXCircle className="w-6 h-6" />
+            <i className="fa-solid fa-circle-xmark"/>
           </button>
         </div>
 
@@ -346,9 +344,7 @@ export default function RegisterForm() {
           <Link href={ROUTES.LOGIN}>Đăng nhập</Link>
         </p>
       </div>
-
       <DebugPanel data={{ openTermModal, openPolicyModal, agree, form  }} />
-      <ToastContainer toasts={toasts} onClose={closeToast} />
     </div>
   );
 }

@@ -1,12 +1,13 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import { IconCheckCircle, IconXCircle } from "@icon"
+import { useEffect, useState } from "react"
+import {TOAST} from "@/config/constant";
 
-export type ToastType = "success" | "error"
+export type ToastType = typeof TOAST.TYPE[keyof typeof TOAST.TYPE]
+
 type ToastItem = { id: number; type: ToastType; message: string }
 
-const TOAST_DURATION = 5000
+const TOAST_DURATION = TOAST.TIMEOUT * 1000
 
 function ToastCard({ toast, onClose }: { toast: ToastItem; onClose: (id: number) => void }) {
   const [show, setShow] = useState(false)
@@ -27,29 +28,19 @@ function ToastCard({ toast, onClose }: { toast: ToastItem; onClose: (id: number)
     setTimeout(() => onClose(toast.id), 300)
   }
 
+  const addExclamation = (text: string) => {
+    const trimmed = text.trim();
+
+    return trimmed.endsWith("!") ? trimmed : `${trimmed}!`;
+  };
+
   return (
     <div className={`toast ${toast.type} ${show ? "show" : ""}`}>
-      {toast.type === "success" ? <IconCheckCircle className="toast-icon" /> : <IconXCircle className="toast-icon" />}
-      <span className="toast-msg">{toast.message}</span>
+      <i className={`fa-solid ${toast.type === "success" ? "fa-circle-check" : "fa-circle-xmark"} toast-icon`}/>
+      <span className="toast-msg">{addExclamation(toast.message)}</span>
       <button type="button" className="toast-close" onClick={handleClose} aria-label="Đóng">×</button>
     </div>
   )
-}
-
-export function useToast() {
-  const [toasts, setToasts] = useState<ToastItem[]>([])
-  const idRef = useRef(0)
-
-  const showToast = (type: ToastType, message: string) => {
-    idRef.current += 1
-    setToasts((prev) => [...prev, { id: idRef.current, type, message }])
-  }
-
-  const closeToast = (id: number) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id))
-  }
-
-  return { toasts, showToast, closeToast }
 }
 
 type ToastContainerProps = {

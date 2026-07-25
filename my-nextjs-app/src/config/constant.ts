@@ -15,4 +15,12 @@ export const AUTH_CONFIG = {
 
 export const DELAY_TIME = 2000; // MS
 export const MESSAGE_SERVER_ERROR_DEFAULT = "Lỗi hệ thống";
+export const TOAST = {
+  TYPE: {
+    SUCCESS: 'success',
+    ERROR: 'error',
+    INFO: 'info'
+  },
+  TIMEOUT: 5 // Thời gian hiển thị toast (giây)
+} as const;
 

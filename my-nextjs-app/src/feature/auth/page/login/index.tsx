@@ -7,12 +7,9 @@ import {useState} from "react";
 import {useRouter} from 'next/navigation';
 import DebugPanel from "@component/DebugPanel"
 import Notification from "@component/Notification"
-import {Spin} from 'antd';
 import authApi from "@feature/auth/authApi";
-
-import {AUTH_CONFIG, DELAY_TIME, MESSAGE_SERVER_ERROR_DEFAULT, STORAGE_KEYS} from "@/config/constant";
+import {AUTH_CONFIG, MESSAGE_SERVER_ERROR_DEFAULT, STORAGE_KEYS} from "@/config/constant";
 import {ROUTES} from "@/config/route";
-import {delay} from "@/helper/helper";
 import FieldError from "@component/form/FieldError";
 import AppSpin from "@component/AppSpin";
 
