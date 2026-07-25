@@ -248,8 +248,7 @@ class AuthController extends Controller
                     errorCode: $result['errorCode'] ?? null,
                 );
             }
-
-            return $this->success();
+            return $this->success([], "Đặt lại mật khẩu thành công");
         } catch (\Exception $e) {
               Log::error($e);
             return $this->systemError();

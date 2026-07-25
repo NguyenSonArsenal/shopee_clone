@@ -24,7 +24,6 @@ import authApi from "@feature/auth/authApi";
 import {USER_GENDER} from "@/config/enum/user-gender";
 import {LENGTH} from "@/config/validate-length";
 import {useRouter} from "next/navigation";
-import Notification from "@component/Notification";
 import FieldError from "@component/form/FieldError";
 import InputTextCounter from "@component/form/InputTextCounter";
 import { useToast } from "@/context/ToastContext";
@@ -41,9 +40,6 @@ export default function RegisterForm() {
   const [showPass, setShowPass] = useState<boolean>(false);
   const [showConfirmPass, setShowConfirmPass] = useState<boolean>(false);
   const [agree, setAgree] = useState<boolean>(false);
-
-  const [openTermModal, setOpenTermModal] = useState<boolean>(false)
-  const [openPolicyModal, setOpenPolicyModal] = useState<boolean>(false)
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const { showToast } = useToast()
@@ -91,7 +87,6 @@ export default function RegisterForm() {
     if (field == 'phone') {
       newValue = e.target.value.replace(/\D/g, '');
     }
-    console.log(newValue, '// newValue')
     setForm(old => ({...old, [field]: newValue}))
   };
 
@@ -107,7 +102,6 @@ export default function RegisterForm() {
       company_name: form.type === USER_ROLES.F2.value ? form.company_name : undefined,
     }
   }
-
 
   return (
     <div className="right">

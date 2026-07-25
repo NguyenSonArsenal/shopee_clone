@@ -11,4 +11,14 @@ export const ROUTES = {
   REFERRALS: "/tai-khoan/thanh-vien-gioi-thieu",
   FAVORITES: "/tai-khoan/bds-quan-tam",
   RESET_PASSWORD: "/forgot-password/reset",
+
+  ORGANIZATION: "/co-cau-to-chuc",
+  ORGANIZATION_COMPANY: "/co-cau-to-chuc/cong-ty",
+  ORGANIZATION_OFFICE: "/co-cau-to-chuc/van-phong",
+  ORGANIZATION_BRANCH: "/co-cau-to-chuc/chi-nhanh",
+  ORGANIZATION_DEPARTMENT: "/co-cau-to-chuc/phong-ban",
+  ORGANIZATION_TEAM: "/co-cau-to-chuc/doi-nhom",
+  ORGANIZATION_POSITION: "/co-cau-to-chuc/chuc-vu",
+  ORGANIZATION_CHART: "/co-cau-to-chuc/so-do-to-chuc",
+  ORGANIZATION_CONFIG: "/co-cau-to-chuc/cau-hinh",
 } as const;

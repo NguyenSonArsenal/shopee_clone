@@ -33,6 +33,27 @@
   --my-breakpoint-lg: 992px;
   --my-breakpoint-xl: 1200px;
   --my-breakpoint-2xl: 1400px;
+
+  /* ── Admin (CRM) — copy từ crm-tan-long, thêm mới không đụng biến trên ── */
+  --primary-2: #c0392b;
+  --gradient: linear-gradient(135deg, var(--primary), var(--primary-2));
+  --info: #3b82f6;
+  --info-bg: #eff6ff;
+  --info-text: #1e40af;
+  --warning: #f59e0b;
+  --warning-bg: #fffbeb;
+  --warning-text: #854d0e;
+  --card-bg: #fffbfb;
+  --bg-admin: #f4f6f9;
+  --text-light: #aaa;
+  --sb-full: 230px;
+  --sb-mini: 52px;
+  --topbar-h: 54px;
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, .06);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, .14);
+  --t: all .22s ease;
+  --bg-table-hover-level-1: #f3f3f3;
+  --bg-table-hover-level-2: #e6e6e7;
 }
 
 $breakpoint-xl: 1200px;
