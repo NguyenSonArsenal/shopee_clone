@@ -5,6 +5,7 @@ import {STORAGE_KEYS} from "@/config/constant";
 import {ROUTES} from "@/config/route";
 import {useRouter} from "next/navigation";
 import Link from "next/link";
+import Cookies from "js-cookie";
 
 export default function Home() {
   const [username, setUsername] = useState("")
@@ -12,14 +13,13 @@ export default function Home() {
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+    const token = Cookies.get(STORAGE_KEYS.ACCESS_TOKEN);
     if (!token) {
       setIsMounted(true);
       return;
     }
     // 2. Lấy thông tin user để hiển thị
-    const userInfoStr = localStorage.getItem(STORAGE_KEYS.USER_INFO);
-
+    const userInfoStr = Cookies.get(STORAGE_KEYS.USER_INFO);
     if (userInfoStr) {
       try {
         const user = JSON.parse(userInfoStr);

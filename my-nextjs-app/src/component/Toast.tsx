@@ -1,11 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import {TOAST} from "@/config/constant";
+import {TOAST, ToastTypeValue} from "@/config/constant";
 
-export type ToastType = typeof TOAST.TYPE[keyof typeof TOAST.TYPE]
-
-type ToastItem = { id: number; type: ToastType; message: string }
+type ToastItem = { id: number; type: ToastTypeValue; message: string }
 
 const TOAST_DURATION = TOAST.TIMEOUT * 1000
 

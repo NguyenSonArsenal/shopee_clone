@@ -32,5 +32,15 @@ return [
             'rate_limit_minutes' => 10, // Rate limit window (phút)
         ],
     ],
-    'format_datetime' => 'Y-m-d H:i:s'
+    'format_datetime' => 'Y-m-d H:i:s',
+    'jwt_token' => [
+        'access_token' => [
+            'key' => 'access_token',
+            'timeout' => 1800, // minutes (minute x 60)
+        ],
+        'refresh_token' => [
+            'key' => 'refresh_token',
+            'timeout' => 604800, // days (day x 24 x 60 x 60)
+        ],
+    ]
 ];

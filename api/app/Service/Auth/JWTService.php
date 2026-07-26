@@ -4,7 +4,6 @@ namespace App\Service\Auth;
 
 class JWTService
 {
-//    const EXP = 1800;
     private function base64UrlEncode(string $data)
     {
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($data));
@@ -23,8 +22,18 @@ class JWTService
     /**
      * Tạo JWT Token từ Payload
      */
-    public function generateToken($payload, $expireSeconds = 1800)
+    public function generateToken($payload, $type)
     {
+        switch ($type) {
+            case getConfig('jwt_token.access_token.key'):
+                $expireSeconds = getConfig('jwt_token.access_token.timeout');
+                break;
+            case getConfig('jwt_token.refresh_token.key'):
+                $expireSeconds = getConfig('jwt_token.refresh_token.timeout');
+                break;
+            default:
+                $expireSeconds = 5; // minutes
+        }
         $header = json_encode(['alg' => 'HS256', 'typ' => 'JWT']);
 
         $payload['exp'] = time() + $expireSeconds;

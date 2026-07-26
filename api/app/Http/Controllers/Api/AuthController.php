@@ -66,7 +66,6 @@ class AuthController extends Controller
     public function postLogin(LoginRequest $request)
     {
         try {
-            sleep(1); // @todo
             $user = User::where('email', $request->email)
                 ->where('status', UserStatus::ACTIVE)
                 ->first();
@@ -81,8 +80,8 @@ class AuthController extends Controller
                 'username' => $user->username,
             ];
 
-            $accessToken = $this->jwtService->generateToken($tokenPayload, getConstant('EXP_ACCESS_TOKEN'));
-            $refreshToken = $this->jwtService->generateToken(['id' => $user->id], getConstant('EXP_RF_TOKEN'));
+            $accessToken = $this->jwtService->generateToken($tokenPayload, getConfig('jwt_token.access_token.key'));
+            $refreshToken = $this->jwtService->generateToken($tokenPayload, getConfig('jwt_token.refresh_token.key'));
 
             // Lưu Refresh Token vào Database để quản lý trạng thái (Stateful)
             $user->rf_token = $refreshToken;
@@ -132,7 +131,7 @@ class AuthController extends Controller
         // Cấp Access Token mới
         $newAccessToken = $this->jwtService->generateToken(
             ['id' => $user->id, 'username' => $user->username],
-            getConstant('EXP_ACCESS_TOKEN')
+            getConfig('jwt_token.access_token.key')
         );
 
         return $this->success([

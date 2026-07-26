@@ -8,10 +8,11 @@ import {useRouter} from 'next/navigation';
 import DebugPanel from "@component/DebugPanel"
 import Notification from "@component/Notification"
 import authApi from "@feature/auth/authApi";
-import {AUTH_CONFIG, MESSAGE_SERVER_ERROR_DEFAULT, STORAGE_KEYS} from "@/config/constant";
+import {access_token_timeout, AUTH_CONFIG, MESSAGE_SERVER_ERROR_DEFAULT, STORAGE_KEYS} from "@/config/constant";
 import {ROUTES} from "@/config/route";
 import FieldError from "@component/form/FieldError";
 import AppSpin from "@component/AppSpin";
+import Cookies from "js-cookie";
 
 export default function LoginForm({}) {
   const [showPass, setShowPass] = useState(false)
@@ -23,9 +24,7 @@ export default function LoginForm({}) {
   const [serverError, setServerError] = useState("")
 
   const validate = () => {
-    return true
     const newErrors = { email: "", password: "" }
-
     if (!email) {
       newErrors.email = "Email không được để trống"
     } else if (!AUTH_CONFIG.EMAIL_REGEX.test(email)) {
@@ -51,8 +50,9 @@ export default function LoginForm({}) {
     _clear()
     try {
       const data = await authApi.login({email, password});
-      localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.access_token)
-      localStorage.setItem(STORAGE_KEYS.USER_INFO, JSON.stringify(data.user))
+      const expiresAt = new Date(Date.now() + access_token_timeout)
+      Cookies.set(STORAGE_KEYS.ACCESS_TOKEN, data.access_token, { expires: expiresAt })
+      Cookies.set(STORAGE_KEYS.USER_INFO, JSON.stringify(data.user), { expires: expiresAt })
       router.replace(ROUTES.HOME)
     } catch (err) {
       if (err.response?.status === 422) {

@@ -23,4 +23,9 @@ export const TOAST = {
   },
   TIMEOUT: 5 // Thời gian hiển thị toast (giây)
 } as const;
+export type ToastTypeValue = typeof TOAST.TYPE[keyof typeof TOAST.TYPE]
+
+
+// @todo K nên dùng chữ thường để lưu const, t dùng vì lười viết hoa
+export const access_token_timeout = Number(30*60*1000) // (mili-giây) (minute x 60 x 1000)
 
