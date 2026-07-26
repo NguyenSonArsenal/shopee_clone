@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import Link from "next/link"
 import AdminLayout from "@component/admin/AdminLayout"
 import AdminPagination from "@component/admin/AdminPagination"
 import { ROUTES } from "@/config/route"
@@ -41,9 +42,9 @@ export default function CompanyListPage() {
       <div className="card">
         <div className="card-head">
           <h3><i className="fa-solid fa-building"/> Danh sách công ty</h3>
-          <button type="button" className="btn btn-primary" style={{ width: "auto", padding: "8px 16px" }}>
+          <Link href={`${ROUTES.ORGANIZATION_COMPANY}/create`} className="btn btn-primary" style={{ width: "auto", padding: "8px 16px" }}>
             <i className="fa-solid fa-plus"/> Thêm công ty
-          </button>
+          </Link>
         </div>
         <div className="card-body">
           <div className="toolbar">
@@ -95,8 +96,8 @@ export default function CompanyListPage() {
                     </td>
                     <td className="col-action">
                       <div className="action-btns">
-                        <button type="button" className="action-icon view" data-tooltip="Xem"><i className="fa-solid fa-eye"/></button>
-                        <button type="button" className="action-icon edit" data-tooltip="Sửa"><i className="fa-solid fa-pen"/></button>
+                        <Link href={`${ROUTES.ORGANIZATION_COMPANY}/${company.id}`} className="action-icon view" data-tooltip="Xem"><i className="fa-solid fa-eye"/></Link>
+                        <Link href={`${ROUTES.ORGANIZATION_COMPANY}/${company.id}/edit`} className="action-icon edit" data-tooltip="Sửa"><i className="fa-solid fa-pen"/></Link>
                         <button type="button" className="action-icon view" data-tooltip="Lịch sử"><i className="fa-solid fa-clock"/></button>
                         <button type="button" className="action-icon delete tip-top-left" data-tooltip="Xoá"><i className="fa-solid fa-trash"/></button>
                       </div>

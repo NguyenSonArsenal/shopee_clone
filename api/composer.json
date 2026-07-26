@@ -13,7 +13,8 @@
     "guzzlehttp/guzzle": "^7.0.1",
     "laravel/framework": "^8.75",
     "laravel/sanctum": "^2.11",
-    "laravel/tinker": "^2.5"
+    "laravel/tinker": "^2.5",
+    "nwidart/laravel-modules": "6.0"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.7",
@@ -28,7 +29,8 @@
     "psr-4": {
       "App\\": "app/",
       "Database\\Factories\\": "database/factories/",
-      "Database\\Seeders\\": "database/seeders/"
+      "Database\\Seeders\\": "database/seeders/",
+      "Modules\\Organization\\": "Modules/Organization/"
     },
     "files": [
       "app//Helper//Helper.php"
@@ -57,12 +59,20 @@
   "extra": {
     "laravel": {
       "dont-discover": []
+    },
+    "merge-plugin": {
+      "include": [
+        "Modules/*/composer.json"
+      ]
     }
   },
   "config": {
     "optimize-autoloader": true,
     "preferred-install": "dist",
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "wikimedia/composer-merge-plugin": true
+    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true
