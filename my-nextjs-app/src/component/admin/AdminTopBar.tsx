@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
-import { STORAGE_KEYS } from "@/config/constant"
+import {STORAGE_KEYS, TOAST} from "@/config/constant"
 import { ROUTES } from "@/config/route"
+import Cookies from "js-cookie";
+import {useLogout} from "@/hook/useLogout";
 
 export type BreadcrumbItem = { label: string; href?: string }
 
@@ -12,9 +14,10 @@ type AdminTopbarProps = {
   breadcrumb: BreadcrumbItem[]
 }
 
-export default function AdminTopbar({ breadcrumb }: AdminTopbarProps) {
+export default function AdminTopBar({ breadcrumb }: AdminTopbarProps) {
+  const handleLogout = useLogout()
+
   const pathname = usePathname()
-  const router = useRouter()
   const [username, setUsername] = useState("Super Admin")
   const [role, setRole] = useState("super_admin")
   const [email, setEmail] = useState("admin@propcam.com")
@@ -22,7 +25,7 @@ export default function AdminTopbar({ breadcrumb }: AdminTopbarProps) {
   const profileRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const userInfoStr = localStorage.getItem(STORAGE_KEYS.USER_INFO)
+    const userInfoStr = Cookies.get(STORAGE_KEYS.USER_INFO)
     if (userInfoStr) {
       try {
         const user = JSON.parse(userInfoStr)
@@ -44,12 +47,6 @@ export default function AdminTopbar({ breadcrumb }: AdminTopbarProps) {
     document.addEventListener("click", handleClickOutside)
     return () => document.removeEventListener("click", handleClickOutside)
   }, [])
-
-  const handleLogout = () => {
-    localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN)
-    localStorage.removeItem(STORAGE_KEYS.USER_INFO)
-    router.replace(ROUTES.LOGIN)
-  }
 
   return (
     <header className="topbar">
@@ -134,7 +131,7 @@ export default function AdminTopbar({ breadcrumb }: AdminTopbarProps) {
               </Link>
               <div className="pd-sep"/>
               <button type="button" className="pd-item out" onClick={handleLogout}>
-                <div className="pd-ico"><i className="fa-solid fa-right-from-bracket" style={{ color: "#dc2626", fontSize: 14 }}/></div>
+                <div className="pd-ico"><i className="fa-solid fa-right-from-bracket" style={{ color: "var(--primary)", fontSize: 14 }}/></div>
                 Thoát
               </button>
             </div>

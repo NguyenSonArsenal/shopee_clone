@@ -1,13 +1,16 @@
-"use client" // Convert serve component to client component to using useState
+"use client"
 
 import {useEffect, useState} from "react";
-import {STORAGE_KEYS} from "@/config/constant";
+import {STORAGE_KEYS, TOAST} from "@/config/constant";
 import {ROUTES} from "@/config/route";
 import {useRouter} from "next/navigation";
 import Link from "next/link";
 import Cookies from "js-cookie";
+import {useLogout} from "@/hook/useLogout";
 
 export default function Home() {
+  const handleLogout = useLogout()
+
   const [username, setUsername] = useState("")
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false)
@@ -30,15 +33,6 @@ export default function Home() {
     }
     setIsMounted(true);
   }, [router]);
-
-  // 3. Xử lý Đăng xuất
-  const handleLogout = () => {
-    localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.USER_INFO);
-    localStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, "Bạn đã đăng xuất")
-    router.replace(ROUTES.LOGIN);
-    setUsername("");
-  };
 
   const renderAuthSection = () => {
     if (!isMounted) {
@@ -79,6 +73,9 @@ export default function Home() {
   return (
     <div className={'p-10 text-center'}>
       <h1>Chào mừng bạn đến với Trang Chủ 🏠</h1>
+
+      <Link href={ROUTES.ORGANIZATION_COMPANY}>Thông tin công ty</Link>
+      <br/>
 
       {renderAuthSection()}
     </div>

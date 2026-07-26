@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import AdminSidebar from "@component/admin/AdminSidebar"
-import AdminTopbar, { BreadcrumbItem } from "@component/admin/AdminTopbar"
+import AdminTopbar, { BreadcrumbItem } from "@component/admin/AdminTopBar"
 
 type AdminLayoutProps = {
   breadcrumb: BreadcrumbItem[]
