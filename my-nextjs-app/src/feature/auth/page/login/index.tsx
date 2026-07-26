@@ -33,9 +33,11 @@ export default function LoginForm({}) {
 
     if (!password) {
       newErrors.password = "Mật khẩu không được để trống"
-    } else if (password.length < AUTH_CONFIG.MIN_PASSWORD_LENGTH) {
-      newErrors.password = "Mật khẩu phải có ít nhất " +  AUTH_CONFIG.MIN_PASSWORD_LENGTH  + " ký tự"
     }
+    // @todo comment to test
+    // else if (password.length < AUTH_CONFIG.MIN_PASSWORD_LENGTH) {
+    //   newErrors.password = "Mật khẩu phải có ít nhất " +  AUTH_CONFIG.MIN_PASSWORD_LENGTH  + " ký tự"
+    // }
 
     setErrors(newErrors)
 
