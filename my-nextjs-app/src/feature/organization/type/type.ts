@@ -4,6 +4,24 @@ type CompanyUserRef = {
   email: string
 } | null
 
+type CompanyListItem = {
+  id: string
+  name: string
+  short_name: string | null
+}
+
+type Pagination = {
+  current_page: number
+  last_page: number
+  per_page: number
+  total: number
+}
+
+type CompanyListResponse = {
+  data: CompanyListItem[]
+  pagination: Pagination
+}
+
 type Company = {
   id: string
   representative_id: string | null

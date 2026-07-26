@@ -8,6 +8,7 @@ import { Skeleton } from "antd"
 import { organization } from "@/config/breadcrumb"
 import companyApi from "@/feature/organization/companyApi"
 import {ROUTES} from "@/config/route";
+import DebugPanel from "@component/DebugPanel";
 
 export default function ViewCompanyPage() {
   // useParams() đọc segment động [id] trên URL, ví dụ /co-cau-to-chuc/cong-ty/1 -> id = "1"
@@ -127,8 +128,6 @@ export default function ViewCompanyPage() {
             className="fas fa-arrow-left"></i> Quay lại</Link>
           <button type="submit" className="btn btn-primary"><i className="fa-solid fa-pen"></i> Sửa</button>
         </div>
-
-
       </div>
     </AdminLayout>
   )
