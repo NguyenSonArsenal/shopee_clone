@@ -1,16 +1,16 @@
 "use client"
 
 import AdminLayout from "@component/admin/AdminLayout"
+import SkeletonField from "@component/admin/SkeletonField";
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
-import { Skeleton } from "antd"
 import { organization } from "@/config/breadcrumb"
 import companyApi from "@/feature/organization/companyApi"
 import {ROUTES} from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
 
-export default function ViewCompanyPage() {
+export default function CompanyDetailPage() {
   // useParams() đọc segment động [id] trên URL, ví dụ /co-cau-to-chuc/cong-ty/1 -> id = "1"
   const { id } = useParams<{ id: string }>()
 
@@ -34,92 +34,65 @@ export default function ViewCompanyPage() {
           <div className="frow c2">
             <div className="field">
               <label>Tên công ty</label>
-              <Skeleton loading={isLoading} active paragraph={false} title={{ width: 120 }}>
-                <div>{data?.name || "-"}</div>
-              </Skeleton>
+              <SkeletonField isLoading={isLoading} value={data?.name}/>
             </div>
             <div className="field">
               <label>Tên viết tắt</label>
-              <Skeleton loading={isLoading} active paragraph={false} title={{ width: 120 }}>
-                <div>{data?.short_name || "-"}</div>
-              </Skeleton>
+              <SkeletonField isLoading={isLoading} value={data?.short_name}/>
             </div>
           </div>
 
           <div className="frow c2">
             <div className="field">
               <label>Mã số thuế</label>
-
-              <Skeleton loading={isLoading} active paragraph={false} title={{ width: 120 }}>
-                <div>{data?.tax_code || "-"}</div>
-              </Skeleton>
+              <SkeletonField isLoading={isLoading} value={data?.tax_code}/>
             </div>
             <div className="field">
               <label>Ngày thành lập</label>
-
-
-
-              <Skeleton loading={isLoading} active paragraph={false} title={{ width: 120 }}>
-                <div>{data?.established_date ? new Date(data?.established_date).toLocaleDateString("vi-VN") : "-"}</div>
-              </Skeleton>
-
+              <SkeletonField isLoading={isLoading} value={data?.established_date ? new Date(data?.established_date).toLocaleDateString("vi-VN") : ""}/>
             </div>
           </div>
 
           <div className="frow c2">
             <div className="field">
               <label>Điện thoại</label>
-              <Skeleton loading={isLoading} active paragraph={false} title={{ width: 120 }}>
-                <div>{data?.phone || "-"}</div>
-              </Skeleton>
+              <SkeletonField isLoading={isLoading} value={data?.phone}/>
             </div>
             <div className="field">
               <label>Email</label>
-              <Skeleton loading={isLoading} active paragraph={false} title={{ width: 120 }}>
-                <div>{data?.email || "-"}</div>
-              </Skeleton>
+              <SkeletonField isLoading={isLoading} value={data?.email}/>
             </div>
           </div>
 
           <div className="frow c1">
             <div className="field">
               <label>Website</label>
-              <Skeleton loading={isLoading} active paragraph={false} title={{ width: 120 }}>
-                <div>{data?.website || "-"}</div>
-              </Skeleton>
+              <SkeletonField isLoading={isLoading} value={data?.website}/>
             </div>
           </div>
 
           <div className="frow c1">
             <div className="field">
               <label>Địa chỉ</label>
-              <Skeleton loading={isLoading} active paragraph={false} title={{ width: 120 }}>
-                <div>{data?.address || "-"}</div>
-              </Skeleton>
+              <SkeletonField isLoading={isLoading} value={data?.address}/>
             </div>
           </div>
 
           <div className="frow c2">
             <div className="field">
               <label>Người đại diện</label>
-              <Skeleton loading={isLoading} active paragraph={false} title={{ width: 120 }}>
-                <div>{data?.representative?.full_name || "-"}</div>
-              </Skeleton>
+              <SkeletonField isLoading={isLoading} value={data?.representative?.full_name}/>
             </div>
             <div className="field">
               <label>Người quản lý</label>
-              <Skeleton loading={isLoading} active paragraph={false} title={{ width: 120 }}>
-                <div>{data?.manager?.full_name || "-"}</div>
-              </Skeleton>
+              <SkeletonField isLoading={isLoading} value={data?.manager?.full_name}/>
             </div>
           </div>
 
           <div className="frow c1">
             <div className="field">
               <label>Giới thiệu / Mô tả</label>
-              <Skeleton loading={isLoading} active paragraph={false} title={{ width: 120 }}>
-                <div>{data?.description || "-"}</div>
-              </Skeleton>
+              <SkeletonField isLoading={isLoading} value={data?.description}/>
             </div>
           </div>
         </div>
