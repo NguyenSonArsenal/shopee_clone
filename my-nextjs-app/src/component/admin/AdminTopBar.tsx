@@ -11,7 +11,7 @@ import {useLogout} from "@/hook/useLogout";
 export type BreadcrumbItem = { label: string; href?: string }
 
 type AdminTopbarProps = {
-  breadcrumb: BreadcrumbItem[]
+  breadcrumb: readonly BreadcrumbItem[]
 }
 
 export default function AdminTopBar({ breadcrumb }: AdminTopbarProps) {

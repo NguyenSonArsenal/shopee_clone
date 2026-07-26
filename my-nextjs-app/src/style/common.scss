@@ -63,15 +63,20 @@ a {
 }
 
 .btn {
-  width: 100%;
-  padding: 12px 20px;
-  border: none;
-  border-radius: var(--radius);
-  font-family: 'Roboto', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
   font-size: var(--fs-primary);
   font-weight: 500;
-  transition: background .15s, transform .1s;
-  position: relative;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: var(--t);
+  white-space: nowrap;
+  font-family: var(--font-sans);
 }
 
 .btn-primary {
@@ -97,7 +102,7 @@ a {
   }
 }
 .btn-md {
-  padding: 5px 12px;
+  padding: 4px 12px;
   font-size: var(--fs-primary);
 }
 

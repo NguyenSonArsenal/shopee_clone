@@ -3,6 +3,8 @@ import { Roboto } from "next/font/google";
 import "./globals.scss";
 import {ToastProvider} from "@/context/ToastContext";
 import {ConfirmProvider} from "@/context/ConfirmContext";
+import {ReactQueryProvider} from "@/context/ReactQueryProvider";
+import {AntdRegistry} from "@ant-design/nextjs-registry";
 
 const roboto = Roboto({
   variable: "--font-roboto",   // dùng qua var(--font-roboto) trong SCSS
@@ -24,11 +26,16 @@ export default function RootLayout({
   return (
     <html lang="vi" className={`${roboto.variable} h-full`}>
       <body className="min-h-full flex flex-col">
-        <ToastProvider>
-          <ConfirmProvider>
-            {children}
-          </ConfirmProvider>
-        </ToastProvider>
+        <ReactQueryProvider>
+          {/* antd sinh CSS bằng JS lúc chạy — thiếu cái này: AntdRegistry thì CSS chỉ có sau hydrate, gây giật layout lúc mới load trang */}
+          <AntdRegistry>
+            <ToastProvider>
+              <ConfirmProvider>
+                {children}
+              </ConfirmProvider>
+            </ToastProvider>
+          </AntdRegistry>
+        </ReactQueryProvider>
       </body>
     </html>
   );

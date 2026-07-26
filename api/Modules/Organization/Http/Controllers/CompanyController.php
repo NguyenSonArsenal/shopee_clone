@@ -18,7 +18,7 @@ class CompanyController extends Controller
             $company = Company::with(['representative:id,full_name,email', 'manager:id,full_name,email'])
                 ->find($id);
 
-            if (!$company) {
+            if (empty($company)) {
                 return $this->error('Không tìm thấy công ty', 404);
             }
 

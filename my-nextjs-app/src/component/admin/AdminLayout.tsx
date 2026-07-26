@@ -5,7 +5,7 @@ import AdminSidebar from "@component/admin/AdminSidebar"
 import AdminTopbar, { BreadcrumbItem } from "@component/admin/AdminTopBar"
 
 type AdminLayoutProps = {
-  breadcrumb: BreadcrumbItem[]
+  breadcrumb: readonly BreadcrumbItem[]
   children: React.ReactNode
 }
 
