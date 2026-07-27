@@ -4,6 +4,8 @@ namespace Modules\Organization\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Organization\Http\Requests\StoreCompanyRequest;
+use Modules\Organization\Http\Requests\UpdateCompanyRequest;
 use Modules\Organization\Models\Company;
 
 class CompanyController extends Controller
@@ -54,6 +56,62 @@ class CompanyController extends Controller
             }
 
             return $this->success($company);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->systemError();
+        }
+    }
+
+    /**
+     * POST /api/organization/company
+     * Tạo mới 1 công ty
+     *
+     * @param StoreCompanyRequest $request Dữ liệu công ty đã được validate
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function create(StoreCompanyRequest $request)
+    {
+        try {
+            $data = $request->validated();
+
+            // Mặc định công ty mới là đang hoạt động nếu client không gửi lên
+            $data['is_active'] = $data['is_active'] ?? true;
+
+            $company = Company::create($data);
+
+            return $this->success($company, 'Tạo công ty thành công', 201);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->systemError();
+        }
+    }
+
+    /**
+     * PUT /api/organization/company/{id}
+     * Cập nhật thông tin 1 công ty (hỗ trợ cập nhật từng phần)
+     *
+     * @param UpdateCompanyRequest $request Dữ liệu cần cập nhật đã được validate
+     * @param string $id UUID của công ty
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function edit(UpdateCompanyRequest $request, $id)
+    {
+        try {
+            $company = Company::find($id);
+
+            if (empty($company)) {
+                return $this->error('Không tìm thấy công ty', 404);
+            }
+
+            $data = $request->validated();
+
+            if (empty($data)) {
+                return $this->error('Không có dữ liệu để cập nhật', 422);
+            }
+
+            $company->fill($data)->save();
+
+            return $this->success($company->refresh(), 'Cập nhật công ty thành công');
         } catch (\Exception $e) {
             Log::error($e);
             return $this->systemError();
