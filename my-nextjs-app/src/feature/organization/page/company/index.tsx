@@ -58,7 +58,7 @@ export default function CompanyListPage() {
 
   return (
     <AdminLayout breadcrumb={organization.company.list}>
-      <div className="toolbar">
+      <div className="toolbar justify-between">
         <div className="search-wrap">
           <i className="fa-solid fa-magnifying-glass"/>
           <input
@@ -69,10 +69,14 @@ export default function CompanyListPage() {
             onChange={(e) => setInputValue(e.target.value)}
           />
         </div>
-
-        <Link href={`${ROUTES.ORGANIZATION_COMPANY}/create`} className="btn btn-primary" style={{ width: "auto", marginLeft: "auto" }}>
-          <i className="fa-solid fa-plus"/> Thêm mới
-        </Link>
+        <div className={"flex gap-[6px]"}>
+          <Link href={ROUTES.ORGANIZATION_COMPANY} className="btn btn-primary" style={{ width: "auto"}}>
+            <i className="fas fa-rotate-left"/>  Đặt lại
+          </Link>
+          <Link href={`${ROUTES.ORGANIZATION_COMPANY}/create`} className="btn btn-primary" style={{ width: "auto" }}>
+            <i className="fa-solid fa-plus"/> Thêm mới
+          </Link>
+        </div>
       </div>
 
       <div className="card">

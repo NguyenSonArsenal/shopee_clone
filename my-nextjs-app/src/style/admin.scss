@@ -229,6 +229,13 @@
 .field textarea { resize: vertical; min-height: 76px; line-height: 1.6; }
 .req { color: var(--primary); }
 
+/* Ép Skeleton.Input (antd) cao đúng bằng input thật — mặc định size="large" chỉ ~40px, lệch so với --min-height-input (42px) */
+.field .ant-skeleton-input {
+  width: 100%;
+  height: var(--min-height-input) !important;
+  border-radius: 7px;
+}
+
 /* ── Data table ── */
 .table-wrap { overflow-x: auto; position: relative; min-height: 220px; }
 

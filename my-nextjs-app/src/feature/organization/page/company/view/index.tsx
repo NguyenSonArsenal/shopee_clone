@@ -1,7 +1,7 @@
 "use client"
 
 import AdminLayout from "@component/admin/AdminLayout"
-import SkeletonField from "@component/admin/SkeletonField";
+import SkeletonField from "@component/admin/skeleton/SkeletonField";
 import { useParams } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 import { organization } from "@/config/breadcrumb"

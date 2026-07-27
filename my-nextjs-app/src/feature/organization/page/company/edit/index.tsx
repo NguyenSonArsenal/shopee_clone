@@ -1,14 +1,35 @@
+"use client"
+
 import AdminLayout from "@component/admin/AdminLayout"
-import Link from "next/link"
-import { ROUTES } from "@/config/route"
+import {organization} from "@/config/breadcrumb";
+import {useParams, useRouter} from "next/navigation";
+import SubmitButton from "@component/admin/SubmitButton";
+import {useQuery} from "@tanstack/react-query";
+import companyApi from "@feature/organization/companyApi";
+import DebugPanel from "@component/DebugPanel";
+import {Skeleton} from "antd";
+import SkeletonInputField from "@component/admin/skeleton/SkeletonInputField";
+import SkeletonTextareaField from "@component/admin/skeleton/SkeletonTextareaField";
 
 export default function EditCompanyPage() {
+  const router = useRouter()
+  const { id } = useParams<{ id: string }>()
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['company-edit', id],
+    queryFn: () => companyApi.getDetail(id),
+  })
+
+  if (isError) {
+    return (
+      <AdminLayout breadcrumb={organization.company.edit}>
+        <div className="card"><div className="card-body">Không tải được thông tin công ty.</div></div>
+      </AdminLayout>
+    )
+  }
+
   return (
-    <AdminLayout breadcrumb={[
-      { label: "Cơ cấu tổ chức", href: ROUTES.ORGANIZATION },
-      { label: "Thông tin công ty", href: ROUTES.ORGANIZATION_COMPANY },
-      { label: "Sửa công ty" },
-    ]}>
+    <AdminLayout breadcrumb={organization.company.edit}>
       <div className="card">
         <div className="card-head">
           <h3><i className="fa-solid fa-building"/> Sửa công ty</h3>
@@ -18,18 +39,18 @@ export default function EditCompanyPage() {
             <div className="frow c2">
               <div className="field">
                 <label>Tên công ty <span className="req">*</span></label>
-                <input type="text" name="name" placeholder="Nhập tên công ty"/>
+                <SkeletonInputField isLoading={isLoading} name={"name"} placeholder={"Nhập tên công ty"} value={data?.name ?? ""} />
               </div>
               <div className="field">
                 <label>Tên viết tắt</label>
-                <input type="text" name="short_name" placeholder="Nhập tên viết tắt"/>
+                <SkeletonInputField isLoading={isLoading} name={"short_name"} placeholder={"Nhập tên viết tắt"} value={data?.short_name ?? ""} />
               </div>
             </div>
 
             <div className="frow c2">
               <div className="field">
                 <label>Mã số thuế</label>
-                <input type="text" name="tax_code" placeholder="Nhập mã số thuế"/>
+                <SkeletonInputField isLoading={isLoading} name={"tax_code"} placeholder={"Nhập mã số thuế"} value={data?.tax_code ?? ""} />
               </div>
               <div className="field">
                 <label>Ngày thành lập</label>
@@ -40,25 +61,25 @@ export default function EditCompanyPage() {
             <div className="frow c2">
               <div className="field">
                 <label>Điện thoại</label>
-                <input type="text" name="phone" placeholder="Nhập số điện thoại"/>
+                <SkeletonInputField isLoading={isLoading} name={"phone"} placeholder={"Nhập số điện thoại"} value={data?.phone ?? ""} />
               </div>
               <div className="field">
                 <label>Email</label>
-                <input type="email" name="email" placeholder="Nhập email"/>
+                <SkeletonInputField isLoading={isLoading} type={"email"} name={"email"} placeholder={"Nhập email"} value={data?.email ?? ""} />
               </div>
             </div>
 
             <div className="frow c1">
               <div className="field">
                 <label>Website</label>
-                <input type="text" name="website" placeholder="Nhập website"/>
+                <SkeletonInputField isLoading={isLoading} name={"website"} placeholder={"Nhập website"} value={data?.website ?? ""} />
               </div>
             </div>
 
             <div className="frow c1">
               <div className="field">
                 <label>Địa chỉ</label>
-                <input type="text" name="address" placeholder="Nhập địa chỉ"/>
+                <SkeletonInputField isLoading={isLoading} name={"address"} placeholder={"Nhập địa chỉ"} value={data?.address ?? ""} />
               </div>
             </div>
 
@@ -80,7 +101,7 @@ export default function EditCompanyPage() {
             <div className="frow c1">
               <div className="field">
                 <label>Giới thiệu / Mô tả</label>
-                <textarea name="description" rows={3}/>
+                <SkeletonTextareaField isLoading={isLoading} name="description" rows={3} value={data?.description ?? ""} />
               </div>
             </div>
 
@@ -93,10 +114,14 @@ export default function EditCompanyPage() {
           </form>
         </div>
         <div className="card-footer">
-          <Link href={ROUTES.ORGANIZATION_COMPANY} className="btn btn-outline btn-md">Huỷ</Link>
-          <button type="button" className="btn btn-primary btn-md">Lưu thay đổi</button>
+          <button type="button" className="btn btn-outline" onClick={() => router.back()}>
+            <i className="fas fa-arrow-left"></i> Quay lại
+          </button>
+          <SubmitButton />
         </div>
       </div>
+
+      <DebugPanel data={{ data, isLoading }} />
     </AdminLayout>
   )
 }

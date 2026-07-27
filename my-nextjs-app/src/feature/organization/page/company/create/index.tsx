@@ -1,14 +1,15 @@
+"use client"
+
 import AdminLayout from "@component/admin/AdminLayout"
-import Link from "next/link"
-import { ROUTES } from "@/config/route"
+import {organization} from "@/config/breadcrumb";
+import {useRouter} from "next/navigation";
+import SubmitButton from "@component/admin/SubmitButton";
 
 export default function CreateCompanyPage() {
+  const router = useRouter()
+
   return (
-    <AdminLayout breadcrumb={[
-      { label: "Cơ cấu tổ chức", href: ROUTES.ORGANIZATION },
-      { label: "Thông tin công ty", href: ROUTES.ORGANIZATION_COMPANY },
-      { label: "Thêm công ty" },
-    ]}>
+    <AdminLayout breadcrumb={organization.company.create}>
       <div className="card">
         <div className="card-head">
           <h3><i className="fa-solid fa-building"/> Thêm công ty</h3>
@@ -93,8 +94,11 @@ export default function CreateCompanyPage() {
           </form>
         </div>
         <div className="card-footer">
-          <Link href={ROUTES.ORGANIZATION_COMPANY} className="btn btn-outline btn-md">Huỷ</Link>
-          <button type="button" className="btn btn-primary btn-md">Lưu công ty</button>
+          <button type="button" className="btn btn-outline" onClick={() => router.back()}>
+            <i className="fas fa-arrow-left"></i> Quay lại
+          </button>
+          <SubmitButton />
+          {/*<button type="submit" className="btn btn-primary"><i className="fas fa-floppy-disk"></i> Lưu</button>*/}
         </div>
       </div>
     </AdminLayout>
