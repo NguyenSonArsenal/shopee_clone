@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useQuery, keepPreviousData } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
 import AdminLayout from "@component/admin/AdminLayout"
 import AdminPagination from "@component/admin/AdminPagination"
@@ -12,26 +12,46 @@ import { organization } from "@/config/breadcrumb"
 import companyApi from "@/feature/organization/companyApi"
 import {debounced_search_timeout} from "@/config/constant";
 import DebugPanel from "@component/DebugPanel";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 
 export default function CompanyListPage() {
-  const [page, setPage] = useState(1)
-  const [search, setSearch] = useState("") // giá trị gõ trong ô input, đổi theo từng phím
-  const [debouncedSearch, setDebouncedSearch] = useState("") // giá trị thật sự dùng để gọi API
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
 
-  // Debounce: chỉ cập nhật debouncedSearch sau khi user ngừng gõ
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(search), debounced_search_timeout)
-    return () => clearTimeout(timer) // gõ tiếp -> huỷ timer cũ, không gọi API
-  }, [search])
+  const page = Number(searchParams.get('page')) || 1
+  const search = searchParams.get('query') ?? ""
 
-  // Search đổi -> quay về trang 1, tránh trường hợp đang ở trang 3 mà kết quả tìm được chỉ có 1 trang
+  const [inputValue, setInputValue] = useState(search)
+
+  // Debounce: sau khi user ngừng gõ mới ghi vào URL (qua handleSearch)
   useEffect(() => {
-    setPage(1)
-  }, [debouncedSearch])
+    const timer = setTimeout(() => {
+      if (inputValue !== search) handleSearch(inputValue)
+    }, debounced_search_timeout)
+    return () => clearTimeout(timer) // gõ tiếp -> huỷ timer cũ, không ghi URL
+  }, [inputValue])
+
+  function handleSearch(term: string) {
+    const params = new URLSearchParams(searchParams);
+    if (term) {
+      params.set('query', term);
+    } else {
+      params.delete('query');
+    }
+    params.set('page', '1') // search đổi -> quay về trang 1
+    replace(`${pathname}?${params.toString()}`);
+  }
+
+  function handlePageChange(newPage: number) {
+    const params = new URLSearchParams(searchParams)
+    params.set('page', String(newPage))
+    replace(`${pathname}?${params.toString()}`)
+  }
 
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["company-list", page, debouncedSearch],
-    queryFn: () => companyApi.getList({ page, search: debouncedSearch }),
+    queryKey: ["company-list", page, search],
+    queryFn: () => companyApi.getList({ page, search: search }),
   })
 
   const companies = data?.data ?? []
@@ -45,8 +65,8 @@ export default function CompanyListPage() {
             type="text"
             placeholder="Tìm theo tên, mã số thuế..."
             autoComplete="off"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
           />
         </div>
 
@@ -101,7 +121,7 @@ export default function CompanyListPage() {
 
           {
             !isLoading && companies.length > 0 &&
-            <AdminPagination page={page} totalPages={data?.pagination.last_page ?? 1} onPageChange={setPage} />
+            <AdminPagination page={page} totalPages={data?.pagination.last_page ?? 1} onPageChange={handlePageChange} />
           }
         </div>
       </div>

@@ -2,20 +2,18 @@
 
 import AdminLayout from "@component/admin/AdminLayout"
 import SkeletonField from "@component/admin/SkeletonField";
-import Link from "next/link"
 import { useParams } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 import { organization } from "@/config/breadcrumb"
 import companyApi from "@/feature/organization/companyApi"
-import {ROUTES} from "@/config/route";
-import DebugPanel from "@component/DebugPanel";
+import { useRouter } from 'next/navigation'
 
 export default function CompanyDetailPage() {
-  // useParams() đọc segment động [id] trên URL, ví dụ /co-cau-to-chuc/cong-ty/1 -> id = "1"
+  const router = useRouter()
   const { id } = useParams<{ id: string }>()
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["company", id], // key này đổi theo id -> đổi company khác sẽ tự gọi lại API, không bị dính cache cũ
+    queryKey: ["company", id],
     queryFn: () => companyApi.getDetail(id),
   })
 
@@ -97,9 +95,12 @@ export default function CompanyDetailPage() {
           </div>
         </div>
         <div className="card-footer">
-          <Link href={ROUTES.ORGANIZATION_COMPANY} className="btn btn-outline"><i
-            className="fas fa-arrow-left"></i> Quay lại</Link>
-          <button type="submit" className="btn btn-primary"><i className="fa-solid fa-pen"></i> Sửa</button>
+          <button type="button" className="btn btn-outline" onClick={() => router.back()}>
+            <i className="fas fa-arrow-left"></i> Quay lại
+          </button>
+          <button type="submit" className="btn btn-primary">
+            <i className="fa-solid fa-pen"></i> Sửa
+          </button>
         </div>
       </div>
     </AdminLayout>
