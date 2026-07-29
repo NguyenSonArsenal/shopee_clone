@@ -7,5 +7,10 @@ export const LENGTH = {
     password: 20,
     password_confirmation: 20,
     company_name: 64,
-  }
+  },
+  company: {
+    name: 50,
+    short_name: 10,
+    tax_code: 20,
+  },
 } as const;

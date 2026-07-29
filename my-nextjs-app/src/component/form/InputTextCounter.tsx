@@ -6,9 +6,11 @@ type InputTextCounterProps = {
 }
 
 function InputTextCounter({value, maxLength}: InputTextCounterProps) {
+  if (!value)
+    return
   return (
-    <div className={`char-counter ${value.length >= maxLength ? 'is-max' : ''}`}>
-      {value.length}/{maxLength}
+    <div className={`char-counter ${value?.length >= maxLength ? 'is-max' : ''}`}>
+      {value?.length}/{maxLength}
     </div>
   )
 }

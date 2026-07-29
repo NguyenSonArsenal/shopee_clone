@@ -67,7 +67,6 @@ a {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 8px 16px;
   border-radius: 10px;
   font-size: var(--fs-primary);
   font-weight: 500;
@@ -77,6 +76,7 @@ a {
   transition: var(--t);
   white-space: nowrap;
   font-family: var(--font-sans);
+  padding: 6px 12px;
 }
 
 .btn-primary {
@@ -101,12 +101,11 @@ a {
     color: var(--primary);
   }
 }
-.btn-md {
-  padding: 4px 12px;
-  font-size: var(--fs-primary);
+.btn-lg {
+  padding: 8px 16px;
 }
 .btn-sm {
-  padding: 5px 12px;
+  padding: 4px 8px;
   font-size: var(--fs-xs);
 }
 

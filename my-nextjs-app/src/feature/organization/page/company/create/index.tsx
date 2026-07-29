@@ -11,9 +11,6 @@ export default function CreateCompanyPage() {
   return (
     <AdminLayout breadcrumb={organization.company.create}>
       <div className="card">
-        <div className="card-head">
-          <h3><i className="fa-solid fa-building"/> Thêm công ty</h3>
-        </div>
         <div className="card-body">
           <form>
             <div className="frow c2">

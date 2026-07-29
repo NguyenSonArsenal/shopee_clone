@@ -314,7 +314,7 @@ export default function RegisterForm() {
 
           <LegalAgreement checked={agree} setAgree={setAgree} />
 
-          <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed" disabled={isSubmitting | !agree}>
+          <button type="submit" className="btn btn-primary btn-submit btn-lg cursor-pointer disabled:cursor-not-allowed" disabled={isSubmitting | !agree}>
             {isSubmitting ? <AppSpin size="small" /> : <i className="fas fa-plus"/>}  Tạo tài khoản
           </button>
         </form>

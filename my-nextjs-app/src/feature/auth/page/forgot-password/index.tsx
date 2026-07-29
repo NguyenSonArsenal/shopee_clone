@@ -95,7 +95,7 @@ export default function ForgotPasswordForm() {
             <FieldError message={errors.email}/>
           </div>
 
-          <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed"
+          <button type="submit" className="btn btn-primary btn-lg btn-submit cursor-pointer disabled:cursor-not-allowed"
                   disabled={isSubmitting}>
             {isSubmitting ? <AppSpin size="small" /> : <i className="fa-solid fa-paper-plane"/>}{" "}
             {isSubmitting ? "Đang gửi mã OTP..." : "Gửi mã OTP"}

@@ -141,7 +141,7 @@ export default function LoginForm({}) {
           </div>
 
           {/* Nút đăng nhập */}
-          <button type="submit" className="btn btn-primary btn-submit cursor-pointer disabled:cursor-not-allowed" disabled={isSubmitting}>
+          <button type="submit" className="btn btn-primary btn-lg btn-submit cursor-pointer disabled:cursor-not-allowed" disabled={isSubmitting}>
             {isSubmitting ? <AppSpin size="small" /> : <IconLogin />}
             {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
@@ -155,7 +155,7 @@ export default function LoginForm({}) {
         <p className="footer-text">banghang.net © 2026 &nbsp;·&nbsp; Tân Long Land</p>
       </div>
 
-      <DebugPanel data={{ email, password, errors, isSubmitting, serverError }} />
+      {/*<DebugPanel data={{ email, password, errors, isSubmitting, serverError }} />*/}
     </div>
   )
 }

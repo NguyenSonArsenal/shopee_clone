@@ -325,13 +325,13 @@ table.data-table td { padding: 10px 12px; font-size: var(--fs-primary); color: v
 .admin-pagination-nav { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .dt-paging-button {
   display: inline-flex; align-items: center; justify-content: center;
-  min-width: 36px; height: 36px; padding: 0 10px; margin: 0;
+  min-width: 30px; height: 30px; padding: 0 10px; margin: 0;
   border: 1px solid var(--border); border-radius: var(--radius);
-  background: var(--card-bg); color: var(--text); font-size: var(--fs-primary); font-weight: 500;
+  background: var(--card-bg); color: var(--text); font-size: var(--fs-primary);
   line-height: 1; cursor: pointer; transition: var(--t);
 
   &:hover:not(:disabled):not(.current) { border-color: var(--primary); color: var(--primary); background: color-mix(in srgb, var(--primary) 8%, transparent); }
-  &.current { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 700; }
+  &.current { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 500; }
   &:disabled { opacity: .35; cursor: default; pointer-events: none; }
 }
 
