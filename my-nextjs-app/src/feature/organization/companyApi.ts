@@ -6,6 +6,7 @@ const baseApiUrl = process.env.NEXT_PUBLIC_API_URL
 const API_URL = {
   list: `${baseApiUrl}/organization/company`,
   detail: (id: string) => `${baseApiUrl}/organization/company/${id}`,
+  update: (id: string) => `${baseApiUrl}/organization/company/${id}`,
 }
 
 const companyApi = {
@@ -15,6 +16,11 @@ const companyApi = {
   },
   getDetail(id: string): Promise<Company> {
     return myAxios.get(API_URL.detail(id)).then(res => {
+      return res.data.data
+    })
+  },
+  update(id, params) {
+    return myAxios.put(API_URL.update(id), params).then(res => {
       return res.data.data
     })
   },

@@ -13,7 +13,7 @@ export const AUTH_CONFIG = {
   EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
 } as const;
 
-export const DELAY_TIME = 2000; // MS
+export const DELAY_TIME = 500; // MS
 export const MESSAGE_SERVER_ERROR_DEFAULT = "Lỗi hệ thống";
 export const TOAST = {
   TYPE: {
@@ -28,5 +28,5 @@ export type ToastTypeValue = typeof TOAST.TYPE[keyof typeof TOAST.TYPE]
 
 // @todo K nên dùng chữ thường để lưu const, t dùng vì lười viết hoa
 export const access_token_timeout = Number(30*60*1000) // (ms) (minute x 60 x 1000)
-export const debounced_search_timeout = 1000 // ms
+export const debounced_search_timeout = 500 // ms
 

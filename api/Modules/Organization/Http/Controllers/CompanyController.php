@@ -94,9 +94,10 @@ class CompanyController extends Controller
      * @param string $id UUID của công ty
      * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(UpdateCompanyRequest $request, $id)
+    public function update(UpdateCompanyRequest $request, $id)
     {
         try {
+            return $this->systemError();
             $company = Company::find($id);
 
             if (empty($company)) {

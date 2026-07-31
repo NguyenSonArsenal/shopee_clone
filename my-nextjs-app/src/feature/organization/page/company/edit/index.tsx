@@ -13,12 +13,19 @@ import InputTextCounter from "@component/form/InputTextCounter";
 import {Controller, useForm, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import authApi from "@feature/auth/authApi";
+import {MESSAGE_SERVER_ERROR_DEFAULT} from "@/config/constant";
+import {useToast} from "@/context/ToastContext";
+import DebugPanel from "@component/DebugPanel";
+import FieldError from "@component/form/FieldError";
+import {trans} from "@/config/validation";
+import {delay} from "@/helper/helper";
 
 // 1. Khai báo schema validate — khớp LENGTH đang có sẵn
 const schema = z.object({
-  name: z.string().min(1, "Vui lòng nhập tên công ty").max(LENGTH.company.name),
-  short_name: z.string().max(LENGTH.company.short_name).optional(),
+  name: z.string().min(1, "Vui lòng nhập tên công ty").max(LENGTH.company.name, trans('max', '111111', { max: LENGTH.company.name })),
+  short_name: z.string().max(LENGTH.company.short_name, trans('max', 'short_name', { max: LENGTH.company.short_name })).optional(),
   tax_code: z.string().optional(),
   // phone: z.string().optional(),
   // email: z.string().email("Email không hợp lệ").optional().or(z.literal("")),
@@ -30,8 +37,11 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>
 
 export default function EditCompanyPage() {
+  const { showToast } = useToast()
   const router = useRouter()
+
   const { id } = useParams<{ id: string }>()
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['company-edit', id],
@@ -51,8 +61,29 @@ export default function EditCompanyPage() {
 
   const [name_value, short_name_value, tax_code_value] = useWatch({ control, name: ['name', 'short_name', 'tax_code'] })
 
-  const postUpdate = (formData) => {
-      console.log(formData, '// formData')
+  const postUpdate = async (formData) => {
+    console.log(formData, '// formData')
+    setIsSubmitting(true)
+    try {
+      delay(5000).then(r => console.log('waited 4000s'))
+      const data = await companyApi.update(id, formData);
+    } catch (err) {
+      if (err.response?.status === 422) {
+        const serverErrors = err.response.data.errors;
+        const fields = ["full_name", "gender", "type", "company_name", "phone", "password", "password_confirmation1"];
+        // setErrors((prev) => ({
+        //   ...prev, ...Object.fromEntries(fields.map((f) => [f, serverErrors[f]?.[0] ?? ""])),
+        // }))
+        if (err.response.data.message) {
+          showToast("error", err.response.data.message)
+        }
+      } else {
+        const errMsg = err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT;
+        showToast("error", errMsg)
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (isError) {
@@ -67,13 +98,14 @@ export default function EditCompanyPage() {
     <AdminLayout breadcrumb={organization.company.edit}>
       <div className="card">
         <div className="card-body">
-          <form onSubmit={handleSubmit(postUpdate)}>
+          <form onSubmit={handleSubmit(postUpdate, (errs) => console.log('validate errors:', errs))}>
             <div className="frow c2">
               <div className="field">
                 <label>Tên công ty <span className="req">*</span></label>
-                {/*<SkeletonInputField isLoading={isLoading} name={"name"} placeholder={"Nhập tên công ty"} value={data?.name ?? ""} />*/}
-                <input type="text" {...register('name')} placeholder={"Nhập tên công ty"}
-                       maxLength={LENGTH.company.name}/>
+                <SkeletonInputField isLoading={isLoading} name={"name"} placeholder={"Nhập tên công ty"}
+                                    value={data?.name ?? ""}/>
+                {/*<input type="text" {...register('name')} placeholder={"Nhập tên công ty"}*/}
+                {/*       maxLength={LENGTH.company.name}/>*/}
                 <InputTextCounter maxLength={LENGTH.company.name} value={name_value}/>
               </div>
               <div className="field">
@@ -87,6 +119,7 @@ export default function EditCompanyPage() {
                   }}
                 />
                 <InputTextCounter maxLength={LENGTH.company.short_name} value={short_name_value}/>
+                <FieldError message={errors?.short_name?.message}/>
               </div>
             </div>
 
@@ -156,7 +189,8 @@ export default function EditCompanyPage() {
             <div className="frow c1">
               <div className="field">
                 <label>Giới thiệu / Mô tả</label>
-                <SkeletonTextareaField isLoading={isLoading} name="description" rows={3} value={data?.description ?? ""}/>
+                <SkeletonTextareaField isLoading={isLoading} name="description" rows={3}
+                                       value={data?.description ?? ""}/>
               </div>
             </div>
 
@@ -167,17 +201,21 @@ export default function EditCompanyPage() {
               </div>
             </div>
 
-
             <div className="card-footer">
               <button type="button" className="btn btn-outline" onClick={() => router.back()}>
                 <i className="fas fa-arrow-left"></i> Quay lại
               </button>
-              <SubmitButton/>
+              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                <i className="fas fa-floppy-disk"></i> {isSubmitting ? "Đang lưu..." : "Lưu"}
+              </button>
+              {/*<SubmitButton/>*/}
             </div>
           </form>
         </div>
       </div>
-      {/*<DebugPanel data={{ data, isLoading }} />*/}
+
+      {/*<DebugPanel data={{ isSubmitting }} />*/}
     </AdminLayout>
+
   )
 }
