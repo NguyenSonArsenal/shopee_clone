@@ -69,9 +69,10 @@ export default function EditCompanyPage() {
 
   const {mutate, isPending} = useMutation({
     mutationFn: (formData: FormValues) => companyApi.update(id, formData),
-    onSuccess: () => {
+    onSuccess: async () => {
       showToast("success", "Cập nhật công ty thành công")
-      queryClient.invalidateQueries({queryKey: ["company-list"]})
+      await queryClient.invalidateQueries({queryKey: ["company-list"], refetchType: 'all'})
+      queryClient.invalidateQueries({ queryKey: ['company-edit', id] })
       router.push(ROUTES.ORGANIZATION_COMPANY)
     },
     onError: (err: any) => {
