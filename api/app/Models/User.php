@@ -10,7 +10,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -19,15 +18,6 @@ class User extends Authenticatable
     protected $table = 'user';
     public $incrementing = false;
     protected $keyType = 'string';
-
-    protected static function booted()
-    {
-        static::creating(function (User $user) {
-            if (!$user->id) {
-                $user->id = (string) Str::orderedUuid();
-            }
-        });
-    }
 
     protected $fillable = [
         'username',

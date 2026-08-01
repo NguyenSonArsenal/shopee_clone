@@ -11,7 +11,7 @@ type Props = {
 export default function SkeletonField({isLoading, value, valueDefault = "-", width = 120, paragraph = false}: Props) {
   return (
     <Skeleton loading={isLoading} active paragraph={paragraph} title={{width: width}}>
-      <div>{value ?? valueDefault}</div>
+      <div className={"field-value"}>{value ?? valueDefault}</div>
     </Skeleton>
   )
 }

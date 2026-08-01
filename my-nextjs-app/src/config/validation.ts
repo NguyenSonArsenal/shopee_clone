@@ -157,6 +157,9 @@ export const ATTRIBUTES = {
   short_name: 'tên viết tắt',
   tax_code: 'mã số thuế',
   website: 'website',
+  established_date: 'ngày thành lập',
+  representative_id: 'người đại diện',
+  manager_id: 'người quản lý',
 } as const
 
 type Rule = keyof typeof VALIDATION_MESSAGES

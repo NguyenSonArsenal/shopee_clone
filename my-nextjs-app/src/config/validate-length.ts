@@ -12,5 +12,9 @@ export const LENGTH = {
     name: 50,
     short_name: 10,
     tax_code: 20,
+    phone: 10,
+    email: 64,
+    website: 32,
+    address: 255,
   },
 } as const;

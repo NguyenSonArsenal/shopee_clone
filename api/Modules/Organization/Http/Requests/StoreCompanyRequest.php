@@ -38,8 +38,8 @@ class StoreCompanyRequest extends BaseApiFormRequest
     public function rules()
     {
         return [
-            'representative_id' => 'nullable|uuid|exists:user,id',
-            'manager_id'        => 'nullable|uuid|exists:user,id',
+            'representative_id' => 'nullable|integer|exists:user,id',
+            'manager_id'        => 'nullable|integer|exists:user,id',
             'name'              => 'required|string|max:255',
             'short_name'        => 'nullable|string|max:100',
             'tax_code'          => [

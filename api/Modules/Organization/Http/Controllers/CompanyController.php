@@ -97,7 +97,6 @@ class CompanyController extends Controller
     public function update(UpdateCompanyRequest $request, $id)
     {
         try {
-            return $this->systemError();
             $company = Company::find($id);
 
             if (empty($company)) {

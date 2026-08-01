@@ -1,11 +1,11 @@
 type CompanyUserRef = {
-  id: string
+  id: number
   full_name: string
   email: string
 } | null
 
 type CompanyListItem = {
-  id: string
+  id: number
   name: string
   short_name: string | null
 }
@@ -23,9 +23,9 @@ type CompanyListResponse = {
 }
 
 type Company = {
-  id: string
-  representative_id: string | null
-  manager_id: string | null
+  id: number
+  representative_id: number | null
+  manager_id: number | null
   name: string
   short_name: string | null
   tax_code: string | null

@@ -8,7 +8,6 @@ class UpdateCompanyRequest extends StoreCompanyRequest
 {
     public function rules()
     {
-        return [];
         $rules = parent::rules();
 
         $rules['name'] = 'sometimes|required|string|max:255';

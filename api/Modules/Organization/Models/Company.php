@@ -2,30 +2,18 @@
 
 namespace Modules\Organization\Models;
 
+use App\Models\Base\BaseModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
 use Modules\Organization\Database\Factories\CompanyFactory;
 
-class Company extends Model
+class Company extends BaseModel
 {
     use HasFactory, SoftDeletes;
 
     protected $table = 'company';
-    public $incrementing = false;
-    protected $keyType = 'string';
-
-    protected static function booted()
-    {
-        static::creating(function (Company $company) {
-            if (!$company->id) {
-                $company->id = (string) Str::orderedUuid();
-            }
-        });
-    }
 
     protected $fillable = [
         'representative_id',

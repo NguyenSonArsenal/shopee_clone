@@ -1,0 +1,29 @@
+/* ============================================================
+ * skeleton.scss — ép kích thước antd Skeleton khớp với kích thước
+ * thật của input/select/textarea/text, tránh layout shift (nháy)
+ * lúc data load xong. Dùng chung cho mọi màn create/edit/view.
+ * ============================================================ */
+
+/* Skeleton.Input (SkeletonInputField) — khớp input/select thật */
+.field .ant-skeleton-input {
+  width: 100%;
+  height: var(--min-height-input) !important;
+  border-radius: 7px;
+}
+
+/* Skeleton paragraph (SkeletonTextareaField) — khớp textarea thật (76px) */
+.field .ant-skeleton-paragraph {
+  height: 76px !important;
+  overflow: hidden;
+  margin: 0 !important;
+}
+
+/* Skeleton title (SkeletonField, màn view) — khớp dòng giá trị thật */
+.field .ant-skeleton-title {
+  margin: 0 !important;
+  height: 22px !important;
+}
+.field .field-value {
+  min-height: 22px;
+  line-height: 22px;
+}

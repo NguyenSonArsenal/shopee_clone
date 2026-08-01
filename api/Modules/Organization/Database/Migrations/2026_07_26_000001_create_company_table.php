@@ -8,9 +8,9 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('company', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->uuid('representative_id')->nullable()->comment('Người đại diện pháp lý');
-            $table->uuid('manager_id')->nullable()->comment('Người quản lý điều hành');
+            $table->id();
+            $table->integer('representative_id')->nullable()->comment('Người đại diện pháp lý');
+            $table->integer('manager_id')->nullable()->comment('Người quản lý điều hành');
             $table->string('name', 255)->comment('Tên đầy đủ (pháp lý) của công ty');
             $table->string('short_name', 100)->nullable()->comment('Tên viết tắt / tên thường gọi');
             $table->string('tax_code', 20)->nullable()->comment('Mã số thuế');

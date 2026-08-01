@@ -24,4 +24,5 @@ Route::get('product',   [ProductController::class, 'getProduct']);
 // Protected - cần đăng nhập (Bearer Token)
 Route::middleware('api.jwt')->group(function () {
     Route::get('me', [UserController::class, 'getProfile']);
+    Route::get('user', [UserController::class, 'getList']);
 });
