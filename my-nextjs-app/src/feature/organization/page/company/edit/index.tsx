@@ -7,7 +7,6 @@ import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import companyApi from "@feature/organization/companyApi";
 import SkeletonInputField from "@component/admin/skeleton/SkeletonInputField";
 import SkeletonTextareaField from "@component/admin/skeleton/SkeletonTextareaField";
-import UserSelect from "@component/admin/UserSelect";
 import {LENGTH} from "@/config/validate-length";
 import InputTextCounter from "@component/form/InputTextCounter";
 import {Controller, useForm, useWatch} from "react-hook-form";
@@ -19,8 +18,8 @@ import {useToast} from "@/context/ToastContext";
 import FieldError from "@component/form/FieldError";
 import {trans} from "@/config/validation";
 import {ROUTES} from "@/config/route";
+import DebugPanel from "@component/DebugPanel";
 
-// "" / null / undefined đều coi như "chưa nhập" — bỏ qua check định dạng cho field optional khi chưa có giá trị
 const isBlank = (v: string | null | undefined) => v === null || v === undefined || v === ""
 
 const schema = z.object({
@@ -44,6 +43,8 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>
 
 export default function EditCompanyPage() {
+  console.log('Re-render')
+
   const {showToast} = useToast()
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -55,7 +56,7 @@ export default function EditCompanyPage() {
     queryFn: () => companyApi.getDetail(id),
   })
 
-  const {control, reset, handleSubmit, formState: {errors}} = useForm<FormValues>({
+  const {control, reset, handleSubmit, setError, formState: {errors}} = useForm<FormValues>({
     resolver: zodResolver(schema),
   })
 
@@ -65,18 +66,30 @@ export default function EditCompanyPage() {
     }
   }, [data, reset]);
 
-  const [name_value, short_name_value, tax_code_value] = useWatch({control, name: ['name', 'short_name', 'tax_code']})
+  const [name, short_name, tax_code, phone, website, email, address, description] =
+    useWatch({control, name: ['name', 'short_name', 'tax_code', 'phone', 'website', 'email', 'address', 'description']})
 
   const {mutate, isPending} = useMutation({
     mutationFn: (formData: FormValues) => companyApi.update(id, formData),
     onSuccess: async () => {
-      showToast("success", "Cập nhật công ty thành công")
       await queryClient.invalidateQueries({queryKey: ["company-list"], refetchType: 'all'})
       queryClient.invalidateQueries({ queryKey: ['company-edit', id] })
       router.push(ROUTES.ORGANIZATION_COMPANY)
+      showToast("success", "Cập nhật công ty thành công")
     },
     onError: (err: any) => {
+      console.log(err.response, '// err.response')
       if (err.response?.status === 422) {
+        const serverErrors = err.response?.data?.errors
+        if (serverErrors) {
+          Object.entries(serverErrors).forEach(([field, messages]) => {
+            setError(field as keyof FormValues, {
+              type: 'server',
+              message: Array.isArray(messages) ? messages[0] : String(messages),
+            })
+          })
+        }
+
         if (err.response.data.message) {
           showToast("error", err.response.data.message)
         }
@@ -111,7 +124,7 @@ export default function EditCompanyPage() {
                                         maxLength={LENGTH.company.name}/>
                   )}
                 />
-                <InputTextCounter maxLength={LENGTH.company.name} value={name_value}/>
+                <InputTextCounter maxLength={LENGTH.company.name} value={name}/>
                 <FieldError message={errors?.name?.message}/>
               </div>
               <div className="field">
@@ -124,7 +137,7 @@ export default function EditCompanyPage() {
                                         maxLength={LENGTH.company.short_name}/>
                   )}
                 />
-                <InputTextCounter maxLength={LENGTH.company.short_name} value={short_name_value ?? ""}/>
+                <InputTextCounter maxLength={LENGTH.company.short_name} value={short_name ?? ""}/>
                 <FieldError message={errors?.short_name?.message}/>
               </div>
             </div>
@@ -140,7 +153,7 @@ export default function EditCompanyPage() {
                                         maxLength={LENGTH.company.tax_code}/>
                   )}
                 />
-                <InputTextCounter maxLength={LENGTH.company.tax_code} value={tax_code_value ?? ""}/>
+                <InputTextCounter maxLength={LENGTH.company.tax_code} value={tax_code ?? ""}/>
                 <FieldError message={errors?.tax_code?.message}/>
               </div>
               <div className="field">
@@ -167,6 +180,7 @@ export default function EditCompanyPage() {
                                         maxLength={LENGTH.company.phone}/>
                   )}
                 />
+                <InputTextCounter maxLength={LENGTH.company.phone} value={phone}/>
                 <FieldError message={errors?.phone?.message}/>
               </div>
               <div className="field">
@@ -179,6 +193,7 @@ export default function EditCompanyPage() {
                                         maxLength={LENGTH.company.email}/>
                   )}
                 />
+                <InputTextCounter maxLength={LENGTH.company.email} value={email}/>
                 <FieldError message={errors?.email?.message}/>
               </div>
             </div>
@@ -194,6 +209,7 @@ export default function EditCompanyPage() {
                                         maxLength={LENGTH.company.website}/>
                   )}
                 />
+                <InputTextCounter maxLength={LENGTH.company.website} value={website}/>
                 <FieldError message={errors?.website?.message}/>
               </div>
             </div>
@@ -209,6 +225,7 @@ export default function EditCompanyPage() {
                                         maxLength={LENGTH.company.address}/>
                   )}
                 />
+                <InputTextCounter maxLength={LENGTH.company.address} value={address}/>
                 <FieldError message={errors?.address?.message}/>
               </div>
             </div>
@@ -231,9 +248,10 @@ export default function EditCompanyPage() {
                   name="description"
                   control={control}
                   render={({field}) => (
-                    <SkeletonTextareaField isLoading={isLoading} rows={3} {...field}/>
+                    <SkeletonTextareaField maxLength={LENGTH.company.description} isLoading={isLoading} rows={3} {...field}/>
                   )}
                 />
+                <InputTextCounter maxLength={LENGTH.company.description} value={description}/>
                 <FieldError message={errors?.description?.message}/>
               </div>
             </div>
@@ -256,6 +274,9 @@ export default function EditCompanyPage() {
           </form>
         </div>
       </div>
+
+
+      <DebugPanel data={{isPending}}/>
     </AdminLayout>
   )
 }

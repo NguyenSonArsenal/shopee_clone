@@ -5,6 +5,7 @@ namespace Modules\Organization\Http\Requests;
 use App\Http\Requests\BaseApiFormRequest;
 use App\Rules\PhoneNumber;
 use Illuminate\Validation\Rule;
+use Modules\Organization\Models\Company;
 
 class StoreCompanyRequest extends BaseApiFormRequest
 {
@@ -37,26 +38,27 @@ class StoreCompanyRequest extends BaseApiFormRequest
      */
     public function rules()
     {
+        $lengths = config('validate.lengths.' . Company::getTableName());
+
         return [
             'representative_id' => 'nullable|integer|exists:user,id',
             'manager_id'        => 'nullable|integer|exists:user,id',
-            'name'              => 'required|string|max:255',
-            'short_name'        => 'nullable|string|max:100',
+            'name'              => 'required|string|max:' . $lengths['name'],
+            'short_name'        => 'nullable|string|max:' . $lengths['short_name'],
             'tax_code'          => [
                 'nullable',
                 'string',
-                'max:20',
+                'max:' . $lengths['tax_code'],
                 'regex:/^[0-9]{10}(-[0-9]{3})?$/',
-                // Mã số thuế không được trùng với công ty khác (bỏ qua bản ghi đã xoá mềm)
                 Rule::unique('company', 'tax_code')->whereNull('deleted_at'),
             ],
             'established_date'  => 'nullable|date|before_or_equal:today',
             'phone'             => ['nullable', new PhoneNumber()],
-            'email'             => 'nullable|email|max:64',
-            'website'           => 'nullable|url|max:32',
-            'address'           => 'nullable|string|max:255',
+            'email'             => 'nullable|email|max:' . $lengths['email'],
+            'website'           => 'nullable|url|max:' . $lengths['website'],
+            'address'           => 'nullable|string|max:' . $lengths['address'],
             'description'       => 'nullable|string',
-            'logo_url'          => 'nullable|string|max:255',
+            'logo_url'          => 'nullable|string|max:' . $lengths['logo_url'],
             'is_active'         => 'nullable|boolean',
         ];
     }
