@@ -19,7 +19,7 @@ const companyApi = {
       return res.data.data
     })
   },
-  update(id, params) {
+  update(id: number, params: Partial<Company>): Promise<Company> {
     return myAxios.put(API_URL.update(id), params).then(res => {
       return res.data.data
     })

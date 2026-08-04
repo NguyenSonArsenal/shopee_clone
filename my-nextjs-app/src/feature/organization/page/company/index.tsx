@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import Link from "next/link"
 import AdminLayout from "@component/admin/AdminLayout"
 import AdminPagination from "@component/admin/AdminPagination"
@@ -10,14 +10,23 @@ import EmptyState from "@component/admin/EmptyState"
 import { ROUTES } from "@/config/route"
 import { organization } from "@/config/breadcrumb"
 import companyApi from "@/feature/organization/companyApi"
-import {debounced_search_timeout} from "@/config/constant";
+import {
+  debounced_search_timeout, LABEL_ACTIVE,
+  LABEL_CREATE, LABEL_INACTIVE,
+  MESSAGE_SERVER_ERROR_DEFAULT,
+  NO_RECORD_DES,
+  NO_RECORD_TITLE
+} from "@/config/constant";
 import DebugPanel from "@component/DebugPanel";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import {useToast} from "@/context/ToastContext";
 
 export default function CompanyListPage() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const { showToast } = useToast()
+  const queryClient = useQueryClient()
 
   const page = Number(searchParams.get('page')) || 1
   const search = searchParams.get('query') ?? ""
@@ -55,6 +64,19 @@ export default function CompanyListPage() {
   })
 
   const companies = data?.data ?? []
+
+  const { mutate: toggleActive, isPending: isToggling, variables: togglingVars } = useMutation({
+    mutationFn: ({ id, is_active }: { id: number; is_active: boolean }) => companyApi.update(id, { is_active }),
+    onSuccess: (updated) => {
+      queryClient.invalidateQueries({ queryKey: ["company-list"] })
+      const label = updated.short_name || updated.name
+      showToast("success", updated.is_active ? `Đã hoạt động công ty ${label}!` : `Đã dừng hoạt động công ty ${label}!`)
+    },
+    onError: (err: any) => {
+      queryClient.invalidateQueries({ queryKey: ["company-list"] })
+      showToast("error", err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT)
+    },
+  })
 
   return (
     <AdminLayout breadcrumb={organization.company.list}>
@@ -97,10 +119,10 @@ export default function CompanyListPage() {
                   <tr className="row-empty">
                     <td colSpan={5}>
                       <EmptyState
-                        title="Chưa có dữ liệu"
-                        desc="Hãy bắt đầu bằng cách thêm mới"
+                        title={NO_RECORD_TITLE}
+                        desc={NO_RECORD_DES}
                         actionUrl={`${ROUTES.ORGANIZATION_COMPANY}/create`}
-                        actionLabel="Thêm mới"
+                        actionLabel={LABEL_CREATE}
                       />
                     </td>
                   </tr>
@@ -111,8 +133,13 @@ export default function CompanyListPage() {
                     <td>{company.name}</td>
                     <td>{company.short_name || "—"}</td>
                     <td className="ms-center">
-                      <label className="switch has-tip" data-tooltip={company.is_active ? "Hoạt động" : "Dừng hoạt động"}>
-                        <input type="checkbox" defaultChecked={company.is_active}/>
+                      <label className="switch has-tip" data-tooltip={company.is_active ? LABEL_ACTIVE : LABEL_INACTIVE}>
+                        <input
+                          type="checkbox"
+                          checked={company.is_active}
+                          disabled={isToggling && togglingVars?.id === company.id} /* Chỉ disable toggle ứng vs dòng đang được chọn */
+                          onChange={(e) => toggleActive({ id: company.id, is_active: e.target.checked })}
+                        />
                         <span className="switch-track"></span>
                       </label>
                     </td>
