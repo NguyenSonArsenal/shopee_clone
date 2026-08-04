@@ -79,23 +79,23 @@ export default function CompanyListPage() {
         </div>
       </div>
 
-      <div className="card">
-        <div className="card-body">
-          <div className="table-wrap">
-            {(isFetching) && <TableLoadingOverlay />}
-            <table className="data-table">
-              <thead>
+      <div className="card" style={{ padding: 0 }}>
+        <div className="table-wrap">
+          {(isFetching) && <TableLoadingOverlay />}
+          <table className="data-table">
+            <thead>
                 <tr>
                   <th className="col-stt">STT</th>
                   <th>Tên công ty</th>
                   <th>Tên viết tắt</th>
+                  <th className="ms-center">Kích hoạt</th>
                   <th className="col-action">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 {!isLoading && companies.length === 0 && (
                   <tr className="row-empty">
-                    <td colSpan={4}>
+                    <td colSpan={5}>
                       <EmptyState
                         title="Chưa có dữ liệu"
                         desc="Hãy bắt đầu bằng cách thêm mới"
@@ -110,6 +110,12 @@ export default function CompanyListPage() {
                     <td className="col-stt">{(page - 1) * (data?.pagination.per_page ?? 10) + index + 1}</td>
                     <td>{company.name}</td>
                     <td>{company.short_name || "—"}</td>
+                    <td className="ms-center">
+                      <label className="switch has-tip" data-tooltip={company.is_active ? "Hoạt động" : "Dừng hoạt động"}>
+                        <input type="checkbox" defaultChecked={company.is_active}/>
+                        <span className="switch-track"></span>
+                      </label>
+                    </td>
                     <td className="col-action">
                       <div className="action-btns">
                         <Link href={`${ROUTES.ORGANIZATION_COMPANY}/${company.id}`} className="action-icon view" data-tooltip="Xem"><i className="fa-solid fa-eye"/></Link>
@@ -123,11 +129,10 @@ export default function CompanyListPage() {
             </table>
           </div>
 
-          {
-            !isLoading && companies.length > 0 &&
-            <AdminPagination page={page} totalPages={data?.pagination.last_page ?? 1} onPageChange={handlePageChange} />
-          }
-        </div>
+        {
+          !isLoading && companies.length > 0 &&
+          <AdminPagination page={page} totalPages={data?.pagination.last_page ?? 1} onPageChange={handlePageChange} />
+        }
       </div>
 
       <DebugPanel data={{ isLoading, isFetching }} />

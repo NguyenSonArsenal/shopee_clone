@@ -8,6 +8,7 @@ type CompanyListItem = {
   id: number
   name: string
   short_name: string | null
+  is_active: boolean
 }
 
 type Pagination = {

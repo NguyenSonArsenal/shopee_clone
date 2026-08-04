@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import {ReactNode, useEffect, useState} from "react"
 import {TOAST, ToastTypeValue} from "@/config/constant";
 
 type ToastItem = { id: number; type: ToastTypeValue; message: string }
@@ -26,16 +26,19 @@ function ToastCard({ toast, onClose }: { toast: ToastItem; onClose: (id: number)
     setTimeout(() => onClose(toast.id), 300)
   }
 
-  const addExclamation = (text: string) => {
-    const trimmed = text.trim();
+  const addExclamation = (text: ReactNode) => {
+    if (typeof text !== "string") {
+      return text;
+    }
 
+    const trimmed = text.trim();
     return trimmed.endsWith("!") ? trimmed : `${trimmed}!`;
   };
 
   return (
     <div className={`toast ${toast.type} ${show ? "show" : ""}`}>
       <i className={`fa-solid ${toast.type === "success" ? "fa-circle-check" : "fa-circle-xmark"} toast-icon`}/>
-      <span className="toast-msg">{addExclamation(toast.message)}</span>
+      <span className="toast-msg">{ addExclamation(toast.message)}</span>
       <button type="button" className="toast-close" onClick={handleClose} aria-label="Đóng">×</button>
     </div>
   )

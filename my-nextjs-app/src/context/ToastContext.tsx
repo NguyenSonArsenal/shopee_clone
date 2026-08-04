@@ -7,7 +7,7 @@ import {ToastTypeValue} from "@/config/constant";
 type ToastItem = { id: number; type: ToastTypeValue; message: string }
 
 type ToastContextValue = {
-  showToast: (type: ToastTypeValue, message: string) => void
+  showToast: (type: ToastTypeValue, message: ReactNode | string) => void
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null)

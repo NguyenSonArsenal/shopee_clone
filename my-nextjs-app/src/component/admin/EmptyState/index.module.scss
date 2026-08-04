@@ -1,0 +1,28 @@
+.empty {
+  text-align: center;
+  padding: 28px 20px;
+  color: #bbb;
+
+  svg {
+    width: 52px;
+    height: 52px;
+    stroke: #e0e0e0;
+    fill: none;
+    stroke-width: 1.2;
+    margin: 0 auto 12px;
+    display: block;
+  }
+}
+
+.emptyTitle {
+  font-size: var(--fs-primary);
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.emptyDesc {
+  font-size: var(--fs-xs);
+  color: var(--text-light);
+  margin-bottom: 14px;
+}

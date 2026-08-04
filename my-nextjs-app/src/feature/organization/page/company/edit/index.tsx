@@ -70,12 +70,15 @@ export default function EditCompanyPage() {
     useWatch({control, name: ['name', 'short_name', 'tax_code', 'phone', 'website', 'email', 'address', 'description']})
 
   const {mutate, isPending} = useMutation({
-    mutationFn: (formData: FormValues) => companyApi.update(id, formData),
+    mutationFn: (formData: FormValues) => {
+      console.log(formData, '// formData gửi lên API')
+      return companyApi.update(id, formData)
+    },
     onSuccess: async () => {
       await queryClient.invalidateQueries({queryKey: ["company-list"], refetchType: 'all'})
       queryClient.invalidateQueries({ queryKey: ['company-edit', id] })
       router.push(ROUTES.ORGANIZATION_COMPANY)
-      showToast("success", "Cập nhật công ty thành công")
+      showToast("success", <>Cập nhật công ty <b>{short_name}</b> thành công</>)
     },
     onError: (err: any) => {
       console.log(err.response, '// err.response')
@@ -111,8 +114,8 @@ export default function EditCompanyPage() {
   return (
     <AdminLayout breadcrumb={organization.company.edit}>
       <div className="card">
-        <div className="card-body">
-          <form onSubmit={handleSubmit((formData) => mutate(formData))}>
+        <form onSubmit={handleSubmit((formData) => mutate(formData))}>
+          <div className="card-body">
             <div className="frow c2">
               <div className="field">
                 <label>Tên công ty <span className="req">*</span></label>
@@ -248,7 +251,8 @@ export default function EditCompanyPage() {
                   name="description"
                   control={control}
                   render={({field}) => (
-                    <SkeletonTextareaField maxLength={LENGTH.company.description} isLoading={isLoading} rows={3} {...field}/>
+                    <SkeletonTextareaField maxLength={LENGTH.company.description} isLoading={isLoading}
+                                           rows={3} {...field}/>
                   )}
                 />
                 <InputTextCounter maxLength={LENGTH.company.description} value={description}/>
@@ -262,20 +266,18 @@ export default function EditCompanyPage() {
                 <input type="file" name="logo" accept="image/*"/>
               </div>
             </div>
+          </div>
 
-            <div className="card-footer">
-              <button type="button" className="btn btn-outline" onClick={() => router.back()}>
-                <i className="fas fa-arrow-left"></i> Quay lại
-              </button>
-              <button type="submit" className="btn btn-primary" disabled={isPending}>
-                <i className="fas fa-floppy-disk"></i> {isPending ? "Đang lưu..." : "Lưu"}
-              </button>
-            </div>
-          </form>
-        </div>
+          <div className="card-footer">
+            <button type="button" className="btn btn-outline" onClick={() => router.back()}>
+              <i className="fas fa-arrow-left"></i> Quay lại
+            </button>
+            <button type="submit" className="btn btn-primary" disabled={isPending}>
+              <i className="fas fa-floppy-disk"></i> {isPending ? "Đang lưu..." : "Lưu"}
+            </button>
+          </div>
+        </form>
       </div>
-
-
       <DebugPanel data={{isPending}}/>
     </AdminLayout>
   )
