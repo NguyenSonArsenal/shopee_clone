@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->string('address', $lengths['address'])->nullable()->comment('Địa chỉ trụ sở');
             $table->text('description')->nullable()->comment('Giới thiệu / mô tả công ty');
             $table->string('logo_url', $lengths['logo_url'])->nullable();
-            $table->boolean('is_active')->default(true)->comment('Đang hoạt động hay đã ngừng hoạt động');
+            $table->boolean('is_active')->default(true)->comment('Đang hoạt động: 1 hay đã ngừng hoạt động: 0');
             $table->timestamps();
             $table->softDeletes();
         });

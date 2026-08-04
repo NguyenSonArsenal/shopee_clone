@@ -32,7 +32,7 @@ class CompanyController extends Controller
             $query->orderBy('created_at', 'desc');
 
             $total = $query->count();
-            $result = $query->select('id', 'name', 'short_name')->paginate($perPage);
+            $result = $query->select('id', 'name', 'short_name', 'is_active')->paginate($perPage);
 
             return $this->successWithPaging($total, $result->items(), $result->currentPage(), $perPage);
         } catch (\Exception $e) {
