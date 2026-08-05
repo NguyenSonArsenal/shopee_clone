@@ -117,4 +117,25 @@ class CompanyController extends Controller
             return $this->systemError();
         }
     }
+
+    /**
+     * DELETE /api/organization/company/{id}
+     */
+    public function destroy($id)
+    {
+        try {
+            $company = Company::find($id);
+
+            if (empty($company)) {
+                return $this->error('Không tìm thấy công ty', 404);
+            }
+
+            $company->delete();
+
+            return $this->success(null, 'Xoá công ty thành công');
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->systemError();
+        }
+    }
 }

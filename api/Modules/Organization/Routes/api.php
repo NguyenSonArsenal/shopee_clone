@@ -13,4 +13,5 @@ Route::prefix('organization')->group(function() {
     Route::get('company/{id}', [CompanyController::class, 'getDetail']);
     Route::post('company', [CompanyController::class, 'create']);
     Route::match(['put', 'patch'], 'company/{id}', [CompanyController::class, 'update']);
+    Route::delete('company/{id}', [CompanyController::class, 'destroy']);
 });

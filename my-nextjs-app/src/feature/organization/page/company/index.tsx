@@ -15,11 +15,12 @@ import {
   LABEL_CREATE, LABEL_INACTIVE,
   MESSAGE_SERVER_ERROR_DEFAULT,
   NO_RECORD_DES,
-  NO_RECORD_TITLE
+  NO_RECORD_TITLE, TOOLTIP_ICON_DELETE, TOOLTIP_ICON_EDIT, TOOLTIP_ICON_VIEW
 } from "@/config/constant";
 import DebugPanel from "@component/DebugPanel";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {useToast} from "@/context/ToastContext";
+import ConfirmModal from "@modal/ConfirmModal";
 
 export default function CompanyListPage() {
   const searchParams = useSearchParams();
@@ -32,6 +33,7 @@ export default function CompanyListPage() {
   const search = searchParams.get('query') ?? ""
 
   const [inputValue, setInputValue] = useState(search)
+  const [deleteTarget, setDeleteTarget] = useState<CompanyListItem | null>(null)
 
   // Debounce: sau khi user ngừng gõ mới ghi vào URL (qua handleSearch)
   useEffect(() => {
@@ -75,6 +77,19 @@ export default function CompanyListPage() {
     onError: (err: any) => {
       queryClient.invalidateQueries({ queryKey: ["company-list"] })
       showToast("error", err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT)
+    },
+  })
+
+  const { mutate: deleteCompany, isPending: isDeleting } = useMutation({
+    mutationFn: (id: number) => companyApi.destroy(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["company-list"] })
+      showToast("success", `Đã xoá công ty ${deleteTarget?.name}!`)
+      setDeleteTarget(null)
+    },
+    onError: (err: any) => {
+      showToast("error", err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT)
+      setDeleteTarget(null)
     },
   })
 
@@ -145,9 +160,15 @@ export default function CompanyListPage() {
                     </td>
                     <td className="col-action">
                       <div className="action-btns">
-                        <Link href={`${ROUTES.ORGANIZATION_COMPANY}/${company.id}`} className="action-icon view" data-tooltip="Xem"><i className="fa-solid fa-eye"/></Link>
-                        <Link href={`${ROUTES.ORGANIZATION_COMPANY}/${company.id}/edit`} className="action-icon edit" data-tooltip="Sửa"><i className="fa-solid fa-pen"/></Link>
-                        <button type="button" className="action-icon delete tip-top-left" data-tooltip="Xoá"><i className="fa-solid fa-trash"/></button>
+                        <Link href={`${ROUTES.ORGANIZATION_COMPANY}/${company.id}`} className="action-icon view" data-tooltip={TOOLTIP_ICON_VIEW}>
+                          <i className="fa-solid fa-eye"/>
+                        </Link>
+                        <Link href={`${ROUTES.ORGANIZATION_COMPANY}/${company.id}/edit`} className="action-icon edit" data-tooltip={TOOLTIP_ICON_EDIT}>
+                          <i className="fa-solid fa-pen"/>
+                        </Link>
+                        <button type="button" className="action-icon delete tip-top-left" data-tooltip={TOOLTIP_ICON_DELETE}
+                                onClick={() => setDeleteTarget(company)}><i className="fa-solid fa-trash"/>
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -162,7 +183,15 @@ export default function CompanyListPage() {
         }
       </div>
 
-      <DebugPanel data={{ isLoading, isFetching }} />
+      <ConfirmModal
+        open={!!deleteTarget}
+        message={<>Xoá &quot;<b>{deleteTarget?.name}</b>&quot;?</>}
+        confirmLoading={isDeleting}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={() => deleteTarget && deleteCompany(deleteTarget.id)}
+      />
+
+      <DebugPanel data={{ deleteTarget }} />
     </AdminLayout>
   )
 }

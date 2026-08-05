@@ -6,7 +6,8 @@ const baseApiUrl = process.env.NEXT_PUBLIC_API_URL
 const API_URL = {
   list: `${baseApiUrl}/organization/company`,
   detail: (id: string) => `${baseApiUrl}/organization/company/${id}`,
-  update: (id: string) => `${baseApiUrl}/organization/company/${id}`,
+  update: (id: number) => `${baseApiUrl}/organization/company/${id}`,
+  destroy: (id: number) => `${baseApiUrl}/organization/company/${id}`,
 }
 
 const companyApi = {
@@ -23,6 +24,9 @@ const companyApi = {
     return myAxios.put(API_URL.update(id), params).then(res => {
       return res.data.data
     })
+  },
+  destroy(id: number): Promise<void> {
+    return myAxios.delete(API_URL.destroy(id)).then(() => undefined)
   },
 }
 
