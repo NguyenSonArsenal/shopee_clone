@@ -21,3 +21,5 @@ export function parseApiErrors(err: any): string[] {
 	// Lỗi đơn từ server (401, 403, 500...)
 	return [errorData.message || 'Đã có lỗi xảy ra, vui lòng thử lại!'];
 }
+
+export const isBlank = (v: string | null | undefined) => v === null || v === undefined || v === ""

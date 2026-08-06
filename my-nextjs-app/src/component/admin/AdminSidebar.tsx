@@ -46,7 +46,7 @@ export default function AdminSidebar({ mini, onToggle }: AdminSidebarProps) {
           </span>
         </div>
         {ORG_MENU.map((item) => {
-          const isActive = pathname === item.href || (item.href !== ROUTES.ORGANIZATION_COMPANY && pathname?.startsWith(item.href))
+          const isActive = pathname?.startsWith(item.href)
           return (
             <Link key={item.href} href={item.href} className={`sb-a ${isActive ? "active" : ""}`}>
               <span className="sb-a-label">{item.label}</span>

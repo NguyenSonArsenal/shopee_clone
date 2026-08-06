@@ -19,8 +19,7 @@ import FieldError from "@component/form/FieldError";
 import {trans} from "@/config/validation";
 import {ROUTES} from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
-
-const isBlank = (v: string | null | undefined) => v === null || v === undefined || v === ""
+import {isBlank} from "@/helper/helper";
 
 const schema = z.object({
   name: z.string().min(1, trans('required', 'name')).max(LENGTH.company.name, trans('max', 'name', {max: LENGTH.company.name})),
@@ -43,8 +42,6 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>
 
 export default function EditCompanyPage() {
-  console.log('Re-render')
-
   const {showToast} = useToast()
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -103,7 +100,7 @@ export default function EditCompanyPage() {
     },
   })
 
-  if (isError) {
+  if (isError) { // @todo move to component 404 not found
     return (
       <AdminLayout breadcrumb={organization.company.edit}>
         <div className="card"><div className="card-body">Không tải được thông tin công ty.</div></div>
@@ -123,8 +120,7 @@ export default function EditCompanyPage() {
                   name="name"
                   control={control}
                   render={({field}) => (
-                    <SkeletonInputField isLoading={isLoading} placeholder="Nhập tên công ty" {...field}
-                                        maxLength={LENGTH.company.name}/>
+                    <SkeletonInputField isLoading={isLoading} placeholder="Nhập tên công ty" {...field} maxLength={LENGTH.company.name}/>
                   )}
                 />
                 <InputTextCounter maxLength={LENGTH.company.name} value={name}/>
@@ -136,8 +132,7 @@ export default function EditCompanyPage() {
                   name="short_name"
                   control={control}
                   render={({field}) => (
-                    <SkeletonInputField isLoading={isLoading} placeholder="Nhập tên viết tắt" {...field}
-                                        maxLength={LENGTH.company.short_name}/>
+                    <SkeletonInputField isLoading={isLoading} placeholder="Nhập tên viết tắt" {...field} maxLength={LENGTH.company.short_name}/>
                   )}
                 />
                 <InputTextCounter maxLength={LENGTH.company.short_name} value={short_name ?? ""}/>
@@ -152,8 +147,7 @@ export default function EditCompanyPage() {
                   name="tax_code"
                   control={control}
                   render={({field}) => (
-                    <SkeletonInputField isLoading={isLoading} placeholder="Nhập mã số thuế" {...field}
-                                        maxLength={LENGTH.company.tax_code}/>
+                    <SkeletonInputField isLoading={isLoading} placeholder="Nhập mã số thuế" {...field} maxLength={LENGTH.company.tax_code}/>
                   )}
                 />
                 <InputTextCounter maxLength={LENGTH.company.tax_code} value={tax_code ?? ""}/>
@@ -179,8 +173,7 @@ export default function EditCompanyPage() {
                   name="phone"
                   control={control}
                   render={({field}) => (
-                    <SkeletonInputField isLoading={isLoading} placeholder="Nhập số điện thoại" {...field}
-                                        maxLength={LENGTH.company.phone}/>
+                    <SkeletonInputField isLoading={isLoading} placeholder="Nhập số điện thoại" {...field} maxLength={LENGTH.company.phone}/>
                   )}
                 />
                 <InputTextCounter maxLength={LENGTH.company.phone} value={phone}/>
@@ -192,8 +185,7 @@ export default function EditCompanyPage() {
                   name="email"
                   control={control}
                   render={({field}) => (
-                    <SkeletonInputField isLoading={isLoading} type="email" placeholder="Nhập email" {...field}
-                                        maxLength={LENGTH.company.email}/>
+                    <SkeletonInputField isLoading={isLoading} type="email" placeholder="Nhập email" {...field} maxLength={LENGTH.company.email}/>
                   )}
                 />
                 <InputTextCounter maxLength={LENGTH.company.email} value={email}/>
@@ -208,8 +200,7 @@ export default function EditCompanyPage() {
                   name="website"
                   control={control}
                   render={({field}) => (
-                    <SkeletonInputField isLoading={isLoading} placeholder="Nhập website" {...field}
-                                        maxLength={LENGTH.company.website}/>
+                    <SkeletonInputField isLoading={isLoading} placeholder="Nhập website" {...field} maxLength={LENGTH.company.website}/>
                   )}
                 />
                 <InputTextCounter maxLength={LENGTH.company.website} value={website}/>
@@ -224,8 +215,7 @@ export default function EditCompanyPage() {
                   name="address"
                   control={control}
                   render={({field}) => (
-                    <SkeletonInputField isLoading={isLoading} placeholder="Nhập địa chỉ" {...field}
-                                        maxLength={LENGTH.company.address}/>
+                    <SkeletonInputField isLoading={isLoading} placeholder="Nhập địa chỉ" {...field} maxLength={LENGTH.company.address}/>
                   )}
                 />
                 <InputTextCounter maxLength={LENGTH.company.address} value={address}/>
@@ -251,8 +241,7 @@ export default function EditCompanyPage() {
                   name="description"
                   control={control}
                   render={({field}) => (
-                    <SkeletonTextareaField maxLength={LENGTH.company.description} isLoading={isLoading}
-                                           rows={3} {...field}/>
+                    <SkeletonTextareaField maxLength={LENGTH.company.description} isLoading={isLoading} rows={3} {...field}/>
                   )}
                 />
                 <InputTextCounter maxLength={LENGTH.company.description} value={description}/>
