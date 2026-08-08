@@ -7,12 +7,17 @@ import SubmitButton from "@component/admin/SubmitButton";
 import {Controller, useForm, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
-import {trans} from "@/config/validation";
+import {trans, MESSAGE_SERVER_ERROR_DEFAULT, transMessage} from "@/config/validation";
 import {LENGTH} from "@/config/validate-length";
 import {isBlank} from "@/helper/helper";
 import SkeletonInputField from "@component/admin/skeleton/SkeletonInputField";
 import InputTextCounter from "@component/form/InputTextCounter";
 import FieldError from "@component/form/FieldError";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import companyApi from "@feature/organization/companyApi";
+import {ERROR_VALIDATE_FORM} from "@/config/http-status";
+import {useToast} from "@/context/ToastContext";
+import {ROUTES} from "@/config/route";
 
 const schema = z.object({
   name: z.string().min(1, trans('required', 'name')).max(LENGTH.company.name, trans('max', 'name', {max: LENGTH.company.name})),
@@ -34,42 +39,65 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>
 export default function CreateCompanyPage() {
+  const {showToast} = useToast()
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const {control, register, reset, handleSubmit, setError, formState: {errors}} = useForm<FormValues>({
     resolver: zodResolver(schema),
   })
 
   const [name, short_name] = useWatch({control, name: ['name', 'short_name']});
-  console.log(name, short_name, '// short_name')
+  // console.log(name, short_name, '// short_name')
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (formData) => {
+      return companyApi.store(formData)
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({queryKey: ["company-list"], refetchType: 'all'})
+      router.push(ROUTES.ORGANIZATION_COMPANY)
+      showToast("success", transMessage('store_success'))
+    },
+    onError: (err: any) => {
+      if (err.response?.status === ERROR_VALIDATE_FORM) {
+        const serverErrors = err.response?.data?.errors
+        if (serverErrors) {
+          Object.entries(serverErrors).forEach(([field, messages]) => {
+            setError(field as keyof FormValues, {
+              type: 'server',
+              message: Array.isArray(messages) ? messages[0] : String(messages),
+            })
+          })
+        }
+        if (err.response.data.message) {
+          showToast("error", err.response.data.message)
+        }
+      } else { // Lỗi serve, network
+        const errMsg = err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT;
+        showToast("error", errMsg)
+      }
+    }
+  });
 
   return (
     <AdminLayout breadcrumb={organization.company.create}>
       <div className="card">
-        <div className="card-body">
-          <form>
+        <form onSubmit={handleSubmit(formData => mutate(formData))}>
+          <div className="card-body">
             <div className="frow c2">
               <div className="field">
                 <label>Tên công ty <span className="req">*</span></label>
-                {/*<input type="text" name="name" placeholder="Nhập tên công ty"/>*/}
-
-                <Controller
-                  name="name"
-                  control={control}
-                  render={({field}) => (
-                    <SkeletonInputField isLoading={false} placeholder="Nhập tên công ty" {...field} maxLength={LENGTH.company.name}/>
-                  )}
-                />
+                <input type="text" {...register('name')} placeholder="Nhập tên công ty"/>
                 <InputTextCounter maxLength={LENGTH.company.name} value={name}/>
-                {/*<FieldError message={errors?.name?.message}/>*/}
-                <FieldError message="co loi say ra"/>
+                <FieldError message={errors?.name?.message}/>
               </div>
 
               <div className="field">
                 <label>Tên viết tắt</label>
-                <input type="text" {...register("short_name")} name="short_name" placeholder="Nhập tên viết tắt" maxLength={LENGTH.company.short_name}/>
+                <input type="text" {...register("short_name")} placeholder="Nhập tên viết tắt"/>
                 <InputTextCounter maxLength={LENGTH.company.short_name} value={short_name}/>
-                <FieldError message="co loi say ra 2"/>
+                <FieldError message={errors?.short_name?.message}/>
               </div>
             </div>
 
@@ -137,15 +165,16 @@ export default function CreateCompanyPage() {
                 <input type="file" name="logo" accept="image/*"/>
               </div>
             </div>
-          </form>
-        </div>
-        <div className="card-footer">
-          <button type="button" className="btn btn-outline" onClick={() => router.back()}>
-            <i className="fas fa-arrow-left"></i> Quay lại
-          </button>
-          <SubmitButton />
-          {/*<button type="submit" className="btn btn-primary"><i className="fas fa-floppy-disk"></i> Lưu</button>*/}
-        </div>
+          </div>
+
+          <div className="card-footer">
+            <button type="button" className="btn btn-outline" onClick={() => router.back()}>
+              <i className="fas fa-arrow-left"></i> Quay lại
+            </button>
+            <SubmitButton loading={isPending}/>
+            {/*<button type="submit" className="btn btn-primary"><i className="fas fa-floppy-disk"></i> Lưu</button>*/}
+          </div>
+        </form>
       </div>
     </AdminLayout>
   )

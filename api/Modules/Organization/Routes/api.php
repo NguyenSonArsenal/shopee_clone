@@ -9,9 +9,9 @@ Route::middleware('auth:api')->get('/organization', function (Request $request) 
 });
 
 Route::prefix('organization')->group(function() {
-    Route::get('company', [CompanyController::class, 'getList']);
-    Route::get('company/{id}', [CompanyController::class, 'getDetail']);
-    Route::post('company', [CompanyController::class, 'create']);
+    Route::get('company', [CompanyController::class, 'index']);
+    Route::get('company/{id}', [CompanyController::class, 'show']);
+    Route::post('company', [CompanyController::class, 'store']);
     Route::match(['put', 'patch'], 'company/{id}', [CompanyController::class, 'update']);
     Route::delete('company/{id}', [CompanyController::class, 'destroy']);
 });

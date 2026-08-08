@@ -4,10 +4,10 @@ import { createContext, useContext, useRef, useState, ReactNode } from "react"
 import { ToastContainer} from "@component/Toast"
 import {ToastTypeValue} from "@/config/constant";
 
-type ToastItem = { id: number; type: ToastTypeValue; message: string }
+type ToastItem = { id: number; type: ToastTypeValue; message: ReactNode }
 
 type ToastContextValue = {
-  showToast: (type: ToastTypeValue, message: ReactNode | string) => void
+  showToast: (type: ToastTypeValue, message: ReactNode) => void
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null)
@@ -16,7 +16,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([])
   const idRef = useRef(0)
 
-  const showToast = (type: ToastTypeValue, message: string) => {
+  const showToast = (type: ToastTypeValue, message: ReactNode) => {
     idRef.current += 1
     setToasts((prev) => [...prev, { id: idRef.current, type, message }])
   }

@@ -14,7 +14,7 @@ class CompanyController extends Controller
      * GET /api/organization/company
      * Danh sách công ty, có phân trang + tìm kiếm theo tên/mã số thuế
      */
-    public function getList()
+    public function index()
     {
         try {
             $perPage = request()->get('per_page', 10);
@@ -45,7 +45,7 @@ class CompanyController extends Controller
      * GET /api/company/{id}
      * Chi tiết 1 công ty
      */
-    public function getDetail($id)
+    public function show($id)
     {
         try {
             $company = Company::with(['representative:id,full_name,email', 'manager:id,full_name,email'])
@@ -69,7 +69,7 @@ class CompanyController extends Controller
      * @param StoreCompanyRequest $request Dữ liệu công ty đã được validate
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(StoreCompanyRequest $request)
+    public function store(StoreCompanyRequest $request)
     {
         try {
             $data = $request->validated();

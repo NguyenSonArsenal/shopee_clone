@@ -13,7 +13,7 @@ enum HttpStatus: int
     case FORBIDDEN = 403; // Đã login, nhưng k có quyền
     case NOT_FOUND = 404;
     case CONFLICT = 409;
-    case UNPROCESSABLE_ENTITY = 422;
+    case ERROR_VALIDATE_FORM = 422;
     case TOO_MANY_REQUESTS = 429;
 
     case INTERNAL_SERVER_ERROR = 500;
@@ -30,7 +30,7 @@ enum HttpStatus: int
             self::FORBIDDEN => 'Forbidden',
             self::NOT_FOUND => 'Not Found',
             self::CONFLICT => 'Conflict',
-            self::UNPROCESSABLE_ENTITY => 'Unprocessable Entity',
+            self::ERROR_VALIDATE_FORM => 'Unprocessable Entity', // Lỗi validate form data submit
             self::TOO_MANY_REQUESTS => 'Too Many Requests',
             self::INTERNAL_SERVER_ERROR => 'Internal Server Error',
             self::SERVICE_UNAVAILABLE => 'Service Unavailable',

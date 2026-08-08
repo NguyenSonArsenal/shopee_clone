@@ -13,10 +13,10 @@ import companyApi from "@/feature/organization/companyApi"
 import {
   debounced_search_timeout, LABEL_ACTIVE,
   LABEL_CREATE, LABEL_INACTIVE,
-  MESSAGE_SERVER_ERROR_DEFAULT,
   NO_RECORD_DES,
   NO_RECORD_TITLE, TOOLTIP_ICON_DELETE, TOOLTIP_ICON_EDIT, TOOLTIP_ICON_VIEW
 } from "@/config/constant";
+import {MESSAGE_SERVER_ERROR_DEFAULT} from "@/config/validation";
 import DebugPanel from "@component/DebugPanel";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {useToast} from "@/context/ToastContext";

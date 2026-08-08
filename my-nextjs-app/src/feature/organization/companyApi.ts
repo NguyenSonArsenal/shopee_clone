@@ -6,6 +6,7 @@ const baseApiUrl = process.env.NEXT_PUBLIC_API_URL
 const API_URL = {
   list: `${baseApiUrl}/organization/company`,
   detail: (id: string) => `${baseApiUrl}/organization/company/${id}`,
+  store: (params: number) => `${baseApiUrl}/organization/company`,
   update: (id: number) => `${baseApiUrl}/organization/company/${id}`,
   destroy: (id: number) => `${baseApiUrl}/organization/company/${id}`,
 }
@@ -17,6 +18,12 @@ const companyApi = {
   },
   getDetail(id: string): Promise<Company> {
     return myAxios.get(API_URL.detail(id)).then(res => {
+      return res.data.data
+    })
+  },
+  async store(params = []) {
+    return myAxios.post(API_URL.store(), params).then(res => {
+      console.log(res, '// ressssss')
       return res.data.data
     })
   },

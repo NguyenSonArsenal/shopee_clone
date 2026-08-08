@@ -1,5 +1,7 @@
 // src/config/validation.ts
 
+import {createElement, Fragment, ReactNode} from "react";
+
 export const VALIDATION_MESSAGES = {
   accepted: 'Trường :attribute phải được chấp nhận.',
   accepted_if: 'Trường :attribute phải được chấp nhận khi :other là :value.',
@@ -180,4 +182,55 @@ export function trans(
     msg = msg.replace(`:${key}`, String(value))
   }
   return msg
+}
+
+export const MESSAGE_SERVER_ERROR_DEFAULT = "Lỗi hệ thống";
+
+export const MESSAGES = {
+  store_success: 'Thêm mới[ :label] thành công',
+  update_success: 'Cập nhật[ :label] thành công',
+  delete_success: 'Xóa[ :label] thành công',
+} as const
+
+type MessageKey = keyof typeof MESSAGES
+
+// Đoạn trong [...] là optional: chỉ giữ lại nếu mọi :placeholder bên trong có param truyền vào
+function resolveMessageTemplate(key: MessageKey, params: Record<string, string | number>) {
+  let msg: string = MESSAGES[key]
+  msg = msg.replace(/\[([^\]]*)]/g, (_, block: string) => {
+    const placeholders = [...block.matchAll(/:(\w+)/g)].map((m) => m[1])
+    const hasAll = placeholders.every((k) => params[k] !== undefined && params[k] !== '')
+    return hasAll ? block : ''
+  })
+  return msg.replace(/\s+/g, ' ').trim()
+}
+
+export function transMessage(
+  key: MessageKey,
+  params: Record<string, string | number> = {}
+) {
+  let msg = resolveMessageTemplate(key, params)
+  for (const [k, v] of Object.entries(params)) {
+    msg = msg.replace(`:${k}`, String(v))
+  }
+  return msg
+}
+
+// Giống transMessage, nhưng bôi đậm giá trị của từng :placeholder — dùng khi cần nhấn mạnh trong toast/JSX
+export function transMessageNode(
+  key: MessageKey,
+  params: Record<string, string | number> = {}
+): ReactNode {
+  const msg = resolveMessageTemplate(key, params)
+  const parts: ReactNode[] = []
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+  const regex = /:(\w+)/g
+  while ((match = regex.exec(msg))) {
+    parts.push(msg.slice(lastIndex, match.index))
+    parts.push(createElement('b', { key: match.index }, params[match[1]]))
+    lastIndex = match.index + match[0].length
+  }
+  parts.push(msg.slice(lastIndex))
+  return createElement(Fragment, null, ...parts)
 }

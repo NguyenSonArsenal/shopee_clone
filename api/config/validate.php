@@ -1,16 +1,18 @@
 <?php
 
+use Modules\Organization\Models\Company;
+
 return [
     'lengths' => [
-        Modules\Organization\Models\Company::getTableName() => [
-            'email'        => 64,
-            'website'      => 64,
-            'address'      => 255,
-            'logo_url'     => 255,
-            'name'         => 255,
-            'short_name'   => 100,
-            'phone'        => 15,
-            'tax_code'     => 20,
+        Company::getTableName() => [
+            'email'        => 10,
+            'website'      => 11,
+            'address'      => 12,
+            'logo_url'     => 13,
+            'name'         => 14,
+            'short_name'   => 15,
+            'phone'        => 10,
+            'tax_code'     => 16,
         ]
     ],
 ];

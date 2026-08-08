@@ -13,13 +13,13 @@ import {Controller, useForm, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
 import {useEffect} from "react";
-import {MESSAGE_SERVER_ERROR_DEFAULT} from "@/config/constant";
 import {useToast} from "@/context/ToastContext";
 import FieldError from "@component/form/FieldError";
-import {trans} from "@/config/validation";
+import {trans, MESSAGE_SERVER_ERROR_DEFAULT, transMessage, transMessageNode} from "@/config/validation";
 import {ROUTES} from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
 import {isBlank} from "@/helper/helper";
+import {ERROR_VALIDATE_FORM} from "@/config/http-status";
 
 const schema = z.object({
   name: z.string().min(1, trans('required', 'name')).max(LENGTH.company.name, trans('max', 'name', {max: LENGTH.company.name})),
@@ -75,11 +75,11 @@ export default function EditCompanyPage() {
       await queryClient.invalidateQueries({queryKey: ["company-list"], refetchType: 'all'})
       queryClient.invalidateQueries({ queryKey: ['company-edit', id] })
       router.push(ROUTES.ORGANIZATION_COMPANY)
-      showToast("success", <>Cập nhật công ty <b>{short_name}</b> thành công</>)
+      showToast("success", transMessageNode('update_success', {label: short_name}))
     },
     onError: (err: any) => {
       console.log(err.response, '// err.response')
-      if (err.response?.status === 422) {
+      if (err.response?.status === ERROR_VALIDATE_FORM) {
         const serverErrors = err.response?.data?.errors
         if (serverErrors) {
           Object.entries(serverErrors).forEach(([field, messages]) => {
@@ -99,14 +99,6 @@ export default function EditCompanyPage() {
       }
     },
   })
-
-  if (isError) { // @todo move to component 404 not found
-    return (
-      <AdminLayout breadcrumb={organization.company.edit}>
-        <div className="card"><div className="card-body">Không tải được thông tin công ty.</div></div>
-      </AdminLayout>
-    )
-  }
 
   return (
     <AdminLayout breadcrumb={organization.company.edit}>

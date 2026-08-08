@@ -8,11 +8,12 @@ import {useRouter} from 'next/navigation';
 import DebugPanel from "@component/DebugPanel"
 import Notification from "@component/Notification"
 import authApi from "@feature/auth/authApi";
-import {access_token_timeout, AUTH_CONFIG, MESSAGE_SERVER_ERROR_DEFAULT, STORAGE_KEYS} from "@/config/constant";
+import {access_token_timeout, AUTH_CONFIG, STORAGE_KEYS} from "@/config/constant";
 import {ROUTES} from "@/config/route";
 import FieldError from "@component/form/FieldError";
 import AppSpin from "@component/AppSpin";
 import Cookies from "js-cookie";
+import {MESSAGE_SERVER_ERROR_DEFAULT} from "@/config/validation";
 
 export default function LoginForm({}) {
   const [showPass, setShowPass] = useState(false)

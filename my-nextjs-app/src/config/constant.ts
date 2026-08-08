@@ -14,7 +14,6 @@ export const AUTH_CONFIG = {
 } as const;
 
 export const DELAY_TIME = 500; // MS
-export const MESSAGE_SERVER_ERROR_DEFAULT = "Lỗi hệ thống";
 export const TOAST = {
   TYPE: {
     SUCCESS: 'success',

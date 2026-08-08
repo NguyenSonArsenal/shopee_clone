@@ -3,7 +3,7 @@
 import {ReactNode, useEffect, useState} from "react"
 import {TOAST, ToastTypeValue} from "@/config/constant";
 
-type ToastItem = { id: number; type: ToastTypeValue; message: string }
+type ToastItem = { id: number; type: ToastTypeValue; message: ReactNode }
 
 const TOAST_DURATION = TOAST.TIMEOUT * 1000
 
