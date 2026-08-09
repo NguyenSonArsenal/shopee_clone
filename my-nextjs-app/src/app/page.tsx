@@ -1,7 +1,7 @@
 "use client"
 
 import {useEffect, useState} from "react";
-import {STORAGE_KEYS, TOAST} from "@/config/constant";
+import {STORAGE_KEYS} from "@/config/constant";
 import {ROUTES} from "@/config/route";
 import {useRouter} from "next/navigation";
 import Link from "next/link";

@@ -11,7 +11,7 @@ import { ROUTES } from "@/config/route"
 import { organization } from "@/config/breadcrumb"
 import companyApi from "@/feature/organization/companyApi"
 import {
-  debounced_search_timeout, LABEL_ACTIVE,
+  DEBOUNCED_SEARCH_TIMEOUT, LABEL_ACTIVE,
   LABEL_CREATE, LABEL_INACTIVE,
   NO_RECORD_DES,
   NO_RECORD_TITLE, TOOLTIP_ICON_DELETE, TOOLTIP_ICON_EDIT, TOOLTIP_ICON_VIEW
@@ -39,7 +39,7 @@ export default function CompanyListPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (inputValue !== search) handleSearch(inputValue)
-    }, debounced_search_timeout)
+    }, DEBOUNCED_SEARCH_TIMEOUT)
     return () => clearTimeout(timer) // gõ tiếp -> huỷ timer cũ, không ghi URL
   }, [inputValue])
 
@@ -124,7 +124,9 @@ export default function CompanyListPage() {
                 <tr>
                   <th className="col-stt">STT</th>
                   <th>Tên công ty</th>
-                  <th>Tên viết tắt</th>
+                  <th className={'text-center'}>Mã số thuế</th>
+                  <th>Người đại diện</th>
+                  <th>Người quản lý</th>
                   <th className="ms-center">Kích hoạt</th>
                   <th className="col-action">Thao tác</th>
                 </tr>
@@ -145,9 +147,14 @@ export default function CompanyListPage() {
                 {!isLoading && companies.map((company, index) => (
                   <tr key={company.id}>
                     <td className="col-stt">{(page - 1) * (data?.pagination.per_page ?? 10) + index + 1}</td>
-                    <td>{company.name}</td>
-                    <td>{company.short_name || "—"}</td>
-                    <td className="ms-center">
+                    <td>
+                      <span className={"font-bold"}>{company.name}</span><br/>
+                      <small className={'text-light'}>{company.short_name || "—"}</small>
+                    </td>
+                    <td className={'text-center'}>{company.tax_code || "—"}</td>
+                    <td className={'text-center'}>—</td>
+                    <td className={'text-center'}>—</td>
+                    <td className="text-center">
                       <label className="switch has-tip" data-tooltip={company.is_active ? LABEL_ACTIVE : LABEL_INACTIVE}>
                         <input
                           type="checkbox"

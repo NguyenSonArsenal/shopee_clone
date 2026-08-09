@@ -178,7 +178,6 @@ export const MESSAGES = {
 
 type MessageKey = keyof typeof MESSAGES
 
-// Đoạn trong [...] là optional: chỉ giữ lại nếu mọi :placeholder bên trong có param truyền vào
 function resolveBrackets(template: string, params: Params) {
   return template.replace(/\[([^\]]*)]/g, (_, block: string) => {
     const placeholders = [...block.matchAll(/:(\w+)/g)].map((m) => m[1])
@@ -186,8 +185,6 @@ function resolveBrackets(template: string, params: Params) {
     return hasAll ? block : ''
   })
 }
-
-// Lõi dùng chung: xử lý [...] optional rồi thay hết :key bằng giá trị trong params
 function interpolate(template: string, params: Params) {
   let msg = resolveBrackets(template, params)
   for (const [k, v] of Object.entries(params)) {
@@ -196,6 +193,10 @@ function interpolate(template: string, params: Params) {
   return msg.replace(/\s+/g, ' ').trim()
 }
 
+/**
+ * trans('required', 'mật khẩu')
+ * trans('gte', 'password', {value: AUTH_CONFIG.MIN_PASSWORD_LENGTH})
+ */
 export function trans(
   rule: Rule,
   attribute: Attribute,

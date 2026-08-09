@@ -13,7 +13,8 @@ import {ROUTES} from "@/config/route";
 import FieldError from "@component/form/FieldError";
 import AppSpin from "@component/AppSpin";
 import Cookies from "js-cookie";
-import {MESSAGE_SERVER_ERROR_DEFAULT} from "@/config/validation";
+import {MESSAGE_SERVER_ERROR_DEFAULT, trans} from "@/config/validation";
+import {ERROR_VALIDATE_FORM} from "@/config/http-status";
 
 export default function LoginForm({}) {
   const [showPass, setShowPass] = useState(false)
@@ -27,22 +28,18 @@ export default function LoginForm({}) {
   const validate = () => {
     const newErrors = { email: "", password: "" }
     if (!email) {
-      newErrors.email = "Email không được để trống"
+      newErrors.email = trans('required', 'email')
     } else if (!AUTH_CONFIG.EMAIL_REGEX.test(email)) {
-      newErrors.email = "Email không đúng định dạng"
+      newErrors.email = trans('regex', 'email')
     }
 
     if (!password) {
-      newErrors.password = "Mật khẩu không được để trống"
+      newErrors.password = trans('required', 'mật khẩu')
+    } else if (password.length < AUTH_CONFIG.MIN_PASSWORD_LENGTH) {
+      newErrors.password = trans('gte', 'password', {value: AUTH_CONFIG.MIN_PASSWORD_LENGTH})
     }
-    // @todo comment to test
-    // else if (password.length < AUTH_CONFIG.MIN_PASSWORD_LENGTH) {
-    //   newErrors.password = "Mật khẩu phải có ít nhất " +  AUTH_CONFIG.MIN_PASSWORD_LENGTH  + " ký tự"
-    // }
 
     setErrors(newErrors)
-
-    // trả về true nếu không có lỗi nào
     return !newErrors.email && !newErrors.password
   }
 
@@ -58,7 +55,7 @@ export default function LoginForm({}) {
       Cookies.set(STORAGE_KEYS.USER_INFO, JSON.stringify(data.user), { expires: expiresAt })
       router.replace(ROUTES.HOME)
     } catch (err) {
-      if (err.response?.status === 422) {
+      if (err.response?.status === ERROR_VALIDATE_FORM) {
         const serverErrors = err.response.data.errors;
         setErrors({
           email: serverErrors.email ? serverErrors.email[0] : "",
@@ -141,22 +138,18 @@ export default function LoginForm({}) {
             </Link>
           </div>
 
-          {/* Nút đăng nhập */}
           <button type="submit" className="btn btn-primary btn-lg btn-submit cursor-pointer disabled:cursor-not-allowed" disabled={isSubmitting}>
             {isSubmitting ? <AppSpin size="small" /> : <IconLogin />}
             {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
         </form>
 
-        {/* Link đăng ký */}
         <p className="login-register-link">
           Chưa có tài khoản?{" "}
           <Link href="/register">Đăng ký ngay</Link>
         </p>
         <p className="footer-text">banghang.net © 2026 &nbsp;·&nbsp; Tân Long Land</p>
       </div>
-
-      {/*<DebugPanel data={{ email, password, errors, isSubmitting, serverError }} />*/}
     </div>
   )
 }
