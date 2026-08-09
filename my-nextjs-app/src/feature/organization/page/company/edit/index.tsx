@@ -32,7 +32,7 @@ const schema = z.object({
   website: z.string().max(LENGTH.company.website, trans('max', 'website', {max: LENGTH.company.website})).nullable().optional()
     .refine((v) => isBlank(v) || /^https?:\/\/.+/.test(v), trans('url', 'website')),
   address: z.string().max(LENGTH.company.address, trans('max', 'address', {max: LENGTH.company.address})).nullable().optional(),
-  description: z.string().nullable().optional(),
+  description: z.string().max(LENGTH.company.description, trans('max', 'description', {max: LENGTH.company.description})).nullable().optional(),
   established_date: z.string().nullable().optional()
     .refine((v) => isBlank(v) || new Date(v) <= new Date(), trans('before_or_equal', 'established_date', {date: 'hôm nay'})),
   representative_id: z.number().nullable().optional(),
@@ -72,7 +72,7 @@ export default function EditCompanyPage() {
       return companyApi.update(id, formData)
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({queryKey: ["company-list"], refetchType: 'all'})
+      await queryClient.invalidateQueries({queryKey: ["company_list"], refetchType: 'all'})
       queryClient.invalidateQueries({ queryKey: ['company-edit', id] })
       router.push(ROUTES.ORGANIZATION_COMPANY)
       showToast("success", transMessageNode('update_success', {label: short_name}))

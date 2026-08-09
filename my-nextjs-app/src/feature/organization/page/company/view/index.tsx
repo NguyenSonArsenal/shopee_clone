@@ -7,13 +7,14 @@ import { useQuery } from "@tanstack/react-query"
 import { organization } from "@/config/breadcrumb"
 import companyApi from "@/feature/organization/companyApi"
 import { useRouter } from 'next/navigation'
+import {ROUTES} from "@/config/route";
 
 export default function CompanyDetailPage() {
   const router = useRouter()
   const { id } = useParams<{ id: string }>()
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["company", id],
+    queryKey: ["company_show", id],
     queryFn: () => companyApi.getDetail(id),
   })
 
@@ -98,7 +99,8 @@ export default function CompanyDetailPage() {
           <button type="button" className="btn btn-outline" onClick={() => router.back()}>
             <i className="fas fa-arrow-left"></i> Quay lại
           </button>
-          <button type="submit" className="btn btn-primary">
+
+          <button type="submit" className="btn btn-primary" onClick={() => router.push(`${ROUTES.ORGANIZATION_COMPANY}/${data?.id}/edit`)}>
             <i className="fa-solid fa-pen"></i> Sửa
           </button>
         </div>

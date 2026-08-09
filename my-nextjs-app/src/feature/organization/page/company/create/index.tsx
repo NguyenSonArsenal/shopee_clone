@@ -10,7 +10,6 @@ import {z} from "zod";
 import {trans, MESSAGE_SERVER_ERROR_DEFAULT, transMessage} from "@/config/validation";
 import {LENGTH} from "@/config/validate-length";
 import {isBlank} from "@/helper/helper";
-import SkeletonInputField from "@component/admin/skeleton/SkeletonInputField";
 import InputTextCounter from "@component/form/InputTextCounter";
 import FieldError from "@component/form/FieldError";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
@@ -30,7 +29,7 @@ const schema = z.object({
   website: z.string().max(LENGTH.company.website, trans('max', 'website', {max: LENGTH.company.website})).nullable().optional()
     .refine((v) => isBlank(v) || /^https?:\/\/.+/.test(v), trans('url', 'website')),
   address: z.string().max(LENGTH.company.address, trans('max', 'address', {max: LENGTH.company.address})).nullable().optional(),
-  description: z.string().nullable().optional(),
+  description: z.string().max(LENGTH.company.description, trans('max', 'description', {max: LENGTH.company.description})).nullable().optional(),
   established_date: z.string().nullable().optional()
     .refine((v) => isBlank(v) || new Date(v) <= new Date(), trans('before_or_equal', 'established_date', {date: 'hôm nay'})),
   representative_id: z.number().nullable().optional(),
@@ -47,15 +46,14 @@ export default function CreateCompanyPage() {
     resolver: zodResolver(schema),
   })
 
-  const [name, short_name] = useWatch({control, name: ['name', 'short_name']});
-  // console.log(name, short_name, '// short_name')
+  const form = useWatch({control});
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (formData) => {
       return companyApi.store(formData)
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({queryKey: ["company-list"], refetchType: 'all'})
+      await queryClient.invalidateQueries({queryKey: ["company_list"], refetchType: 'all'})
       router.push(ROUTES.ORGANIZATION_COMPANY)
       showToast("success", transMessage('store_success'))
     },
@@ -80,6 +78,8 @@ export default function CreateCompanyPage() {
     }
   });
 
+  console.log(form, '// fiorm')
+
   return (
     <AdminLayout breadcrumb={organization.company.create}>
       <div className="card">
@@ -88,15 +88,15 @@ export default function CreateCompanyPage() {
             <div className="frow c2">
               <div className="field">
                 <label>Tên công ty <span className="req">*</span></label>
-                <input type="text" {...register('name')} placeholder="Nhập tên công ty"/>
-                <InputTextCounter maxLength={LENGTH.company.name} value={name}/>
+                <input type="text" {...register('name')} maxLength={LENGTH.company.name} placeholder="Nhập tên công ty"/>
+                <InputTextCounter maxLength={LENGTH.company.name} value={form['name']}/>
                 <FieldError message={errors?.name?.message}/>
               </div>
 
               <div className="field">
                 <label>Tên viết tắt</label>
-                <input type="text" {...register("short_name")} placeholder="Nhập tên viết tắt"/>
-                <InputTextCounter maxLength={LENGTH.company.short_name} value={short_name}/>
+                <input type="text" {...register("short_name")} maxLength={LENGTH.company.short_name} placeholder="Nhập tên viết tắt"/>
+                <InputTextCounter maxLength={LENGTH.company.short_name} value={form.short_name}/>
                 <FieldError message={errors?.short_name?.message}/>
               </div>
             </div>
@@ -104,7 +104,9 @@ export default function CreateCompanyPage() {
             <div className="frow c2">
               <div className="field">
                 <label>Mã số thuế</label>
-                <input type="text" name="tax_code" placeholder="Nhập mã số thuế"/>
+                <input type="text" {...register('tax_code')} maxLength={LENGTH.company.tax_code} placeholder="Nhập mã số thuế"/>
+                <InputTextCounter maxLength={LENGTH.company.tax_code} value={form.tax_code}/>
+                <FieldError message={errors?.tax_code?.message}/>
               </div>
               <div className="field">
                 <label>Ngày thành lập</label>
@@ -115,25 +117,33 @@ export default function CreateCompanyPage() {
             <div className="frow c2">
               <div className="field">
                 <label>Điện thoại</label>
-                <input type="text" name="phone" placeholder="Nhập số điện thoại"/>
+                <input type="text" {...register('phone')} maxLength={LENGTH.company.phone} placeholder="Nhập số điện thoại"/>
+                <InputTextCounter maxLength={LENGTH.company.phone} value={form.phone}/>
+                <FieldError message={errors?.phone?.message}/>
               </div>
               <div className="field">
                 <label>Email</label>
-                <input type="email" name="email" placeholder="Nhập email"/>
+                <input type="email" {...register('email')} maxLength={LENGTH.company.email} placeholder="Nhập email"/>
+                <InputTextCounter maxLength={LENGTH.company.email} value={form.email}/>
+                <FieldError message={errors?.email?.message}/>
               </div>
             </div>
 
             <div className="frow c1">
               <div className="field">
                 <label>Website</label>
-                <input type="text" name="website" placeholder="Nhập website"/>
+                <input type="text" {...register('website')} maxLength={LENGTH.company.website} placeholder="Nhập website"/>
+                <InputTextCounter maxLength={LENGTH.company.website} value={form.website}/>
+                <FieldError message={errors?.website?.message}/>
               </div>
             </div>
 
             <div className="frow c1">
               <div className="field">
                 <label>Địa chỉ</label>
-                <input type="text" name="address" placeholder="Nhập địa chỉ"/>
+                <input type="text" {...register('address')} maxLength={LENGTH.company.address} placeholder="Nhập địa chỉ"/>
+                <InputTextCounter maxLength={LENGTH.company.address} value={form.address}/>
+                <FieldError message={errors?.address?.message}/>
               </div>
             </div>
 
@@ -155,7 +165,9 @@ export default function CreateCompanyPage() {
             <div className="frow c1">
               <div className="field">
                 <label>Giới thiệu / Mô tả</label>
-                <textarea name="description" rows={3}/>
+                <textarea name="description" rows={3} {...register('description')} maxLength={LENGTH.company.description} />
+                <InputTextCounter maxLength={LENGTH.company.description} value={form.description}/>
+                <FieldError message={errors?.description?.message}/>
               </div>
             </div>
 

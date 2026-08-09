@@ -61,7 +61,7 @@ export default function CompanyListPage() {
   }
 
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["company-list", page, search],
+    queryKey: ["company_list", page, search],
     queryFn: () => companyApi.getList({ page, search: search }),
   })
 
@@ -70,12 +70,12 @@ export default function CompanyListPage() {
   const { mutate: toggleActive, isPending: isToggling, variables: togglingVars } = useMutation({
     mutationFn: ({ id, is_active }: { id: number; is_active: boolean }) => companyApi.update(id, { is_active }),
     onSuccess: (updated) => {
-      queryClient.invalidateQueries({ queryKey: ["company-list"] })
+      queryClient.invalidateQueries({ queryKey: ["company_list"] })
       const label = updated.short_name || updated.name
       showToast("success", updated.is_active ? `Đã hoạt động công ty ${label}!` : `Đã dừng hoạt động công ty ${label}!`)
     },
     onError: (err: any) => {
-      queryClient.invalidateQueries({ queryKey: ["company-list"] })
+      queryClient.invalidateQueries({ queryKey: ["company_list"] })
       showToast("error", err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT)
     },
   })
@@ -83,7 +83,7 @@ export default function CompanyListPage() {
   const { mutate: deleteCompany, isPending: isDeleting } = useMutation({
     mutationFn: (id: number) => companyApi.destroy(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["company-list"] })
+      queryClient.invalidateQueries({ queryKey: ["company_list"] })
       showToast("success", `Đã xoá công ty ${deleteTarget?.name}!`)
       setDeleteTarget(null)
     },
