@@ -4,12 +4,10 @@ import AdminLayout from "@component/admin/AdminLayout"
 import {organization} from "@/config/breadcrumb";
 import {useRouter} from "next/navigation";
 import SubmitButton from "@component/admin/SubmitButton";
-import {Controller, useForm, useWatch} from "react-hook-form";
+import {useForm, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {z} from "zod";
 import {trans, MESSAGE_SERVER_ERROR_DEFAULT, transMessage} from "@/config/validation";
 import {LENGTH} from "@/config/validate-length";
-import {isBlank} from "@/helper/helper";
 import InputTextCounter from "@component/form/InputTextCounter";
 import FieldError from "@component/form/FieldError";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
@@ -17,33 +15,15 @@ import companyApi from "@feature/organization/companyApi";
 import {ERROR_VALIDATE_FORM} from "@/config/http-status";
 import {useToast} from "@/context/ToastContext";
 import {ROUTES} from "@/config/route";
+import {CompanyFormValues, companySchema} from "@feature/organization/companySchema";
 
-const schema = z.object({
-  name: z.string().min(1, trans('required', 'name')).max(LENGTH.company.name, trans('max', 'name', {max: LENGTH.company.name})),
-  short_name: z.string().max(LENGTH.company.short_name, trans('max', 'short_name', {max: LENGTH.company.short_name})).nullable().optional(),
-  tax_code: z.string().nullable().optional(),
-  phone: z.string().nullable().optional()
-    .refine((v) => isBlank(v) || /^0[0-9]{9}$/.test(v), trans('regex', 'phone')),
-  email: z.string().max(LENGTH.company.email, trans('max', 'email', {max: LENGTH.company.email})).nullable().optional()
-    .refine((v) => isBlank(v) || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), trans('email', 'email')),
-  website: z.string().max(LENGTH.company.website, trans('max', 'website', {max: LENGTH.company.website})).nullable().optional()
-    .refine((v) => isBlank(v) || /^https?:\/\/.+/.test(v), trans('url', 'website')),
-  address: z.string().max(LENGTH.company.address, trans('max', 'address', {max: LENGTH.company.address})).nullable().optional(),
-  description: z.string().max(LENGTH.company.description, trans('max', 'description', {max: LENGTH.company.description})).nullable().optional(),
-  established_date: z.string().nullable().optional()
-    .refine((v) => isBlank(v) || new Date(v) <= new Date(), trans('before_or_equal', 'established_date', {date: 'hôm nay'})),
-  representative_id: z.number().nullable().optional(),
-  manager_id: z.number().nullable().optional(),
-})
-
-type FormValues = z.infer<typeof schema>
 export default function CreateCompanyPage() {
   const {showToast} = useToast()
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const {control, register, reset, handleSubmit, setError, formState: {errors}} = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  const {control, register, reset, handleSubmit, setError, formState: {errors}} = useForm<CompanyFormValues>({
+    resolver: zodResolver(companySchema),
   })
 
   const form = useWatch({control});
@@ -62,7 +42,7 @@ export default function CreateCompanyPage() {
         const serverErrors = err.response?.data?.errors
         if (serverErrors) {
           Object.entries(serverErrors).forEach(([field, messages]) => {
-            setError(field as keyof FormValues, {
+            setError(field as keyof CompanyFormValues, {
               type: 'server',
               message: Array.isArray(messages) ? messages[0] : String(messages),
             })
@@ -77,8 +57,6 @@ export default function CreateCompanyPage() {
       }
     }
   });
-
-  console.log(form, '// fiorm')
 
   return (
     <AdminLayout breadcrumb={organization.company.create}>
@@ -184,7 +162,6 @@ export default function CreateCompanyPage() {
               <i className="fas fa-arrow-left"></i> Quay lại
             </button>
             <SubmitButton loading={isPending}/>
-            {/*<button type="submit" className="btn btn-primary"><i className="fas fa-floppy-disk"></i> Lưu</button>*/}
           </div>
         </form>
       </div>

@@ -167,25 +167,9 @@ export const ATTRIBUTES = {
 type Rule = keyof typeof VALIDATION_MESSAGES
 type Attribute = keyof typeof ATTRIBUTES
 type VariantType = 'array' | 'file' | 'numeric' | 'string'
-
-export function trans(
-  rule: Rule,
-  attribute: Attribute,
-  params: Record<string, string | number> = {},
-  type: VariantType = 'string'
-) {
-  const entry = VALIDATION_MESSAGES[rule]
-  let msg: string = typeof entry === 'string' ? entry : entry[type]
-
-  msg = msg.replace(':attribute', ATTRIBUTES[attribute] ?? attribute)
-  for (const [key, value] of Object.entries(params)) {
-    msg = msg.replace(`:${key}`, String(value))
-  }
-  return msg
-}
+type Params = Record<string, string | number>
 
 export const MESSAGE_SERVER_ERROR_DEFAULT = "Lỗi hệ thống";
-
 export const MESSAGES = {
   store_success: 'Thêm mới[ :label] thành công',
   update_success: 'Cập nhật[ :label] thành công',
@@ -195,33 +179,37 @@ export const MESSAGES = {
 type MessageKey = keyof typeof MESSAGES
 
 // Đoạn trong [...] là optional: chỉ giữ lại nếu mọi :placeholder bên trong có param truyền vào
-function resolveMessageTemplate(key: MessageKey, params: Record<string, string | number>) {
-  let msg: string = MESSAGES[key]
-  msg = msg.replace(/\[([^\]]*)]/g, (_, block: string) => {
+function resolveBrackets(template: string, params: Params) {
+  return template.replace(/\[([^\]]*)]/g, (_, block: string) => {
     const placeholders = [...block.matchAll(/:(\w+)/g)].map((m) => m[1])
     const hasAll = placeholders.every((k) => params[k] !== undefined && params[k] !== '')
     return hasAll ? block : ''
   })
-  return msg.replace(/\s+/g, ' ').trim()
 }
 
-export function transMessage(
-  key: MessageKey,
-  params: Record<string, string | number> = {}
-) {
-  let msg = resolveMessageTemplate(key, params)
+// Lõi dùng chung: xử lý [...] optional rồi thay hết :key bằng giá trị trong params
+function interpolate(template: string, params: Params) {
+  let msg = resolveBrackets(template, params)
   for (const [k, v] of Object.entries(params)) {
     msg = msg.replace(`:${k}`, String(v))
   }
-  return msg
+  return msg.replace(/\s+/g, ' ').trim()
 }
 
-// Giống transMessage, nhưng bôi đậm giá trị của từng :placeholder — dùng khi cần nhấn mạnh trong toast/JSX
-export function transMessageNode(
-  key: MessageKey,
-  params: Record<string, string | number> = {}
-): ReactNode {
-  const msg = resolveMessageTemplate(key, params)
+export function trans(
+  rule: Rule,
+  attribute: Attribute,
+  params: Params = {},
+  type: VariantType = 'string'
+) {
+  const entry = VALIDATION_MESSAGES[rule]
+  const template = typeof entry === 'string' ? entry : entry[type]
+  return interpolate(template, {attribute: ATTRIBUTES[attribute] ?? attribute, ...params})
+}
+
+// Trả về ReactNode, tự bôi đậm giá trị của từng :placeholder — string cũng là 1 ReactNode hợp lệ nên dùng được ở mọi nơi
+export function transMessage(key: MessageKey, params: Params = {}): ReactNode {
+  const msg = resolveBrackets(MESSAGES[key], params)
   const parts: ReactNode[] = []
   let lastIndex = 0
   let match: RegExpExecArray | null

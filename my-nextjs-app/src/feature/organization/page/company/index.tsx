@@ -16,7 +16,7 @@ import {
   NO_RECORD_DES,
   NO_RECORD_TITLE, TOOLTIP_ICON_DELETE, TOOLTIP_ICON_EDIT, TOOLTIP_ICON_VIEW
 } from "@/config/constant";
-import {MESSAGE_SERVER_ERROR_DEFAULT} from "@/config/validation";
+import {MESSAGE_SERVER_ERROR_DEFAULT, transMessage} from "@/config/validation";
 import DebugPanel from "@component/DebugPanel";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {useToast} from "@/context/ToastContext";
@@ -33,7 +33,7 @@ export default function CompanyListPage() {
   const search = searchParams.get('query') ?? ""
 
   const [inputValue, setInputValue] = useState(search)
-  const [deleteTarget, setDeleteTarget] = useState<CompanyListItem | null>(null)
+  const [entity, setEntity] = useState<CompanyListItem | null>(null)
 
   // Debounce: sau khi user ngừng gõ mới ghi vào URL (qua handleSearch)
   useEffect(() => {
@@ -81,15 +81,15 @@ export default function CompanyListPage() {
   })
 
   const { mutate: deleteCompany, isPending: isDeleting } = useMutation({
-    mutationFn: (id: number) => companyApi.destroy(id),
-    onSuccess: () => {
+    mutationFn: (entity) => companyApi.destroy(entity.id),
+    onSuccess: (res, entity) => {
       queryClient.invalidateQueries({ queryKey: ["company_list"] })
-      showToast("success", `Đã xoá công ty ${deleteTarget?.name}!`)
-      setDeleteTarget(null)
+      showToast("success", transMessage('delete_success', {label: entity.name}))
+      setEntity(null)
     },
     onError: (err: any) => {
       showToast("error", err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT)
-      setDeleteTarget(null)
+      setEntity(null)
     },
   })
 
@@ -167,7 +167,7 @@ export default function CompanyListPage() {
                           <i className="fa-solid fa-pen"/>
                         </Link>
                         <button type="button" className="action-icon delete tip-top-left" data-tooltip={TOOLTIP_ICON_DELETE}
-                                onClick={() => setDeleteTarget(company)}><i className="fa-solid fa-trash"/>
+                                onClick={() => setEntity(company)}><i className="fa-solid fa-trash"/>
                         </button>
                       </div>
                     </td>
@@ -184,14 +184,14 @@ export default function CompanyListPage() {
       </div>
 
       <ConfirmModal
-        open={!!deleteTarget}
-        message={<>Xoá &quot;<b>{deleteTarget?.name}</b>&quot;?</>}
+        open={!!entity}
+        message={<>Xoá &quot;<b>{entity?.name}</b>&quot;?</>}
         confirmLoading={isDeleting}
-        onClose={() => setDeleteTarget(null)}
-        onConfirm={() => deleteTarget && deleteCompany(deleteTarget.id)}
+        onClose={() => setEntity(null)}
+        onConfirm={() => entity && deleteCompany(entity)}
       />
 
-      <DebugPanel data={{ deleteTarget }} />
+      <DebugPanel data={{ entity }} />
     </AdminLayout>
   )
 }
