@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Organization\Models\Company;
+use Modules\Organization\Models\Region;
 
 return [
     'lengths' => [
@@ -13,6 +14,13 @@ return [
             'short_name'   => 100,
             'phone'        => 15,
             'tax_code'     => 20,
+        ],
+        Region::getTableName() => [
+            'name'         => 255,
+            'code'         => 50,
+            'phone'        => 15,
+            'email'        => 64,
+            'address'      => 255,
         ]
     ],
 ];

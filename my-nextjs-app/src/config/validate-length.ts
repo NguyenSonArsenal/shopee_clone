@@ -18,4 +18,11 @@ export const LENGTH = {
     address: 255,
     description: 1000,
   },
+  region: {
+    name: 255,
+    code: 50,
+    phone: 20,
+    email: 150,
+    address: 500,
+  },
 } as const;

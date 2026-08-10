@@ -174,6 +174,8 @@ export const MESSAGES = {
   store_success: 'Thêm mới[ :label] thành công',
   update_success: 'Cập nhật[ :label] thành công',
   delete_success: 'Xóa[ :label] thành công',
+  activate_success: 'Đã hoạt động công ty[ :label]',
+  deactivate_success: 'Đã dừng hoạt động công ty[ :label]',
 } as const
 
 type MessageKey = keyof typeof MESSAGES
@@ -208,7 +210,10 @@ export function trans(
   return interpolate(template, {attribute: ATTRIBUTES[attribute] ?? attribute, ...params})
 }
 
-// Trả về ReactNode, tự bôi đậm giá trị của từng :placeholder — string cũng là 1 ReactNode hợp lệ nên dùng được ở mọi nơi
+/**
+ * To bold
+ * transMessage(updated.is_active ? 'activate_success' : 'deactivate_success', { label })
+ */
 export function transMessage(key: MessageKey, params: Params = {}): ReactNode {
   const msg = resolveBrackets(MESSAGES[key], params)
   const parts: ReactNode[] = []

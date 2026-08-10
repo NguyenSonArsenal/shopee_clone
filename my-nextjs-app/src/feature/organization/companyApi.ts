@@ -23,7 +23,6 @@ const companyApi = {
   },
   async store(params = []) {
     return myAxios.post(API_URL.store(), params).then(res => {
-      console.log(res, '// ressssss')
       return res.data.data
     })
   },

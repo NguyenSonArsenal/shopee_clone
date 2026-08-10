@@ -14,6 +14,7 @@ export const ROUTES = {
 
   ORGANIZATION: "/co-cau-to-chuc",
   ORGANIZATION_COMPANY: "/co-cau-to-chuc/cong-ty",
+  ORGANIZATION_REGION: "/co-cau-to-chuc/vung-mien",
   ORGANIZATION_OFFICE: "/co-cau-to-chuc/van-phong",
   ORGANIZATION_BRANCH: "/co-cau-to-chuc/chi-nhanh",
   ORGANIZATION_DEPARTMENT: "/co-cau-to-chuc/phong-ban",
