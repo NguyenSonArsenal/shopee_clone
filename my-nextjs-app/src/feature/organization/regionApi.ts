@@ -31,9 +31,9 @@ const regionApi = {
       return res.data.data
     })
   },
-  // destroy(id: number): Promise<void> {
-  //   return myAxios.delete(API_URL.destroy(id)).then(() => undefined)
-  // },
+  destroy(id: number): Promise<void> {
+    return myAxios.delete(API_URL.destroy(id)).then(() => undefined)
+  },
 }
 
 export default regionApi

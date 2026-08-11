@@ -13,20 +13,50 @@ import {
 } from "@/config/constant"
 import ConfirmModal from "@modal/ConfirmModal"
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {useSearchParams} from "next/navigation";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import regionApi from "@feature/organization/regionApi";
 import TableLoadingOverlay from "@component/admin/TableLoadingOverlay";
+import {DEBOUNCED_SEARCH_TIMEOUT} from "@/config/constant";
 import {MESSAGE_SERVER_ERROR_DEFAULT, transMessage} from "@/config/validation";
 import {useToast} from "@/context/ToastContext";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export default function RegionListPage() {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
   const queryClient = useQueryClient();
   const { showToast } = useToast()
   const search = searchParams.get("search") || "";
   const page = Number(searchParams.get("page")) || 1;
   const [entity, setEntity] = useState();
+
+  const [inputValue, setInputValue] = useState(search)
+
+  // Debounce: sau khi user ngừng gõ mới ghi vào URL (qua handleSearch)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (inputValue !== search) handleSearch(inputValue)
+    }, DEBOUNCED_SEARCH_TIMEOUT)
+    return () => clearTimeout(timer) // gõ tiếp -> huỷ timer cũ, không ghi URL
+  }, [inputValue])
+
+  function handleSearch(term: string) {
+    const params = new URLSearchParams(searchParams);
+    if (term) {
+      params.set('search', term);
+    } else {
+      params.delete('search');
+    }
+    params.set('page', '1') // search đổi -> quay về trang 1
+    replace(`${pathname}?${params.toString()}`);
+  }
+
+  function handlePageChange(newPage: number) {
+    const params = new URLSearchParams(searchParams)
+    params.set('page', String(newPage))
+    replace(`${pathname}?${params.toString()}`)
+  }
 
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["region_list", page, search],
@@ -35,17 +65,28 @@ export default function RegionListPage() {
 
   const regionList =  data?.data || []
 
-  const {mutation, mutate, isPending, variables} = useMutation({
+  const { mutate, isPending, variables } = useMutation({
     mutationFn: ({ id, is_active }) => regionApi.update(id, { is_active }),
     onSuccess: (updated) => {
-      console.log(updated, '// updated')
       queryClient.invalidateQueries({ queryKey: ["region_list"] })
       const label = updated.name
       showToast("success", transMessage(updated.is_active ? 'activate_success' : 'deactivate_success', { label }))
     },
     onError: (err: any) => {
-      console.log(err?.data, 'onError')
       showToast("error", err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT)
+    },
+  });
+
+  const { mutate: deleteRegion, isPending: isDeleting } = useMutation({
+    mutationFn: (entity) => regionApi.destroy(entity.id),
+    onSuccess: (res, entity) => {
+      queryClient.invalidateQueries({ queryKey: ["region_list"] })
+      showToast("success", transMessage('delete_success', { label: entity.name }))
+      setEntity(null)
+    },
+    onError: (err: any) => {
+      showToast("error", err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT)
+      setEntity(null)
     },
   });
 
@@ -58,6 +99,8 @@ export default function RegionListPage() {
             type="text"
             placeholder="Tìm theo tên, mã Vùng miền..."
             autoComplete="off"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
           />
         </div>
         <div className={"flex gap-[6px]"}>
@@ -141,15 +184,16 @@ export default function RegionListPage() {
         </div>
 
         {regionList.length > 0 && (
-          <AdminPagination page={1} totalPages={1} onPageChange={() => {}}/>
+          <AdminPagination page={page} totalPages={data?.pagination.last_page ?? 1} onPageChange={handlePageChange}/>
         )}
       </div>
 
       <ConfirmModal
         open={!!entity}
         message={<>Xoá &quot;<b>{entity?.name}</b>&quot;?</>}
+        confirmLoading={isDeleting}
         onClose={() => setEntity(null)}
-        onConfirm={() => setEntity(null)}
+        onConfirm={() => entity && deleteRegion(entity)}
       />
     </AdminLayout>
   )
