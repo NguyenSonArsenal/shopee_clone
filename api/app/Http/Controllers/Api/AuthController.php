@@ -21,6 +21,7 @@ use App\Service\Auth\AuthService;
 use App\Service\Otp\OtpService;
 use App\Service\Otp\OtpStrategyFactory;
 use App\Http\Requests\Api\Auth\ResetPasswordRequest;
+use OpenApi\Annotations as OA;
 
 class AuthController extends Controller
 {
@@ -62,6 +63,22 @@ class AuthController extends Controller
 
     /**
      * API Đăng nhập cấp JWT Token
+     *
+     * @OA\Post(
+     *     path="/api/login",
+     *     tags={"Auth"},
+     *     summary="Đăng nhập",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string"),
+     *             @OA\Property(property="password", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Thành công"),
+     *     @OA\Response(response=401, description="Sai tài khoản hoặc mật khẩu")
+     * )
      */
     public function postLogin(LoginRequest $request)
     {

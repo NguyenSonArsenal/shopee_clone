@@ -10,6 +10,12 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
+/**
+ * @OA\Info(title="Shopee Clone API", version="1.0.0")
+ * @OA\Tag(name="Auth", description="Đăng nhập, đăng ký, quên mật khẩu")
+ * @OA\Tag(name="Organization / Company", description="Quản lý công ty")
+ * @OA\Tag(name="Organization / Region", description="Quản lý vùng miền")
+ */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;

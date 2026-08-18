@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Organization\Http\Requests;
+namespace Modules\Organization\Http\Requests\Region;
 
 use Illuminate\Validation\Rule;
 use Modules\Organization\Models\Region;

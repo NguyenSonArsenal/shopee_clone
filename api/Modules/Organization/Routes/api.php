@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
-use Modules\Organization\Http\Controllers\CompanyController;
-use Modules\Organization\Http\Controllers\RegionController;
+use Modules\Organization\Http\Controllers\Company\CompanyController;
+use Modules\Organization\Http\Controllers\Region\RegionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/organization', function (Request $request) {

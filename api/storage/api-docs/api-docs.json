@@ -1,0 +1,539 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Shopee Clone API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/organization/company": {
+            "get": {
+                "tags": [
+                    "Organization / Company"
+                ],
+                "summary": "Danh sách công ty",
+                "description": "GET /api/organization/company\nDanh sách công ty, có phân trang + tìm kiếm theo tên/mã số thuế",
+                "operationId": "1eea0bd59dfbe02b188cba6343cf4341",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Trang hiện tại",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Tìm theo tên/mã số thuế",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Organization / Company"
+                ],
+                "summary": "Tạo mới công ty",
+                "description": "POST /api/organization/company\nTạo mới 1 công ty",
+                "operationId": "76107c2a2136ba19f369ba820e001c51",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "short_name": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "tax_code": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "established_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "website": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "representative_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "manager_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo thành công"
+                    },
+                    "422": {
+                        "description": "Lỗi validate"
+                    }
+                }
+            }
+        },
+        "/api/organization/company/{id}": {
+            "get": {
+                "tags": [
+                    "Organization / Company"
+                ],
+                "summary": "Chi tiết công ty",
+                "description": "GET /api/company/{id}\nChi tiết 1 công ty",
+                "operationId": "93a324b05bf41d658979bdef98030bd8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy công ty"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Organization / Company"
+                ],
+                "summary": "Cập nhật công ty",
+                "description": "PUT /api/organization/company/{id}\nCập nhật thông tin 1 công ty (hỗ trợ cập nhật từng phần)",
+                "operationId": "630fbaa2090ce5e29cb04a00633e8ab1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "short_name": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "tax_code": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "established_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "website": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "representative_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "manager_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy công ty"
+                    },
+                    "422": {
+                        "description": "Lỗi validate"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Organization / Company"
+                ],
+                "summary": "Xoá công ty",
+                "description": "DELETE /api/organization/company/{id}",
+                "operationId": "16d6652505bd69a4e7b429b74bd97547",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Xoá thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy công ty"
+                    }
+                }
+            }
+        },
+        "/api/organization/region": {
+            "get": {
+                "tags": [
+                    "Organization / Region"
+                ],
+                "summary": "Danh sách vùng miền",
+                "description": "GET /api/organization/region\nDanh sách vùng miền, có phân trang + tìm kiếm theo tên/mã",
+                "operationId": "4b9e92e43c6422284bc6acb5ab29f6e5",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Trang hiện tại",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Tìm theo tên/mã vùng miền",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Organization / Region"
+                ],
+                "summary": "Tạo mới vùng miền",
+                "description": "POST /api/organization/region\nTạo mới 1 vùng miền",
+                "operationId": "6746d04c5c9e30b7867cee8bf959a288",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "company_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "manager_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo thành công"
+                    },
+                    "422": {
+                        "description": "Lỗi validate"
+                    }
+                }
+            }
+        },
+        "/api/organization/region/{id}": {
+            "get": {
+                "tags": [
+                    "Organization / Region"
+                ],
+                "summary": "Chi tiết vùng miền",
+                "description": "GET /api/organization/region/{id}\nChi tiết 1 vùng miền",
+                "operationId": "9566b545263da1bf302fb845c64cd103",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy vùng miền"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Organization / Region"
+                ],
+                "summary": "Cập nhật vùng miền",
+                "description": "PUT /api/organization/region/{id}\nCập nhật thông tin 1 vùng miền (hỗ trợ cập nhật từng phần)",
+                "operationId": "5fa4c8c012478779637731ce0412226a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "company_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "manager_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy vùng miền"
+                    },
+                    "422": {
+                        "description": "Lỗi validate"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Organization / Region"
+                ],
+                "summary": "Xoá vùng miền",
+                "description": "DELETE /api/organization/region/{id}",
+                "operationId": "093587e2dd2895d53ef2d2a39ee97252",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Xoá thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy vùng miền"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Đăng nhập",
+                "description": "API Đăng nhập cấp JWT Token",
+                "operationId": "4ffe2bcfdce92e03ae57da4465298383",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "401": {
+                        "description": "Sai tài khoản hoặc mật khẩu"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Đăng nhập, đăng ký, quên mật khẩu"
+        },
+        {
+            "name": "Organization / Company",
+            "description": "Quản lý công ty"
+        },
+        {
+            "name": "Organization / Region",
+            "description": "Quản lý vùng miền"
+        }
+    ]
+}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Organization\Http\Requests;
+namespace Modules\Organization\Http\Requests\Region;
 
 use App\Http\Requests\BaseApiFormRequest;
 use App\Rules\PhoneNumber;
