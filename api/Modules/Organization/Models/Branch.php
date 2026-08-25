@@ -6,20 +6,20 @@ use App\Models\Base\BaseModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Region extends BaseModel
+class Branch extends BaseModel
 {
     use SoftDeletes;
 
-    protected $table = 'region';
+    protected $table = 'branch';
 
     protected $fillable = [
         'company_id',
-        'manager_id',
         'name',
         'code',
-        'phone',
-        'email',
         'address',
+        'phone',
+        'manager_id',
+        'receptionist_id',
         'is_active',
     ];
 
@@ -35,5 +35,10 @@ class Region extends BaseModel
     public function manager()
     {
         return $this->belongsTo(User::class, 'manager_id');
+    }
+
+    public function receptionist()
+    {
+        return $this->belongsTo(User::class, 'receptionist_id');
     }
 }

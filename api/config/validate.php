@@ -1,7 +1,7 @@
 <?php
 
+use Modules\Organization\Models\Branch;
 use Modules\Organization\Models\Company;
-use Modules\Organization\Models\Region;
 
 return [
     'lengths' => [
@@ -15,12 +15,11 @@ return [
             'phone'        => 15,
             'tax_code'     => 20,
         ],
-        Region::getTableName() => [
-            'name'         => 255,
-            'code'         => 50,
-            'phone'        => 15,
-            'email'        => 64,
-            'address'      => 255,
-        ]
+        Branch::getTableName() => [
+            'name'    => 255,
+            'code'    => 50,
+            'address' => 255,
+            'phone'   => 15,
+        ],
     ],
 ];

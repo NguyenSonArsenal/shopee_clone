@@ -18,11 +18,10 @@ export const LENGTH = {
     address: 255,
     description: 1000,
   },
-  region: {
+  branch: {
     name: 255,
     code: 50,
-    phone: 20,
-    email: 150,
-    address: 500,
+    address: 255,
+    phone: 10,
   },
 } as const;

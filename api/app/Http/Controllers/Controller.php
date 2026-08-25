@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
  * @OA\Info(title="Shopee Clone API", version="1.0.0")
  * @OA\Tag(name="Auth", description="Đăng nhập, đăng ký, quên mật khẩu")
  * @OA\Tag(name="Organization / Company", description="Quản lý công ty")
- * @OA\Tag(name="Organization / Region", description="Quản lý vùng miền")
+ * @OA\Tag(name="Organization / Branch", description="Quản lý chi nhánh")
  */
 class Controller extends BaseController
 {

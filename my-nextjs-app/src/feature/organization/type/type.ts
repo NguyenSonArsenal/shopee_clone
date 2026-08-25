@@ -23,6 +23,34 @@ type CompanyListResponse = {
   pagination: Pagination
 }
 
+type BranchListItem = {
+  id: number
+  company_id: number | null
+  name: string
+  code: string | null
+  is_active: boolean
+}
+
+type BranchListResponse = {
+  data: BranchListItem[]
+  pagination: Pagination
+}
+
+type Branch = {
+  id: number
+  company_id: number | null
+  manager_id: number | null
+  receptionist_id: number | null
+  name: string
+  code: string | null
+  address: string | null
+  phone: string | null
+  is_active: boolean
+  company: { id: number; name: string } | null
+  manager: CompanyUserRef
+  receptionist: CompanyUserRef
+}
+
 type Company = {
   id: number
   representative_id: number | null

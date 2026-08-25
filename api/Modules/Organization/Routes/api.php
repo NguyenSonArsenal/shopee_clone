@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Modules\Organization\Http\Controllers\Branch\BranchController;
 use Modules\Organization\Http\Controllers\Company\CompanyController;
-use Modules\Organization\Http\Controllers\Region\RegionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/organization', function (Request $request) {
@@ -16,9 +16,9 @@ Route::prefix('organization')->group(function() {
     Route::match(['put', 'patch'], 'company/{id}', [CompanyController::class, 'update']);
     Route::delete('company/{id}', [CompanyController::class, 'destroy']);
 
-    Route::get('region', [RegionController::class, 'index']);
-    Route::get('region/{id}', [RegionController::class, 'show']);
-    Route::post('region', [RegionController::class, 'store']);
-    Route::match(['put', 'patch'], 'region/{id}', [RegionController::class, 'update']);
-    Route::delete('region/{id}', [RegionController::class, 'destroy']);
+    Route::get('branch', [BranchController::class, 'index']);
+    Route::get('branch/{id}', [BranchController::class, 'show']);
+    Route::post('branch', [BranchController::class, 'store']);
+    Route::match(['put', 'patch'], 'branch/{id}', [BranchController::class, 'update']);
+    Route::delete('branch/{id}', [BranchController::class, 'destroy']);
 });

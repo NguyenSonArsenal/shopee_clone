@@ -4,43 +4,38 @@ export const organization = {
   company: {
     list: [
       { label: "Cơ cấu tổ chức", href: ROUTES.ORGANIZATION },
-      { label: "Thông tin công ty" },
+      { label: "Công ty" },
     ],
     detail: [
       { label: "Cơ cấu tổ chức", href: ROUTES.ORGANIZATION },
-      { label: "Thông tin công ty", href: ROUTES.ORGANIZATION_COMPANY },
+      { label: "Công ty", href: ROUTES.ORGANIZATION_COMPANY },
       { label: "Chi tiết" },
     ],
     edit: [
       { label: "Cơ cấu tổ chức", href: ROUTES.ORGANIZATION },
-      { label: "Thông tin công ty", href: ROUTES.ORGANIZATION_COMPANY },
+      { label: "Công ty", href: ROUTES.ORGANIZATION_COMPANY },
       { label: "Cập nhật" },
     ],
     create: [
       { label: "Cơ cấu tổ chức", href: ROUTES.ORGANIZATION },
-      { label: "Thông tin công ty", href: ROUTES.ORGANIZATION_COMPANY },
+      { label: "Công ty", href: ROUTES.ORGANIZATION_COMPANY },
       { label: "Thêm mới" },
     ],
   },
-  region: {
+  office: {
     list: [
       { label: "Cơ cấu tổ chức", href: ROUTES.ORGANIZATION },
-      { label: "Thông tin vùng miền" },
+      { label: "Chi nhánh" },
     ],
     detail: [
       { label: "Cơ cấu tổ chức", href: ROUTES.ORGANIZATION },
-      { label: "Thông tin vùng miền", href: ROUTES.ORGANIZATION_REGION },
+      { label: "Chi nhánh", href: ROUTES.ORGANIZATION_OFFICE },
       { label: "Chi tiết" },
     ],
     edit: [
       { label: "Cơ cấu tổ chức", href: ROUTES.ORGANIZATION },
-      { label: "Thông tin vùng miền", href: ROUTES.ORGANIZATION_REGION },
+      { label: "Chi nhánh", href: ROUTES.ORGANIZATION_OFFICE },
       { label: "Cập nhật" },
     ],
-    create: [
-      { label: "Cơ cấu tổ chức", href: ROUTES.ORGANIZATION },
-      { label: "Thông tin vùng miền", href: ROUTES.ORGANIZATION_REGION },
-      { label: "Thêm mới" },
-    ],
-  }
+  },
 } as const;

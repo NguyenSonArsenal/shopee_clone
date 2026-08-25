@@ -1,9 +1,14 @@
 "use client"
 
-type AdminPaginationProps = {
+import SelectSingle from "@component/form/SelectSingle"
+
+type PaginationProps = {
   page: number
   totalPages: number
   onPageChange: (page: number) => void
+  perPage?: number
+  perPageOptions?: number[]
+  onPerPageChange?: (perPage: number) => void
 }
 
 // Sinh danh sách nút số trang kiểu DataTables `full_numbers`: luôn có trang đầu/cuối,
@@ -41,11 +46,12 @@ function getPageNumbers(page: number, totalPages: number): (number | "...")[] {
   return pages
 }
 
-export default function AdminPagination({ page, totalPages, onPageChange }: AdminPaginationProps) {
+export default function Index({ page, totalPages, onPageChange, perPage, perPageOptions, onPerPageChange }: PaginationProps) {
   const pageNumbers = getPageNumbers(page, totalPages)
+  const hasPerPage = !!onPerPageChange // Chỉ bật layout 3 phần khi màn thực sự truyền handler đổi số dòng/trang
 
   return (
-    <div className="admin-pagination">
+    <div className={`admin-pagination${hasPerPage ? " has-perpage" : ""}`}>
       <div className="admin-pagination-info">Trang {page}/{totalPages || 1}</div>
       <div className="admin-pagination-nav">
         <button type="button" className="dt-paging-button" disabled={page <= 1} onClick={() => onPageChange(1)}>«</button>
@@ -69,6 +75,17 @@ export default function AdminPagination({ page, totalPages, onPageChange }: Admi
         <button type="button" className="dt-paging-button" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)}>›</button>
         <button type="button" className="dt-paging-button" disabled={page >= totalPages} onClick={() => onPageChange(totalPages)}>»</button>
       </div>
+
+      {hasPerPage && (
+        <div className="admin-pagination-perpage">
+          <SelectSingle
+            dropUp
+            value={perPage ?? (perPageOptions ?? [10, 20, 50, 100])[0]}
+            options={(perPageOptions ?? [10, 20, 50, 100]).map((n) => ({ value: n, label: `${n} dòng/trang` }))}
+            onChange={(v) => onPerPageChange!(Number(v))}
+          />
+        </div>
+      )}
     </div>
   )
 }

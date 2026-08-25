@@ -5,8 +5,8 @@ import {organization} from "@/config/breadcrumb";
 import {useParams, useRouter} from "next/navigation";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import companyApi from "@feature/organization/companyApi";
-import SkeletonInputField from "@component/admin/skeleton/SkeletonInputField";
-import SkeletonTextareaField from "@component/admin/skeleton/SkeletonTextareaField";
+import SkeletonInputField from "@component/admin/Skeleton/SkeletonInputField";
+import SkeletonTextareaField from "@component/admin/Skeleton/SkeletonTextareaField";
 import {LENGTH} from "@/config/validate-length";
 import InputTextCounter from "@component/form/InputTextCounter";
 import {Controller, useForm, useWatch} from "react-hook-form";
@@ -45,6 +45,15 @@ export default function EditCompanyPage() {
   const [name, short_name, tax_code, phone, website, email, address, description] =
     useWatch({control, name: ['name', 'short_name', 'tax_code', 'phone', 'website', 'email', 'address', 'description']})
 
+  const breadcrumb = data?.name
+    ? [
+        organization.company.edit[0],
+        organization.company.edit[1],
+        { label: data.name, href: `${ROUTES.ORGANIZATION_COMPANY}/${id}` },
+        organization.company.edit[2],
+      ]
+    : organization.company.edit
+
   const {mutate, isPending} = useMutation({
     mutationFn: (formData: CompanyFormValues) => {
       console.log(formData, '// formData gửi lên API')
@@ -80,7 +89,7 @@ export default function EditCompanyPage() {
   })
 
   return (
-    <AdminLayout breadcrumb={organization.company.edit}>
+    <AdminLayout breadcrumb={breadcrumb}>
       <div className="card">
         <form onSubmit={handleSubmit((formData) => mutate(formData))}>
           <div className="card-body">

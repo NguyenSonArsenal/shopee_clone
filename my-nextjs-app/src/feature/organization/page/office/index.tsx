@@ -2,14 +2,13 @@
 
 import { useEffect, useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import Link from "next/link"
 import AdminLayout from "@component/admin/AdminLayout"
 import AdminPagination from "@component/admin/Pagination"
 import TableLoadingOverlay from "@component/admin/TableLoadingOverlay"
 import EmptyState from "@component/admin/EmptyState"
 import { ROUTES } from "@/config/route"
 import { organization } from "@/config/breadcrumb"
-import companyApi from "@/feature/organization/companyApi"
+import branchApi from "@/feature/organization/branchApi"
 import {
   DEBOUNCED_SEARCH_TIMEOUT, LABEL_ACTIVE,
   LABEL_CREATE, LABEL_INACTIVE,
@@ -18,11 +17,12 @@ import {
 } from "@/config/constant";
 import {MESSAGE_SERVER_ERROR_DEFAULT, transMessage} from "@/config/validation";
 import DebugPanel from "@component/DebugPanel";
+import Link from "next/link";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {useToast} from "@/context/ToastContext";
 import ConfirmModal from "@modal/ConfirmModal";
 
-export default function CompanyListPage() {
+export default function OfficeListPage() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -31,9 +31,10 @@ export default function CompanyListPage() {
 
   const page = Number(searchParams.get('page')) || 1
   const search = searchParams.get('query') ?? ""
+  const perPage = Number(searchParams.get('per_page')) || 10
 
   const [inputValue, setInputValue] = useState(search)
-  const [entity, setEntity] = useState<CompanyListItem | null>(null)
+  const [entity, setEntity] = useState<BranchListItem | null>(null)
 
   // Debounce: sau khi user ngừng gõ mới ghi vào URL (qua handleSearch)
   useEffect(() => {
@@ -60,30 +61,36 @@ export default function CompanyListPage() {
     replace(`${pathname}?${params.toString()}`)
   }
 
+  function handlePerPageChange(newPerPage: number) {
+    const params = new URLSearchParams(searchParams)
+    params.set('per_page', String(newPerPage))
+    params.set('page', '1') // đổi số dòng/trang -> quay về trang 1
+    replace(`${pathname}?${params.toString()}`)
+  }
+
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["company_list", page, search],
-    queryFn: () => companyApi.getList({ page, search: search }),
+    queryKey: ["branch_list", page, search, perPage],
+    queryFn: () => branchApi.getList({ page, search: search, per_page: perPage }),
   })
 
-  const companies = data?.data ?? []
+  const branches = data?.data ?? []
 
   const { mutate: toggleActive, isPending: isToggling, variables: togglingVars } = useMutation({
-    mutationFn: ({ id, is_active }: { id: number; is_active: boolean }) => companyApi.update(id, { is_active }),
+    mutationFn: ({ id, is_active }: { id: number; is_active: boolean }) => branchApi.update(id, { is_active }),
     onSuccess: (updated) => {
-      queryClient.invalidateQueries({ queryKey: ["company_list"] })
-      const label = updated.short_name || updated.name
-      showToast("success", updated.is_active ? `Đã hoạt động công ty ${label}!` : `Đã dừng hoạt động công ty ${label}!`)
+      queryClient.invalidateQueries({ queryKey: ["branch_list"] })
+      showToast("success", updated.is_active ? `Đã hoạt động văn phòng ${updated.name}!` : `Đã dừng hoạt động văn phòng ${updated.name}!`)
     },
     onError: (err: any) => {
-      queryClient.invalidateQueries({ queryKey: ["company_list"] })
+      queryClient.invalidateQueries({ queryKey: ["branch_list"] })
       showToast("error", err.response?.data?.message || err.message || MESSAGE_SERVER_ERROR_DEFAULT)
     },
   })
 
-  const { mutate: deleteCompany, isPending: isDeleting } = useMutation({
-    mutationFn: (entity) => companyApi.destroy(entity.id),
+  const { mutate: deleteBranch, isPending: isDeleting } = useMutation({
+    mutationFn: (entity: BranchListItem) => branchApi.destroy(entity.id),
     onSuccess: (res, entity) => {
-      queryClient.invalidateQueries({ queryKey: ["company_list"] })
+      queryClient.invalidateQueries({ queryKey: ["branch_list"] })
       showToast("success", transMessage('delete_success', {label: entity.name}))
       setEntity(null)
     },
@@ -94,87 +101,76 @@ export default function CompanyListPage() {
   })
 
   return (
-    <AdminLayout breadcrumb={organization.company.list}>
+    <AdminLayout breadcrumb={organization.office.list}>
       <div className="toolbar justify-between">
         <div className="search-wrap">
           <i className="fa-solid fa-magnifying-glass"/>
           <input
             type="text"
-            placeholder="Tìm theo tên, mã số thuế..."
+            placeholder="Tìm theo tên, mã chi nhánh..."
             autoComplete="off"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
-        </div>
-        <div className={"flex gap-[6px]"}>
-          <Link href={ROUTES.ORGANIZATION_COMPANY} className="btn btn-primary" style={{ width: "auto"}}>
-            <i className="fas fa-rotate-left"/>  Đặt lại
-          </Link>
-          <Link href={`${ROUTES.ORGANIZATION_COMPANY}/create`} className="btn btn-primary" style={{ width: "auto" }}>
-            <i className="fa-solid fa-plus"/> Thêm mới
-          </Link>
         </div>
       </div>
 
       <div className="card" style={{ padding: 0 }}>
         <div className="table-wrap">
           {(isFetching) && <TableLoadingOverlay />}
-          <table className="data-table">
+          <table className="data-table data-table--compact">
             <thead>
                 <tr>
                   <th className="col-stt">STT</th>
-                  <th>Tên công ty</th>
-                  <th className={'text-center'}>Mã số thuế</th>
-                  <th>Người đại diện</th>
-                  <th>Người quản lý</th>
+                  <th>Tên chi nhánh</th>
+                  <th>Mã</th>
+                  <th className="col-manager">Người quản lý</th>
+                  <th className="col-manager">Lễ tân văn phòng</th>
                   <th className="ms-center">Kích hoạt</th>
                   <th className="col-action">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
-                {!isLoading && companies.length === 0 && (
+                {!isLoading && branches.length === 0 && (
                   <tr className="row-empty">
-                    <td colSpan={5}>
+                    <td colSpan={7}>
                       <EmptyState
                         title={NO_RECORD_TITLE}
                         desc={NO_RECORD_DES}
-                        actionUrl={`${ROUTES.ORGANIZATION_COMPANY}/create`}
-                        actionLabel={LABEL_CREATE}
                       />
                     </td>
                   </tr>
                 )}
-                {!isLoading && companies.map((company, index) => (
-                  <tr key={company.id}>
+                {!isLoading && branches.map((branch, index) => (
+                  <tr key={branch.id}>
                     <td className="col-stt">{(page - 1) * (data?.pagination.per_page ?? 10) + index + 1}</td>
                     <td>
-                      <span className={"font-bold"}>{company.name}</span><br/>
-                      <small className={'text-light'}>{company.short_name || "—"}</small>
+                      <span className={"font-bold"}>{branch.name}</span>
                     </td>
-                    <td className={'text-center'}>{company.tax_code || "—"}</td>
-                    <td className={'text-center'}>—</td>
-                    <td className={'text-center'}>—</td>
+                    <td>{branch.code || "—"}</td>
+                    <td className="col-manager">—</td>
+                    <td className="col-manager">—</td>
                     <td className="text-center">
-                      <label className="switch has-tip" data-tooltip={company.is_active ? LABEL_ACTIVE : LABEL_INACTIVE}>
+                      <label className="switch has-tip" data-tooltip={branch.is_active ? LABEL_ACTIVE : LABEL_INACTIVE}>
                         <input
                           type="checkbox"
-                          checked={company.is_active}
-                          disabled={isToggling && togglingVars?.id === company.id} /* Chỉ disable toggle ứng vs dòng đang được chọn */
-                          onChange={(e) => toggleActive({ id: company.id, is_active: e.target.checked })}
+                          checked={branch.is_active}
+                          disabled={isToggling && togglingVars?.id === branch.id} /* Chỉ disable toggle ứng vs dòng đang được chọn */
+                          onChange={(e) => toggleActive({ id: branch.id, is_active: e.target.checked })}
                         />
                         <span className="switch-track"></span>
                       </label>
                     </td>
                     <td className="col-action">
                       <div className="action-btns">
-                        <Link href={`${ROUTES.ORGANIZATION_COMPANY}/${company.id}`} className="action-icon view" data-tooltip={TOOLTIP_ICON_VIEW}>
+                        <Link href={`${ROUTES.ORGANIZATION_OFFICE}/${branch.id}`} className="action-icon view" data-tooltip={TOOLTIP_ICON_VIEW}>
                           <i className="fa-solid fa-eye"/>
                         </Link>
-                        <Link href={`${ROUTES.ORGANIZATION_COMPANY}/${company.id}/edit`} className="action-icon edit" data-tooltip={TOOLTIP_ICON_EDIT}>
+                        <Link href={`${ROUTES.ORGANIZATION_OFFICE}/${branch.id}/edit`} className="action-icon edit" data-tooltip={TOOLTIP_ICON_EDIT}>
                           <i className="fa-solid fa-pen"/>
                         </Link>
                         <button type="button" className="action-icon delete tip-top-left" data-tooltip={TOOLTIP_ICON_DELETE}
-                                onClick={() => setEntity(company)}><i className="fa-solid fa-trash"/>
+                                onClick={() => setEntity(branch)}><i className="fa-solid fa-trash"/>
                         </button>
                       </div>
                     </td>
@@ -185,8 +181,15 @@ export default function CompanyListPage() {
           </div>
 
         {
-          !isLoading && companies.length > 0 &&
-          <AdminPagination page={page} totalPages={data?.pagination.last_page ?? 1} onPageChange={handlePageChange} />
+          !isLoading && branches.length > 0 &&
+          <AdminPagination
+            page={page}
+            totalPages={data?.pagination.last_page ?? 1}
+            onPageChange={handlePageChange}
+            perPage={perPage}
+            perPageOptions={[10, 20, 50, 100]}
+            onPerPageChange={handlePerPageChange}
+          />
         }
       </div>
 
@@ -195,7 +198,7 @@ export default function CompanyListPage() {
         message={<>Xoá &quot;<b>{entity?.name}</b>&quot;?</>}
         confirmLoading={isDeleting}
         onClose={() => setEntity(null)}
-        onConfirm={() => entity && deleteCompany(entity)}
+        onConfirm={() => entity && deleteBranch(entity)}
       />
 
       <DebugPanel data={{ entity }} />

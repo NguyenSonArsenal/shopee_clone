@@ -162,6 +162,10 @@ export const ATTRIBUTES = {
   established_date: 'ngày thành lập',
   representative_id: 'người đại diện',
   manager_id: 'người quản lý',
+
+  // — riêng cho form branch (chi nhánh) đang làm
+  branch_name: 'tên chi nhánh',
+  code: 'mã chi nhánh',
 } as const
 
 type Rule = keyof typeof VALIDATION_MESSAGES

@@ -17,5 +17,6 @@ class OrganizationDatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->call(CompanySeeder::class);
+        $this->call(BranchSeeder::class);
     }
 }
