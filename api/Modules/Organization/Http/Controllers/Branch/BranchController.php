@@ -27,7 +27,7 @@ class BranchController extends Controller
     public function index()
     {
         try {
-            $perPage = request()->get('per_page', 10);
+            $perPage = request()->get('per_page', getConstant('BACKEND_PAGINATE'));
 
             $query = Branch::query();
 

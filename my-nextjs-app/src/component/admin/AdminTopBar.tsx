@@ -14,6 +14,11 @@ type AdminTopbarProps = {
   breadcrumb: readonly BreadcrumbItem[]
 }
 
+const MODULES = [
+  { label: "Cơ cấu tổ chức", href: ROUTES.ORGANIZATION_COMPANY, icon: "fa-sitemap", bg: "#eff6ff", color: "#2563eb" },
+  { label: "Cấu hình", href: ROUTES.SETTINGS, icon: "fa-sliders-h", bg: "#fff0ef", color: "var(--primary)" },
+]
+
 export default function AdminTopBar({ breadcrumb }: AdminTopbarProps) {
   const handleLogout = useLogout()
 
@@ -22,7 +27,9 @@ export default function AdminTopBar({ breadcrumb }: AdminTopbarProps) {
   const [role, setRole] = useState("super_admin")
   const [email, setEmail] = useState("admin@propcam.com")
   const [profileOpen, setProfileOpen] = useState(false)
+  const [modulesOpen, setModulesOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
+  const modulesRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const userInfoStr = Cookies.get(STORAGE_KEYS.USER_INFO)
@@ -42,6 +49,9 @@ export default function AdminTopBar({ breadcrumb }: AdminTopbarProps) {
     const handleClickOutside = (e: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
         setProfileOpen(false)
+      }
+      if (modulesRef.current && !modulesRef.current.contains(e.target as Node)) {
+        setModulesOpen(false)
       }
     }
     document.addEventListener("click", handleClickOutside)
@@ -80,15 +90,30 @@ export default function AdminTopBar({ breadcrumb }: AdminTopbarProps) {
           <i className="fa-solid fa-user"/>
         </button>
 
-        <button type="button" className="tb-btn" title="Modules">
-          <svg viewBox="0 -960 960 960" style={{ width: 24, height: 24, fill: "currentColor", stroke: "none", opacity: .85 }}>
-            <path d="M183.5-183.5Q160-207 160-240t23.5-56.5Q207-320 240-320t56.5 23.5Q320-273 320-240t-23.5 56.5Q273-160 240-160t-56.5-23.5Zm240 0Q400-207 400-240t23.5-56.5Q447-320 480-320t56.5 23.5Q560-273 560-240t-23.5 56.5Q513-160 480-160t-56.5-23.5Zm240 0Q640-207 640-240t23.5-56.5Q687-320 720-320t56.5 23.5Q800-273 800-240t-23.5 56.5Q753-160 720-160t-56.5-23.5Zm-480-240Q160-447 160-480t23.5-56.5Q207-560 240-560t56.5 23.5Q320-513 320-480t-23.5 56.5Q273-400 240-400t-56.5-23.5Zm240 0Q400-447 400-480t23.5-56.5Q447-560 480-560t56.5 23.5Q560-513 560-480t-23.5 56.5Q513-400 480-400t-56.5-23.5Zm240 0Q640-447 640-480t23.5-56.5Q687-560 720-560t56.5 23.5Q800-513 800-480t-23.5 56.5Q753-400 720-400t-56.5-23.5Zm-480-240Q160-687 160-720t23.5-56.5Q207-800 240-800t56.5 23.5Q320-753 320-720t-23.5 56.5Q273-640 240-640t-56.5-23.5Zm240 0Q400-687 400-720t23.5-56.5Q447-800 480-800t56.5 23.5Q560-753 560-720t-23.5 56.5Q513-640 480-640t-56.5-23.5Zm240 0Q640-687 640-720t23.5-56.5Q687-800 720-800t56.5 23.5Q800-753 800-720t-23.5 56.5Q753-640 720-640t-56.5-23.5Z"/>
-          </svg>
-        </button>
+        <div ref={modulesRef} style={{ position: "relative" }}>
+          <button type="button" className={`tb-btn ${modulesOpen ? "active" : ""}`} title="Modules" onClick={() => setModulesOpen((v) => !v)}>
+            <svg viewBox="0 -960 960 960" style={{ width: 24, height: 24, fill: "currentColor", stroke: "none", opacity: .85 }}>
+              <path d="M183.5-183.5Q160-207 160-240t23.5-56.5Q207-320 240-320t56.5 23.5Q320-273 320-240t-23.5 56.5Q273-160 240-160t-56.5-23.5Zm240 0Q400-207 400-240t23.5-56.5Q447-320 480-320t56.5 23.5Q560-273 560-240t-23.5 56.5Q513-160 480-160t-56.5-23.5Zm240 0Q640-207 640-240t23.5-56.5Q687-320 720-320t56.5 23.5Q800-273 800-240t-23.5 56.5Q753-160 720-160t-56.5-23.5Zm-480-240Q160-447 160-480t23.5-56.5Q207-560 240-560t56.5 23.5Q320-513 320-480t-23.5 56.5Q273-400 240-400t-56.5-23.5Zm240 0Q400-447 400-480t23.5-56.5Q447-560 480-560t56.5 23.5Q560-513 560-480t-23.5 56.5Q513-400 480-400t-56.5-23.5Zm240 0Q640-447 640-480t23.5-56.5Q687-560 720-560t56.5 23.5Q800-513 800-480t-23.5 56.5Q753-400 720-400t-56.5-23.5Zm-480-240Q160-687 160-720t23.5-56.5Q207-800 240-800t56.5 23.5Q320-753 320-720t-23.5 56.5Q273-640 240-640t-56.5-23.5Zm240 0Q400-687 400-720t23.5-56.5Q447-800 480-800t56.5 23.5Q560-753 560-720t-23.5 56.5Q513-640 480-640t-56.5-23.5Zm240 0Q640-687 640-720t23.5-56.5Q687-800 720-800t56.5 23.5Q800-753 800-720t-23.5 56.5Q753-640 720-640t-56.5-23.5Z"/>
+            </svg>
+          </button>
 
-        <button type="button" className="tb-btn" title="Cài đặt">
+          <div className={`mod-dd ${modulesOpen ? "open" : ""}`}>
+            <div className="mod-dd-grid">
+              {MODULES.map((mod) => (
+                <Link key={mod.href} href={mod.href} className="mod-tile" onClick={() => setModulesOpen(false)}>
+                  <span className="mod-tile-icon" style={{ background: mod.bg, color: mod.color }}>
+                    <i className={`fa-solid ${mod.icon}`}/>
+                  </span>
+                  {mod.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <Link href={ROUTES.SETTINGS} className={`tb-btn ${pathname === ROUTES.SETTINGS ? "active" : ""}`} title="Cài đặt">
           <i className="fa-solid fa-gear"/>
-        </button>
+        </Link>
 
         <button type="button" className="tb-btn" title="Thông tin cá nhân">
           <i className="fa-solid fa-circle-info"/>

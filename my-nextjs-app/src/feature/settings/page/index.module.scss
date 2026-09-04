@@ -1,0 +1,46 @@
+.configsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.configCard {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-sm);
+}
+
+.configCardHead {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 8px; padding-bottom: 8px;
+  border-bottom: 1px solid #f2f2f2;
+
+  h3 { margin: 0; font-size: var(--fs-primary); font-weight: 700; color: var(--text); }
+}
+
+.configCardIcon {
+  width: 30px; height: 30px; flex-shrink: 0;
+  border-radius: 8px; color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--fs-md);
+}
+
+.configCardLinks {
+  display: grid; grid-template-columns: 1fr 1fr;
+  column-gap: 24px; row-gap: 2px;
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
+
+  span, a { display: block; padding: 6px 0; color: var(--text); font-size: var(--fs-primary); line-height: 1.4; }
+
+  a { text-decoration: none; }
+  a:hover { color: var(--primary); }
+}

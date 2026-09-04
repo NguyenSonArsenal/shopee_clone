@@ -2,6 +2,8 @@
   --be: #FDFBF2;
   --primary: #b20707;
   --primary-dark: #9a0606;
+  --primary-2: #c0392b;
+  --gradient: linear-gradient(135deg, var(--primary), var(--primary-2));
   --primary-soft: #ffebee;
   --border: #eaecf0;
   --text: #212121;
@@ -19,6 +21,7 @@
   --fs-lg: 18px;
   --fs-md: 16px;
   --fs-primary: 14px;
+  --fs-sm: 13px;
   --fs-xs: 12px;
 
   --radius: 10px;

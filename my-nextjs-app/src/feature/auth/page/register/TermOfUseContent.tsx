@@ -974,6 +974,6 @@ Passio có cơ chế kiểm tra thụ động và ngẫu nhiên các Nội Dung 
 `
 
   return (
-    <div className="whitespace-pre-wrap text-(--text) text-[13px] leading-5" dangerouslySetInnerHTML={{ __html: content }}></div>
+    <div className="whitespace-pre-wrap text-(--text) text-(length:--fs-primary) leading-5" dangerouslySetInnerHTML={{ __html: content }}></div>
   )
 }

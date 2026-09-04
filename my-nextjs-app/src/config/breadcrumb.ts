@@ -39,3 +39,13 @@ export const organization = {
     ],
   },
 } as const;
+
+export const settings = {
+  list: [
+    { label: "Cài đặt hệ thống" },
+  ],
+  system: [
+    { label: "Cài đặt", href: ROUTES.SETTINGS },
+    { label: "Cấu hình hệ thống" },
+  ],
+} as const;

@@ -21,4 +21,7 @@ export const ROUTES = {
   ORGANIZATION_POSITION: "/co-cau-to-chuc/chuc-vu",
   ORGANIZATION_CHART: "/co-cau-to-chuc/so-do-to-chuc",
   ORGANIZATION_CONFIG: "/co-cau-to-chuc/cau-hinh",
+
+  SETTINGS: "/cau-hinh",
+  SETTINGS_SYSTEM: "/cau-hinh-he-thong",
 } as const;

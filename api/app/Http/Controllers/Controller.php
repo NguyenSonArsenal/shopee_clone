@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
  * @OA\Tag(name="Auth", description="Đăng nhập, đăng ký, quên mật khẩu")
  * @OA\Tag(name="Organization / Company", description="Quản lý công ty")
  * @OA\Tag(name="Organization / Branch", description="Quản lý chi nhánh")
+ * @OA\Tag(name="Settings / Config", description="Cấu hình hệ thống")
  */
 class Controller extends BaseController
 {

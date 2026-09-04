@@ -211,10 +211,14 @@ a {
 //  }
 //}
 
+.term-modal {
+  font-family: var(--font-roboto), sans-serif;
+  font-size: var(--fs-primary);
+}
 .term-modal-body {
   max-height: 70vh;
   overflow-y: auto;
-  font-size: 14px;
+  font-size: var(--fs-primary);
   line-height: 1.6;
   color: var(--muted);
 }
@@ -229,6 +233,10 @@ a {
   text-align: justify;
   border-bottom: 1px solid #eeeeee;
   border-top: 1px solid #eeeeee;
+}
+.term-modal .ant-modal-footer {
+  display: flex;
+  justify-content: flex-end;
 }
 /* End modal */
 

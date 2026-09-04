@@ -21,6 +21,7 @@ import Link from "next/link";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {useToast} from "@/context/ToastContext";
 import ConfirmModal from "@modal/ConfirmModal";
+import { usePaginationConfig } from "@/hook/usePaginationConfig";
 
 export default function OfficeListPage() {
   const searchParams = useSearchParams();
@@ -28,10 +29,11 @@ export default function OfficeListPage() {
   const { replace } = useRouter();
   const { showToast } = useToast()
   const queryClient = useQueryClient()
+  const { perPageOptions, defaultPerPage, isLoading: isConfigLoading } = usePaginationConfig()
 
   const page = Number(searchParams.get('page')) || 1
   const search = searchParams.get('query') ?? ""
-  const perPage = Number(searchParams.get('per_page')) || 10
+  const perPage = Number(searchParams.get('per_page')) || defaultPerPage
 
   const [inputValue, setInputValue] = useState(search)
   const [entity, setEntity] = useState<BranchListItem | null>(null)
@@ -71,6 +73,7 @@ export default function OfficeListPage() {
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["branch_list", page, search, perPage],
     queryFn: () => branchApi.getList({ page, search: search, per_page: perPage }),
+    enabled: !isConfigLoading, // chờ có defaultPerPage từ config rồi mới gọi, tránh gọi 2 lần (fallback -> giá trị thật)
   })
 
   const branches = data?.data ?? []
@@ -143,7 +146,7 @@ export default function OfficeListPage() {
                 )}
                 {!isLoading && branches.map((branch, index) => (
                   <tr key={branch.id}>
-                    <td className="col-stt">{(page - 1) * (data?.pagination.per_page ?? 10) + index + 1}</td>
+                    <td className="col-stt">{(page - 1) * (data?.pagination.per_page ?? perPage) + index + 1}</td>
                     <td>
                       <span className={"font-bold"}>{branch.name}</span>
                     </td>
@@ -187,7 +190,7 @@ export default function OfficeListPage() {
             totalPages={data?.pagination.last_page ?? 1}
             onPageChange={handlePageChange}
             perPage={perPage}
-            perPageOptions={[10, 20, 50, 100]}
+            perPageOptions={perPageOptions}
             onPerPageChange={handlePerPageChange}
           />
         }

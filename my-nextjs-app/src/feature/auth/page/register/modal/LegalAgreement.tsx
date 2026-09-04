@@ -18,7 +18,7 @@ const LegalAgreement = ({ checked, setAgree }: LegalAgreementProps) => {
   return (
     <>
       {/* Điều khoản */}
-      <div className="terms" style={{ display: "flex", alignItems: "center", gap: 8, margin: "16px 0", fontSize: 13 }}>
+      <div className="terms" style={{ display: "flex", alignItems: "center", gap: 8, margin: "16px 0", fontSize: "var(--fs-primary)" }}>
         <input
           id="agree"
           type="checkbox"

@@ -480,6 +480,77 @@
                 }
             }
         },
+        "/api/settings/config": {
+            "get": {
+                "tags": [
+                    "Settings / Config"
+                ],
+                "summary": "Danh sách cấu hình hệ thống",
+                "description": "GET /api/settings/config\nDanh sách config, lọc theo group hoặc danh sách key",
+                "operationId": "9806564533eb17887240d15df35a96cb",
+                "parameters": [
+                    {
+                        "name": "group",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keys[]",
+                        "in": "query",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Settings / Config"
+                ],
+                "summary": "Cập nhật cấu hình hệ thống (bulk, tự tạo key mới nếu chưa có)",
+                "description": "PUT /api/settings/config\nCập nhật nhiều key cùng lúc. Key đã có thì chỉ đổi value (giữ nguyên data_type/group/description);\nkey chưa có thì tự tạo mới (group mặc định \"general\", data_type tự suy ra từ kiểu value gửi lên)",
+                "operationId": "7ab1b8021138b780501f183b277b7b25",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "data"
+                                ],
+                                "properties": {
+                                    "data": {
+                                        "type": "object",
+                                        "example": {
+                                            "pagination.default_per_page": 20
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật thành công"
+                    },
+                    "422": {
+                        "description": "Không có dữ liệu để cập nhật"
+                    }
+                }
+            }
+        },
         "/api/login": {
             "post": {
                 "tags": [
@@ -533,6 +604,10 @@
         {
             "name": "Organization / Branch",
             "description": "Quản lý chi nhánh"
+        },
+        {
+            "name": "Settings / Config",
+            "description": "Cấu hình hệ thống"
         }
     ]
 }
