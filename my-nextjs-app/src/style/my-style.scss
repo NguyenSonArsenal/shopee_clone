@@ -1,0 +1,58 @@
+/* Các class CSS component dùng chung toàn hệ thống (badge, action-icon, switch, tabs, ms-*...) */
+
+.badge { display: inline-flex; align-items: center; padding: 2px 9px; border-radius: 20px; font-size: var(--fs-xs); font-weight: 500; white-space: nowrap; }
+.badge-group { background: var(--group-bg); color: var(--group-text); }
+
+.status-text { font-weight: 500; }
+.status-text.status-info { color: var(--info-text); }
+.status-text.status-warning { color: var(--warning-text); }
+.status-text.status-success { color: var(--success); }
+.status-text.status-danger { color: var(--danger-text); }
+
+.tabs { display: flex; gap: 4px; }
+.tab {
+  border: none; background: none; cursor: pointer; font-family: inherit;
+  padding: 8px 14px 0; font-size: var(--fs-primary); font-weight: 400; color: var(--text-light);
+  transition: var(--t);
+
+  .tab-label { display: inline-block; padding-bottom: 8px; border-bottom: 2px solid transparent; }
+  .cnt { display: inline-block; margin-left: 4px; color: inherit; }
+
+  &:hover { color: var(--primary); }
+  &.active { color: var(--primary); font-weight: 500; .tab-label { border-bottom-color: var(--primary); } }
+}
+
+.ms-id-cell { display: flex; align-items: center; gap: 10px; }
+.ms-id-info { display: flex; flex-direction: column; min-width: 0; }
+.ms-id-name { font-weight: 500; color: var(--text); text-decoration: none; }
+.ms-id-sub { font-size: var(--fs-xs); color: var(--text-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.ms-roles { display: flex; flex-wrap: wrap; gap: 5px; }
+
+.action-icon.permission { color: var(--purple); }
+.action-icon.assign { color: var(--success); }
+
+.ms-bulk-bar {
+  display: none; align-items: center; gap: 12px; padding: 10px 16px; margin-bottom: 14px;
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+  font-size: var(--fs-primary); color: var(--text);
+
+  &.show { display: flex; }
+  .count { font-weight: 500; color: var(--primary); }
+  .spacer { flex: 1; }
+}
+
+table.data-table th.col-action-multi, table.data-table td.col-action-multi { text-align: right; }
+.col-action-multi .action-btns { justify-content: flex-end; }
+
+.col-action.ms-center .action-btns { justify-content: center; }
+
+.col-toggle-wrap { position: relative; }
+.col-toggle-panel {
+  display: none; position: absolute; top: calc(100% + 6px); right: 0; z-index: 400;
+  width: 200px; padding: 8px; background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow-lg);
+
+  &.open { display: block; }
+}
+.col-toggle-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-size: var(--fs-primary); color: var(--text); border-radius: 6px; cursor: pointer; &:hover { background: var(--light); } }

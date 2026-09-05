@@ -49,3 +49,10 @@ export const settings = {
     { label: "Cấu hình hệ thống" },
   ],
 } as const;
+
+export const myStyle = {
+  list: [
+    { label: "Giao diện mẫu", href: ROUTES.MY_STYLE },
+    { label: "Danh sách" },
+  ],
+} as const;

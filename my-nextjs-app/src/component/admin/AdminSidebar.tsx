@@ -11,7 +11,7 @@ type AdminSidebarProps = {
 
 const ORG_MENU = [
   { label: "Công ty", href: ROUTES.ORGANIZATION_COMPANY },
-  { label: "Chi nhánh", href: ROUTES.ORGANIZATION_OFFICE },
+  { label: "Văn phòng", href: ROUTES.ORGANIZATION_OFFICE },
   { label: "Phòng ban", href: ROUTES.ORGANIZATION_DEPARTMENT },
   { label: "Chức vụ", href: ROUTES.ORGANIZATION_POSITION },
   { label: "Sơ đồ tổ chức", href: ROUTES.ORGANIZATION_CHART },

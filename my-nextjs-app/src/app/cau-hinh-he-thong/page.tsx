@@ -1,4 +1,4 @@
-import SystemConfigPage from "@feature/settings/page/system";
+import SystemConfigPage from "@feature/cau-hinh/page/system";
 
 export default function Page() {
   return <SystemConfigPage />;

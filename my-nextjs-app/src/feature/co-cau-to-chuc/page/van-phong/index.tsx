@@ -8,14 +8,15 @@ import TableLoadingOverlay from "@component/admin/TableLoadingOverlay"
 import EmptyState from "@component/admin/EmptyState"
 import { ROUTES } from "@/config/route"
 import { organization } from "@/config/breadcrumb"
-import branchApi from "@/feature/organization/branchApi"
+import branchApi from "@/feature/co-cau-to-chuc/branchApi"
 import {
   DEBOUNCED_SEARCH_TIMEOUT, LABEL_ACTIVE,
   LABEL_CREATE, LABEL_INACTIVE,
   NO_RECORD_DES,
   NO_RECORD_TITLE, TOOLTIP_ICON_DELETE, TOOLTIP_ICON_EDIT, TOOLTIP_ICON_VIEW
 } from "@/config/constant";
-import {MESSAGE_SERVER_ERROR_DEFAULT, transMessage} from "@/config/validation";
+import {MESSAGE_SERVER_ERROR_DEFAULT} from "@/config/validation";
+import {transMessage} from "@/lib/utils";
 import DebugPanel from "@component/DebugPanel";
 import Link from "next/link";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
@@ -120,7 +121,7 @@ export default function OfficeListPage() {
 
       <div className="card" style={{ padding: 0 }}>
         <div className="table-wrap">
-          {(isFetching) && <TableLoadingOverlay />}
+          {(isFetching || isConfigLoading) && <TableLoadingOverlay />}
           <table className="data-table data-table--compact">
             <thead>
                 <tr>
@@ -134,7 +135,7 @@ export default function OfficeListPage() {
                 </tr>
               </thead>
               <tbody>
-                {!isLoading && branches.length === 0 && (
+                {!isLoading && !isConfigLoading && branches.length === 0 && (
                   <tr className="row-empty">
                     <td colSpan={7}>
                       <EmptyState
@@ -184,7 +185,7 @@ export default function OfficeListPage() {
           </div>
 
         {
-          !isLoading && branches.length > 0 &&
+          !isLoading && !isConfigLoading && branches.length > 0 &&
           <AdminPagination
             page={page}
             totalPages={data?.pagination.last_page ?? 1}
@@ -203,8 +204,6 @@ export default function OfficeListPage() {
         onClose={() => setEntity(null)}
         onConfirm={() => entity && deleteBranch(entity)}
       />
-
-      <DebugPanel data={{ entity }} />
     </AdminLayout>
   )
 }

@@ -115,10 +115,6 @@ export default function AdminTopBar({ breadcrumb }: AdminTopbarProps) {
           <i className="fa-solid fa-gear"/>
         </Link>
 
-        <button type="button" className="tb-btn" title="Thông tin cá nhân">
-          <i className="fa-solid fa-circle-info"/>
-        </button>
-
         <div ref={profileRef} style={{ position: "relative" }}>
           <button type="button" className={`profile-btn ${profileOpen ? "open" : ""}`} onClick={() => setProfileOpen((v) => !v)}>
             <span className="profile-greet">

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { CONFIG_GROUPS } from "@feature/settings/configGroups"
+import { CONFIG_GROUPS } from "@feature/cau-hinh/configGroups"
 
 export default function SettingsSidebar() {
   const pathname = usePathname()

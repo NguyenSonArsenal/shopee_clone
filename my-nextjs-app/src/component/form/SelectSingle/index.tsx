@@ -38,7 +38,7 @@ export default function Index({ options, value, onChange, dropUp }: SelectSingle
   return (
     <div ref={wrapRef} className={`select-single${open ? " open" : ""}${dropUp ? " select-single--up" : ""}`}>
       <div className="select-single-trigger" onClick={() => setOpen((o) => !o)}>
-        <span className="select-single-value">{current?.label ?? ""}</span>
+        <span className={`select-single-value${value === "" ? " is-placeholder" : ""}`}>{current?.label ?? ""}</span>
         <span className="select-single-arrow"/>
       </div>
       <div className="select-single-panel">

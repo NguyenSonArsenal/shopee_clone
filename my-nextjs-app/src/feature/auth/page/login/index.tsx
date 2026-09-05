@@ -13,7 +13,8 @@ import {ROUTES} from "@/config/route";
 import FieldError from "@component/form/FieldError";
 import AppSpin from "@component/AppSpin";
 import Cookies from "js-cookie";
-import {MESSAGE_SERVER_ERROR_DEFAULT, trans} from "@/config/validation";
+import {MESSAGE_SERVER_ERROR_DEFAULT} from "@/config/validation";
+import {trans} from "@/lib/utils";
 import {ERROR_VALIDATE_FORM} from "@/config/http-status";
 
 export default function LoginForm({}) {

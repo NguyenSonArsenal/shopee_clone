@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {trans} from "@/config/validation";
+import {trans} from "@/lib/utils";
 import {LENGTH} from "@/config/validate-length";
 import {isBlank} from "@/helper/helper";
 

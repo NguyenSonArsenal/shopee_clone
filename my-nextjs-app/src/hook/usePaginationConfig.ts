@@ -1,8 +1,8 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
-import configApi from "@feature/settings/configApi"
-import { PER_PAGE_OPTIONS_KEY, DEFAULT_PER_PAGE_KEY } from "@feature/settings/configKeys"
+import configApi from "@feature/cau-hinh/configApi"
+import { PER_PAGE_OPTIONS_KEY, DEFAULT_PER_PAGE_KEY } from "@feature/cau-hinh/configKeys"
 
 const FALLBACK_OPTIONS = [10, 20, 50, 100]
 const FALLBACK_DEFAULT = 10

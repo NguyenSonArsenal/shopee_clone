@@ -20,7 +20,6 @@ export const TOAST = {
     ERROR: 'error',
     INFO: 'info'
   },
-  TIMEOUT: 5 // Thời gian hiển thị toast (giây)
 } as const;
 export type ToastTypeValue = typeof TOAST.TYPE[keyof typeof TOAST.TYPE]
 

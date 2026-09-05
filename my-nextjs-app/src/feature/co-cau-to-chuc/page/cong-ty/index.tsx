@@ -9,14 +9,15 @@ import TableLoadingOverlay from "@component/admin/TableLoadingOverlay"
 import EmptyState from "@component/admin/EmptyState"
 import { ROUTES } from "@/config/route"
 import { organization } from "@/config/breadcrumb"
-import companyApi from "@/feature/organization/companyApi"
+import companyApi from "@/feature/co-cau-to-chuc/companyApi"
 import {
   DEBOUNCED_SEARCH_TIMEOUT, LABEL_ACTIVE,
   LABEL_CREATE, LABEL_INACTIVE,
   NO_RECORD_DES,
   NO_RECORD_TITLE, TOOLTIP_ICON_DELETE, TOOLTIP_ICON_EDIT, TOOLTIP_ICON_VIEW
 } from "@/config/constant";
-import {MESSAGE_SERVER_ERROR_DEFAULT, transMessage} from "@/config/validation";
+import {MESSAGE_SERVER_ERROR_DEFAULT} from "@/config/validation";
+import {transMessage} from "@/lib/utils";
 import DebugPanel from "@component/DebugPanel";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {useToast} from "@/context/ToastContext";
@@ -197,8 +198,6 @@ export default function CompanyListPage() {
         onClose={() => setEntity(null)}
         onConfirm={() => entity && deleteCompany(entity)}
       />
-
-      <DebugPanel data={{ entity }} />
     </AdminLayout>
   )
 }

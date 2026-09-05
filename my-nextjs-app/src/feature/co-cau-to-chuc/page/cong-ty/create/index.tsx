@@ -6,16 +6,17 @@ import {useRouter} from "next/navigation";
 import SubmitButton from "@component/admin/SubmitButton";
 import {useForm, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {trans, MESSAGE_SERVER_ERROR_DEFAULT, transMessage} from "@/config/validation";
+import {MESSAGE_SERVER_ERROR_DEFAULT} from "@/config/validation";
+import {trans, transMessage} from "@/lib/utils";
 import {LENGTH} from "@/config/validate-length";
 import InputTextCounter from "@component/form/InputTextCounter";
 import FieldError from "@component/form/FieldError";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import companyApi from "@feature/organization/companyApi";
+import companyApi from "@feature/co-cau-to-chuc/companyApi";
 import {ERROR_VALIDATE_FORM} from "@/config/http-status";
 import {useToast} from "@/context/ToastContext";
 import {ROUTES} from "@/config/route";
-import {CompanyFormValues, companySchema} from "@feature/organization/companySchema";
+import {CompanyFormValues, companySchema} from "@feature/co-cau-to-chuc/companySchema";
 
 export default function CreateCompanyPage() {
   const {showToast} = useToast()

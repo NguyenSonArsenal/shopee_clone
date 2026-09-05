@@ -4,7 +4,7 @@ import AdminLayout from "@component/admin/AdminLayout"
 import {organization} from "@/config/breadcrumb";
 import {useParams, useRouter} from "next/navigation";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import branchApi from "@feature/organization/branchApi";
+import branchApi from "@feature/co-cau-to-chuc/branchApi";
 import SkeletonInputField from "@component/admin/Skeleton/SkeletonInputField";
 import SkeletonField from "@component/admin/Skeleton/SkeletonField";
 import {LENGTH} from "@/config/validate-length";
@@ -14,11 +14,12 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useEffect} from "react";
 import {useToast} from "@/context/ToastContext";
 import FieldError from "@component/form/FieldError";
-import {MESSAGE_SERVER_ERROR_DEFAULT, transMessage} from "@/config/validation";
+import {MESSAGE_SERVER_ERROR_DEFAULT} from "@/config/validation";
+import {transMessage} from "@/lib/utils";
 import {ROUTES} from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
 import {ERROR_VALIDATE_FORM} from "@/config/http-status";
-import {BranchFormValues, branchSchema} from "@feature/organization/branchSchema";
+import {BranchFormValues, branchSchema} from "@feature/co-cau-to-chuc/branchSchema";
 
 export default function EditOfficePage() {
   const {showToast} = useToast()

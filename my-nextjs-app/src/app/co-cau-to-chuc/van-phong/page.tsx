@@ -1,4 +1,4 @@
-import OfficeListPage from "@feature/organization/page/van-phong";
+import OfficeListPage from "@feature/co-cau-to-chuc/page/van-phong";
 
 export default function Page() {
   return <OfficeListPage />;

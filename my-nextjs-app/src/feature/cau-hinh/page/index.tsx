@@ -3,7 +3,7 @@
 import Link from "next/link"
 import AdminLayout from "@component/admin/AdminLayout"
 import { settings } from "@/config/breadcrumb"
-import { CONFIG_GROUPS } from "@feature/settings/configGroups"
+import { CONFIG_GROUPS } from "@feature/cau-hinh/configGroups"
 import styles from "./index.module.scss"
 
 export default function ConfigsHubPage() {

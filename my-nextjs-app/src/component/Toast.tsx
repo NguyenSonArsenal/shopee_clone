@@ -1,25 +1,24 @@
 "use client"
 
 import {ReactNode, useEffect, useState} from "react"
-import {TOAST, ToastTypeValue} from "@/config/constant";
+import {ToastTypeValue} from "@/config/constant";
+import {useToastDurationConfig} from "@/hook/useToastDurationConfig";
 
 type ToastItem = { id: number; type: ToastTypeValue; message: ReactNode }
 
-const TOAST_DURATION = TOAST.TIMEOUT * 1000
-
-function ToastCard({ toast, onClose }: { toast: ToastItem; onClose: (id: number) => void }) {
+function ToastCard({ toast, duration, onClose }: { toast: ToastItem; duration: number; onClose: (id: number) => void }) {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => requestAnimationFrame(() => setShow(true)))
-    const hideTimer = setTimeout(() => setShow(false), TOAST_DURATION)
-    const removeTimer = setTimeout(() => onClose(toast.id), TOAST_DURATION + 300)
+    const hideTimer = setTimeout(() => setShow(false), duration)
+    const removeTimer = setTimeout(() => onClose(toast.id), duration + 300)
     return () => {
       cancelAnimationFrame(raf)
       clearTimeout(hideTimer)
       clearTimeout(removeTimer)
     }
-  }, [toast.id, onClose])
+  }, [toast.id, duration, onClose])
 
   const handleClose = () => {
     setShow(false)
@@ -50,9 +49,11 @@ type ToastContainerProps = {
 }
 
 export function ToastContainer({ toasts, onClose }: ToastContainerProps) {
+  const duration = useToastDurationConfig()
+
   return (
     <div className="toast-container">
-      {toasts.map((t) => <ToastCard key={t.id} toast={t} onClose={onClose} />)}
+      {toasts.map((t) => <ToastCard key={t.id} toast={t} duration={duration} onClose={onClose} />)}
     </div>
   )
 }

@@ -93,6 +93,7 @@
 
   &:hover { background: rgba(255, 255, 255, .15); color: #fff; opacity: 1; }
   &.active { background: rgba(0, 0, 0, .2); color: #fff; font-weight: 500; border-left-color: #fff; opacity: 1; }
+  &.disabled { cursor: default; opacity: .4; pointer-events: none; }
 }
 
 /* ── Sidebar dạng accordion (SettingsSidebar, /cau-hinh-he-thong) — màu/opacity khớp .sb-a của crm-app.css ── */
@@ -175,6 +176,7 @@
 .profile-btn.open .profile-chev { transform: rotate(180deg); }
 
 @keyframes dropIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+@keyframes dropInCentered { from { opacity: 0; transform: translateX(-50%) translateY(-5px); } to { opacity: 1; transform: translateX(-50%); } }
 
 .profile-dd {
   display: none; position: absolute; top: calc(100% + 8px); right: 0; width: 255px;
@@ -219,7 +221,7 @@
   background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border);
   box-shadow: var(--shadow-lg); z-index: 400;
 
-  &.open { display: block; animation: dropIn .15s ease; }
+  &.open { display: block; animation: dropInCentered .15s ease; }
 }
 .mod-dd-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .mod-tile {
@@ -328,7 +330,7 @@ table.data-table td { padding: 10px 12px; font-size: var(--fs-primary); color: v
 .switch input:disabled + .switch-track { opacity: .5; filter: grayscale(.4); }
 
 /* ── Action icon buttons ── */
-.action-btns { display: flex; gap: 5px; justify-content: flex-start; align-items: center; }
+.action-btns { display: flex; gap: 0; justify-content: flex-start; align-items: center; }
 .action-icon {
   position: relative; display: inline-flex; align-items: center; justify-content: center;
   width: 32px; height: 32px; border-radius: 8px; border: none;
@@ -374,7 +376,7 @@ table.data-table td { padding: 10px 12px; font-size: var(--fs-primary); color: v
 .admin-pagination.has-perpage .admin-pagination-perpage { flex: 1 1 0; min-width: 0; }
 .admin-pagination.has-perpage .admin-pagination-nav { justify-content: center; }
 .admin-pagination.has-perpage .admin-pagination-perpage { display: flex; justify-content: flex-end; }
-.admin-pagination-perpage .select-single { min-width: 150px; }
+.admin-pagination-perpage .select-single { min-width: 125px; }
 
 /* ── Select single tuỳ biến (tham khảo .ms-* của crm-tan-long, bản rút gọn: không search/checkbox) ── */
 .select-single { position: relative; }
@@ -390,6 +392,7 @@ table.data-table td { padding: 10px 12px; font-size: var(--fs-primary); color: v
   border-color: var(--primary); border-radius: 8px 8px 0 0;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 8%, transparent);
 }
+.select-single-value.is-placeholder { color: var(--text-light); }
 .select-single-arrow {
   position: absolute; right: 12px; top: 50%; margin-top: -3px;
   border: 5px solid transparent; border-top-color: #999;

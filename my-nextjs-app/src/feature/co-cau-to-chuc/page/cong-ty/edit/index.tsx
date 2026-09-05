@@ -4,7 +4,7 @@ import AdminLayout from "@component/admin/AdminLayout"
 import {organization} from "@/config/breadcrumb";
 import {useParams, useRouter} from "next/navigation";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import companyApi from "@feature/organization/companyApi";
+import companyApi from "@feature/co-cau-to-chuc/companyApi";
 import SkeletonInputField from "@component/admin/Skeleton/SkeletonInputField";
 import SkeletonTextareaField from "@component/admin/Skeleton/SkeletonTextareaField";
 import {LENGTH} from "@/config/validate-length";
@@ -14,11 +14,12 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useEffect} from "react";
 import {useToast} from "@/context/ToastContext";
 import FieldError from "@component/form/FieldError";
-import {MESSAGE_SERVER_ERROR_DEFAULT, transMessage} from "@/config/validation";
+import {MESSAGE_SERVER_ERROR_DEFAULT} from "@/config/validation";
+import {transMessage} from "@/lib/utils";
 import {ROUTES} from "@/config/route";
 import DebugPanel from "@component/DebugPanel";
 import {ERROR_VALIDATE_FORM} from "@/config/http-status";
-import {CompanyFormValues, companySchema} from "@feature/organization/companySchema";
+import {CompanyFormValues, companySchema} from "@feature/co-cau-to-chuc/companySchema";
 
 export default function EditCompanyPage() {
   const {showToast} = useToast()

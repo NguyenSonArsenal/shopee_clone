@@ -1,4 +1,4 @@
-import CreateCompanyPage from "@feature/organization/page/cong-ty/create";
+import CreateCompanyPage from "@feature/co-cau-to-chuc/page/cong-ty/create";
 
 export default function Page() {
   return <CreateCompanyPage />;
