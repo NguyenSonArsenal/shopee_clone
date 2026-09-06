@@ -1,0 +1,16 @@
+.methodBadge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .3px;
+}
+.methodGet { color: #2563eb; }
+.methodPost { color: #16a34a; }
+.methodPut { color: #d97706; }
+.methodPatch { color: #ca8a04; }
+.methodDelete { color: var(--primary); }
+
+.urlText {
+  font-family: var(--font-mono, monospace);
+  font-size: var(--fs-primary);
+}

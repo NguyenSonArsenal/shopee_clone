@@ -32,7 +32,8 @@
       "Database\\Factories\\": "database/factories/",
       "Database\\Seeders\\": "database/seeders/",
       "Modules\\Organization\\": "Modules/Organization/",
-      "Modules\\Settings\\": "Modules/Settings/"
+      "Modules\\Settings\\": "Modules/Settings/",
+      "Modules\\ApiDoc\\": "Modules/ApiDoc/"
     },
     "files": [
       "app//Helper//Helper.php"

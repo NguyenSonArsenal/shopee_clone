@@ -1,0 +1,13 @@
+{
+    "name": "ApiDoc",
+    "alias": "apidoc",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Modules\\ApiDoc\\Providers\\ApiDocServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

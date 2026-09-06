@@ -27,5 +27,14 @@ class ConfigSeeder extends Seeder
             ConfigGroup::GENERAL->value,
             'Số dòng/trang mặc định khi chưa chọn'
         );
+
+        // Thời gian hiển thị toast (giây) trước khi tự động đóng
+        Config::set(
+            'notification.toast_duration',
+            5,
+            ConfigDataType::INTEGER->value,
+            ConfigGroup::GENERAL->value,
+            'Thời gian hiển thị toast thông báo (giây)'
+        );
     }
 }

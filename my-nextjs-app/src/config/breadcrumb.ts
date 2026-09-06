@@ -56,3 +56,13 @@ export const myStyle = {
     { label: "Danh sách" },
   ],
 } as const;
+
+export const apiDoc = {
+  list: [
+    { label: "Swagger - Danh sách API" },
+  ],
+  view: [
+    { label: "Swagger - Danh sách API", href: ROUTES.SWAGGER },
+    { label: "Chi tiết" },
+  ],
+} as const;

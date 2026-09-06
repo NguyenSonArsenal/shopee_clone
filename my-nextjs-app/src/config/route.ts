@@ -26,4 +26,5 @@ export const ROUTES = {
   SETTINGS_SYSTEM: "/cau-hinh-he-thong",
 
   MY_STYLE: "/my-style",
+  SWAGGER: "/swagger",
 } as const;
