@@ -24,4 +24,9 @@ export const LENGTH = {
     address: 255,
     phone: 10,
   },
+  api_doc: {
+    module: 100,
+    url: 255,
+    description: 255,
+  },
 } as const;

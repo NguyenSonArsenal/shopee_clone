@@ -51,6 +51,20 @@ type Branch = {
   receptionist: CompanyUserRef
 }
 
+type DepartmentListItem = {
+  id: number
+  company_id: number | null
+  branch_id: number | null
+  name: string
+  code: string | null
+  is_active: boolean
+}
+
+type DepartmentListResponse = {
+  data: DepartmentListItem[]
+  pagination: Pagination
+}
+
 type Company = {
   id: number
   representative_id: number | null

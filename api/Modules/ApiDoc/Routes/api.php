@@ -16,4 +16,6 @@ use Modules\ApiDoc\Http\Controllers\ApiDocController;
 
 Route::get('api-doc', [ApiDocController::class, 'index']);
 Route::get('api-doc/{id}', [ApiDocController::class, 'show']);
+Route::post('api-doc', [ApiDocController::class, 'store']);
+Route::put('api-doc/{id}', [ApiDocController::class, 'update']);
 Route::delete('api-doc/{id}', [ApiDocController::class, 'destroy']);

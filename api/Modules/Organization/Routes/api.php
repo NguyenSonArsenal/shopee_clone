@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Modules\Organization\Http\Controllers\Branch\BranchController;
 use Modules\Organization\Http\Controllers\Company\CompanyController;
+use Modules\Organization\Http\Controllers\Department\DepartmentController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/organization', function (Request $request) {
@@ -21,4 +22,10 @@ Route::prefix('organization')->group(function() {
     Route::post('branch', [BranchController::class, 'store']);
     Route::match(['put', 'patch'], 'branch/{id}', [BranchController::class, 'update']);
     Route::delete('branch/{id}', [BranchController::class, 'destroy']);
+
+    Route::get('department', [DepartmentController::class, 'index']);
+    Route::get('department/{id}', [DepartmentController::class, 'show']);
+    Route::post('department', [DepartmentController::class, 'store']);
+    Route::match(['put', 'patch'], 'department/{id}', [DepartmentController::class, 'update']);
+    Route::delete('department/{id}', [DepartmentController::class, 'destroy']);
 });

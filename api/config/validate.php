@@ -2,6 +2,7 @@
 
 use Modules\Organization\Models\Branch;
 use Modules\Organization\Models\Company;
+use Modules\Organization\Models\Department;
 
 return [
     'lengths' => [
@@ -20,6 +21,10 @@ return [
             'code'    => 50,
             'address' => 255,
             'phone'   => 15,
+        ],
+        Department::getTableName() => [
+            'name' => 255,
+            'code' => 50,
         ],
     ],
 ];

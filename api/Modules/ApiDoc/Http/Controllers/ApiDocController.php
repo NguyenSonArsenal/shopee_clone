@@ -4,6 +4,8 @@ namespace Modules\ApiDoc\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\ApiDoc\Http\Requests\StoreApiDocRequest;
+use Modules\ApiDoc\Http\Requests\UpdateApiDocRequest;
 use Modules\ApiDoc\Models\ApiDoc;
 use OpenApi\Annotations as OA;
 
@@ -72,7 +74,92 @@ class ApiDocController extends Controller
                 return $this->error('Không tìm thấy API doc', 404);
             }
 
-            return $this->success($apiDoc);
+            $data = $apiDoc->toArray();
+            $data['app_url'] = config('app.url');
+
+            return $this->success($data);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->systemError();
+        }
+    }
+
+    /**
+     * POST /api/api-doc
+     * Tạo mới 1 API doc
+     *
+     * @OA\Post(
+     *     path="/api/api-doc",
+     *     tags={"ApiDoc"},
+     *     summary="Tạo mới API doc",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"module", "method", "url"},
+     *             @OA\Property(property="module", type="string"),
+     *             @OA\Property(property="method", type="string", enum={"GET","POST","PUT","PATCH","DELETE"}),
+     *             @OA\Property(property="url", type="string"),
+     *             @OA\Property(property="description", type="string", nullable=true),
+     *             @OA\Property(property="curl_example", type="string", nullable=true),
+     *             @OA\Property(property="parameters", type="string", nullable=true),
+     *             @OA\Property(property="response_sample", type="string", nullable=true)
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Tạo thành công"),
+     *     @OA\Response(response=422, description="Lỗi validate")
+     * )
+     */
+    public function store(StoreApiDocRequest $request)
+    {
+        try {
+            $apiDoc = ApiDoc::create($request->validated());
+
+            return $this->success($apiDoc, 'Tạo API doc thành công', 201);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->systemError();
+        }
+    }
+
+    /**
+     * PUT /api/api-doc/{id}
+     * Cập nhật thông tin 1 API doc
+     *
+     * @OA\Put(
+     *     path="/api/api-doc/{id}",
+     *     tags={"ApiDoc"},
+     *     summary="Cập nhật API doc",
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"module", "method", "url"},
+     *             @OA\Property(property="module", type="string"),
+     *             @OA\Property(property="method", type="string", enum={"GET","POST","PUT","PATCH","DELETE"}),
+     *             @OA\Property(property="url", type="string"),
+     *             @OA\Property(property="description", type="string", nullable=true),
+     *             @OA\Property(property="curl_example", type="string", nullable=true),
+     *             @OA\Property(property="parameters", type="string", nullable=true),
+     *             @OA\Property(property="response_sample", type="string", nullable=true)
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Cập nhật thành công"),
+     *     @OA\Response(response=404, description="Không tìm thấy"),
+     *     @OA\Response(response=422, description="Lỗi validate")
+     * )
+     */
+    public function update(UpdateApiDocRequest $request, $id)
+    {
+        try {
+            $apiDoc = ApiDoc::find($id);
+
+            if (empty($apiDoc)) {
+                return $this->error('Không tìm thấy API doc', 404);
+            }
+
+            $apiDoc->fill($request->validated())->save();
+
+            return $this->success($apiDoc->refresh(), 'Cập nhật API doc thành công');
         } catch (\Exception $e) {
             Log::error($e);
             return $this->systemError();

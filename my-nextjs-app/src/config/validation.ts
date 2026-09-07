@@ -164,6 +164,11 @@ export const ATTRIBUTES = {
   // — riêng cho form branch (chi nhánh) đang làm
   branch_name: 'tên chi nhánh',
   code: 'mã chi nhánh',
+
+  // — riêng cho form api-doc (swagger) đang làm
+  module: 'module',
+  method: 'phương thức',
+  url: 'url',
 } as const
 
 export const MESSAGE_SERVER_ERROR_DEFAULT = "Lỗi hệ thống";

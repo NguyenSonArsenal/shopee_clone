@@ -114,6 +114,9 @@ export default function ApiDocListPage() {
             onChange={(e) => setInputValue(e.target.value)}
           />
         </div>
+        <Link href={`${ROUTES.SWAGGER}/create`} className="btn btn-primary" style={{ width: "auto" }}>
+          <i className="fa-solid fa-plus" /> Thêm mới
+        </Link>
       </div>
 
       <div className="card" style={{ padding: 0 }}>

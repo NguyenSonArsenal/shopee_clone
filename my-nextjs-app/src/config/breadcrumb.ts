@@ -38,6 +38,12 @@ export const organization = {
       { label: "Cập nhật" },
     ],
   },
+  department: {
+    list: [
+      { label: "Cơ cấu tổ chức", href: ROUTES.ORGANIZATION },
+      { label: "Phòng ban" },
+    ],
+  },
 } as const;
 
 export const settings = {
@@ -64,5 +70,13 @@ export const apiDoc = {
   view: [
     { label: "Swagger - Danh sách API", href: ROUTES.SWAGGER },
     { label: "Chi tiết" },
+  ],
+  edit: [
+    { label: "Swagger - Danh sách API", href: ROUTES.SWAGGER },
+    { label: "Cập nhật" },
+  ],
+  create: [
+    { label: "Swagger - Danh sách API", href: ROUTES.SWAGGER },
+    { label: "Thêm mới" },
   ],
 } as const;

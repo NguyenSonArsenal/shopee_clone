@@ -7,6 +7,7 @@ type ApiDocItem = {
   curl_example: string | null
   parameters: string | null
   response_sample: string | null
+  app_url?: string | null
 }
 
 type ApiDocListResponse = {

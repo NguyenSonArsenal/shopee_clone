@@ -5,6 +5,171 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/api-doc": {
+            "get": {
+                "tags": [
+                    "ApiDoc"
+                ],
+                "summary": "Danh sách API doc",
+                "description": "GET /api/api-doc\nDanh sách API đã làm, có phân trang + tìm kiếm theo url/mô tả/module",
+                "operationId": "e9f6d81195c403b7ca4c200a3c6badbd",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Trang hiện tại",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Tìm theo url/mô tả/module",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    }
+                }
+            }
+        },
+        "/api/api-doc/{id}": {
+            "get": {
+                "tags": [
+                    "ApiDoc"
+                ],
+                "summary": "Chi tiết API doc",
+                "description": "GET /api/api-doc/{id}\nChi tiết 1 API doc",
+                "operationId": "ae1e7047a4a686f51c346a5e28f77aea",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "ApiDoc"
+                ],
+                "summary": "Cập nhật API doc",
+                "description": "PUT /api/api-doc/{id}\nCập nhật thông tin 1 API doc",
+                "operationId": "a36cab4e16f8b8ac0cfc745d632bcdc4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "module",
+                                    "method",
+                                    "url"
+                                ],
+                                "properties": {
+                                    "module": {
+                                        "type": "string"
+                                    },
+                                    "method": {
+                                        "type": "string",
+                                        "enum": [
+                                            "GET",
+                                            "POST",
+                                            "PUT",
+                                            "PATCH",
+                                            "DELETE"
+                                        ]
+                                    },
+                                    "url": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "curl_example": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "parameters": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "response_sample": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    },
+                    "422": {
+                        "description": "Lỗi validate"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ApiDoc"
+                ],
+                "summary": "Xoá API doc",
+                "description": "DELETE /api/api-doc/{id}",
+                "operationId": "7a529a18198d0c1ba99af1906a599e41",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Xoá thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    }
+                }
+            }
+        },
         "/api/organization/branch": {
             "get": {
                 "tags": [
@@ -480,6 +645,211 @@
                 }
             }
         },
+        "/api/organization/department": {
+            "get": {
+                "tags": [
+                    "Organization / Department"
+                ],
+                "summary": "Danh sách phòng ban",
+                "description": "GET /api/organization/department\nDanh sách phòng ban, có phân trang + tìm kiếm theo tên/mã",
+                "operationId": "0e953d9de5c70c1c167d88f5816b4523",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Trang hiện tại",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Tìm theo tên/mã",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Organization / Department"
+                ],
+                "summary": "Tạo mới phòng ban",
+                "description": "POST /api/organization/department\nTạo mới 1 phòng ban",
+                "operationId": "2dd3898b35456853e5cb756d6c497c03",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "company_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "branch_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "manager_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo thành công"
+                    },
+                    "422": {
+                        "description": "Lỗi validate"
+                    }
+                }
+            }
+        },
+        "/api/organization/department/{id}": {
+            "get": {
+                "tags": [
+                    "Organization / Department"
+                ],
+                "summary": "Chi tiết phòng ban",
+                "description": "GET /api/organization/department/{id}\nChi tiết 1 phòng ban",
+                "operationId": "cf4167537fe613e13f960666b6399b45",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy phòng ban"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Organization / Department"
+                ],
+                "summary": "Cập nhật phòng ban",
+                "description": "PUT /api/organization/department/{id}\nCập nhật thông tin 1 phòng ban (hỗ trợ cập nhật từng phần)",
+                "operationId": "2c686b1f6f68ee77bd14405df787ca4d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "company_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "branch_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "manager_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy phòng ban"
+                    },
+                    "422": {
+                        "description": "Lỗi validate"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Organization / Department"
+                ],
+                "summary": "Xoá phòng ban",
+                "description": "DELETE /api/organization/department/{id}",
+                "operationId": "0ad32b2ac06ad61a27070d32741f5a85",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Xoá thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy phòng ban"
+                    }
+                }
+            }
+        },
         "/api/settings/config": {
             "get": {
                 "tags": [
@@ -606,8 +976,16 @@
             "description": "Quản lý chi nhánh"
         },
         {
+            "name": "Organization / Department",
+            "description": "Quản lý phòng ban"
+        },
+        {
             "name": "Settings / Config",
             "description": "Cấu hình hệ thống"
+        },
+        {
+            "name": "ApiDoc",
+            "description": "ApiDoc"
         }
     ]
 }
